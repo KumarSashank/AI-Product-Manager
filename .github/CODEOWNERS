@@ -1,0 +1,50 @@
+# CODEOWNERS - Define code ownership for automatic PR review requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ==============================================================================
+# GLOBAL OWNERS
+# These owners will be requested for review on any PR
+# ==============================================================================
+* @KumarSashank @Gottipat
+
+# ==============================================================================
+# SHARED PACKAGE - REQUIRES BOTH REVIEWERS
+# This is the source of truth - changes must be approved by both teams
+# ==============================================================================
+/packages/shared/ @KumarSashank @Gottipat
+
+# ==============================================================================
+# BOT RUNNER - GOTTIPAT'S DOMAIN
+# Primary owner: Gottipat (Playwright/Chromium bot development)
+# ==============================================================================
+/packages/bot-runner/ @Gottipat
+
+# ==============================================================================
+# AI BACKEND - SASHANK'S DOMAIN
+# Primary owner: KumarSashank (AI extraction, MoM, RAG development)
+# ==============================================================================
+/packages/ai-backend/ @KumarSashank
+
+# ==============================================================================
+# CI/CD & INFRASTRUCTURE - REQUIRES BOTH REVIEWERS
+# Changes to workflows and configs need both approvals
+# ==============================================================================
+/.github/ @KumarSashank @Gottipat
+/docker-compose.yml @KumarSashank @Gottipat
+/.eslintrc.js @KumarSashank @Gottipat
+/tsconfig.base.json @KumarSashank @Gottipat
+
+# ==============================================================================
+# CONTEXT FILES - BOTH REVIEWERS
+# LLM context should be consistent across team
+# ==============================================================================
+/.context/ @KumarSashank @Gottipat
+
+# ==============================================================================
+# DOCUMENTATION
+# Anyone can update docs, but ownership reflects primary expertise
+# ==============================================================================
+/docs/BOT_RUNNER_GUIDE.md @Gottipat
+/docs/AI_BACKEND_GUIDE.md @KumarSashank
+/docs/ARCHITECTURE.md @KumarSashank @Gottipat
+/docs/API_CONTRACTS.md @KumarSashank @Gottipat
