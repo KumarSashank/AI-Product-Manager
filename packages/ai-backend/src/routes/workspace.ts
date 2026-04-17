@@ -64,9 +64,63 @@ export async function workspaceRoutes(server: FastifyInstance): Promise<void> {
         .select()
         .from(meetings)
         .where(eq(meetings.organizationId, organizationId));
+      const workspaceInviteHistory = await db
+        .select()
+        .from(workspaceInvitations)
+        .where(eq(workspaceInvitations.organizationId, organizationId));
 
       const currentUser =
         workspaceMembers.find((member) => member.id === request.user?.userId) ?? null;
+      const memberLookup = new Map(
+        workspaceMembers.map((member) => [
+          member.id,
+          {
+            displayName: member.displayName,
+            email: member.email,
+          },
+        ])
+      );
+
+      const recentActivity = [
+        ...workspaceProjects.map((project) => ({
+          id: `project-${project.id}`,
+          type: 'project_created',
+          title: project.name,
+          description:
+            project.status === 'active'
+              ? 'Project created and active'
+              : `Project ${project.status}`,
+          occurredAt: project.createdAt,
+          href: `/projects/${project.id}`,
+        })),
+        ...workspaceMeetings.map((meeting) => ({
+          id: `meeting-${meeting.id}`,
+          type: 'meeting_processed',
+          title: meeting.title,
+          description:
+            meeting.totalTranscriptEvents && meeting.totalTranscriptEvents > 0
+              ? `${meeting.totalTranscriptEvents} transcript events captured`
+              : 'Meeting record created',
+          occurredAt: meeting.endTime ?? meeting.startTime ?? meeting.createdAt,
+          href: `/meetings/${meeting.id}`,
+        })),
+        ...workspaceInviteHistory.map((invitation) => ({
+          id: `invite-${invitation.id}`,
+          type: invitation.acceptedAt ? 'invite_accepted' : 'invite_created',
+          title: invitation.email,
+          description: invitation.acceptedAt
+            ? `Joined the workspace as ${invitation.role}`
+            : `Invited as ${invitation.role} by ${
+                memberLookup.get(invitation.invitedBy ?? '')?.displayName ??
+                memberLookup.get(invitation.invitedBy ?? '')?.email ??
+                'a workspace admin'
+              }`,
+          occurredAt: invitation.acceptedAt ?? invitation.createdAt,
+          href: '/workspace',
+        })),
+      ]
+        .sort((left, right) => right.occurredAt.getTime() - left.occurredAt.getTime())
+        .slice(0, 8);
 
       return reply.send({
         workspace,
@@ -89,6 +143,7 @@ export async function workspaceRoutes(server: FastifyInstance): Promise<void> {
             .length,
           meetingCount: workspaceMeetings.length,
         },
+        recentActivity,
       });
     } catch (error) {
       console.error('Get workspace error:', error);

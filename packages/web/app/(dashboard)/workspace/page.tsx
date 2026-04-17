@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import {
+  WorkspaceActivityEntry,
   Workspace,
   WorkspaceInvitation,
   WorkspaceInvitationCreateInput,
@@ -55,6 +57,7 @@ export default function WorkspacePage() {
   const [currentUser, setCurrentUser] = useState<WorkspaceUser | null>(null);
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
   const [invitations, setInvitations] = useState<WorkspaceInvitation[]>([]);
+  const [recentActivity, setRecentActivity] = useState<WorkspaceActivityEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>('idle');
@@ -124,6 +127,7 @@ export default function WorkspacePage() {
       setWorkspace(workspaceResponse.workspace);
       setStats(workspaceResponse.stats);
       setCurrentUser(workspaceResponse.currentUser);
+      setRecentActivity(workspaceResponse.recentActivity || []);
       setMembers(membersResponse.members);
       setInvitations(invitationsResponse.invitations);
       setForm({
@@ -308,6 +312,55 @@ export default function WorkspacePage() {
             <p className="mt-1 text-xs text-[var(--ink-soft)]">{card.hint}</p>
           </div>
         ))}
+      </section>
+
+      <section className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-[#1d4ed8]">Recent activity</p>
+            <h2 className="mt-2 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+              Workspace timeline
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm text-[var(--ink-soft)]">
+              A lightweight operational feed makes the workspace feel accountable and alive, not
+              just configured.
+            </p>
+          </div>
+          <span className="rounded-full border border-black/8 px-3 py-1 text-xs text-[var(--ink-soft)]">
+            {recentActivity.length} recent events
+          </span>
+        </div>
+
+        {recentActivity.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.7)] px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
+            Workspace activity will appear here as projects, meetings, and invitations move forward.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {recentActivity.map((entry) => (
+              <Link
+                key={entry.id}
+                href={entry.href}
+                className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#ffffff,#fbfdff)] p-4 transition hover:border-black/12"
+              >
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-black/8 bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--ink-soft)]">
+                      {entry.type.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm font-semibold text-[var(--ink-strong)]">
+                    {entry.title}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--ink-soft)]">{entry.description}</p>
+                </div>
+                <span className="text-xs text-[var(--ink-soft)]">
+                  {formatDate(entry.occurredAt)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">

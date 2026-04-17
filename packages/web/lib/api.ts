@@ -83,6 +83,7 @@ export const workspaceApi = {
       workspace: Workspace;
       stats: WorkspaceStats;
       currentUser: WorkspaceUser | null;
+      recentActivity: WorkspaceActivityEntry[];
     }>('/workspace'),
 
   listMembers: () => apiFetch<{ members: WorkspaceMember[] }>('/workspace/members'),
@@ -319,6 +320,15 @@ export interface WorkspaceStats {
   projectCount: number;
   activeProjectCount: number;
   meetingCount: number;
+}
+
+export interface WorkspaceActivityEntry {
+  id: string;
+  type: 'project_created' | 'meeting_processed' | 'invite_created' | 'invite_accepted';
+  title: string;
+  description: string;
+  occurredAt: string;
+  href: string;
 }
 
 export interface WorkspaceUser {
