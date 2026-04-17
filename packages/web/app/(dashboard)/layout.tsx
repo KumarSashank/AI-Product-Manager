@@ -21,6 +21,20 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    label: 'Workspace',
+    href: '/workspace',
+    icon: (
+      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.6}
+          d="M4 7a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7zm4 0v10m8-6H8"
+        />
+      </svg>
+    ),
+  },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -174,6 +188,8 @@ function Breadcrumbs({ pathname }: { pathname: string }) {
 
     if (seg === 'projects') {
       crumbs.push({ label: 'Projects', href });
+    } else if (seg === 'workspace') {
+      crumbs.push({ label: 'Workspace', href });
     } else if (seg === 'meetings' && i === 0) {
       crumbs.push({ label: 'Meetings', href });
     } else if (i > 0 && segments[i - 1] === 'projects') {

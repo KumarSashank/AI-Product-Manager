@@ -74,6 +74,23 @@ export const authApi = {
   me: () => apiFetch<{ user: User }>('/auth/me'),
 };
 
+export const workspaceApi = {
+  get: () =>
+    apiFetch<{
+      workspace: Workspace;
+      stats: WorkspaceStats;
+      currentUser: WorkspaceUser | null;
+    }>('/workspace'),
+
+  listMembers: () => apiFetch<{ members: WorkspaceMember[] }>('/workspace/members'),
+
+  update: (data: WorkspaceUpdateInput) =>
+    apiFetch<{ workspace: Workspace }>('/workspace', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+};
+
 // Projects API
 export const projectsApi = {
   list: () => apiFetch<{ projects: Project[] }>('/projects'),
@@ -239,7 +256,47 @@ export interface User {
   displayName: string;
   organizationId?: string;
   role: string;
+  isActive?: boolean;
   createdAt: string;
+  updatedAt?: string;
+  lastLoginAt?: string | null;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkspaceStats {
+  memberCount: number;
+  adminCount: number;
+  projectCount: number;
+  activeProjectCount: number;
+  meetingCount: number;
+}
+
+export interface WorkspaceUser {
+  id: string;
+  email: string;
+  displayName: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  lastLoginAt?: string | null;
+}
+
+export interface WorkspaceMember extends WorkspaceUser {
+  isCurrentUser: boolean;
+}
+
+export interface WorkspaceUpdateInput {
+  name?: string;
+  logoUrl?: string | null;
 }
 
 export interface Project {

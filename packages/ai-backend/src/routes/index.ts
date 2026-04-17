@@ -20,6 +20,7 @@ import { projectRoutes } from './projects.js';
 import { transcriptRoutes } from './transcripts.js';
 import { uploadRoutes } from './upload.js';
 import { recordingStreamRoutes } from './recording-stream.js';
+import { workspaceRoutes } from './workspace.js';
 
 export async function registerRoutes(fastify: FastifyInstance): Promise<void> {
   // Register cookie plugin for auth
@@ -31,6 +32,7 @@ export async function registerRoutes(fastify: FastifyInstance): Promise<void> {
 
   // Register all route modules
   await authRoutes(fastify);
+  await workspaceRoutes(fastify);
   await projectRoutes(fastify);
   await aiRoutes(fastify);
   await benchmarkRoutes(fastify);
