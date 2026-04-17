@@ -6,7 +6,7 @@
 
 import { randomUUID } from 'crypto';
 
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
@@ -15,6 +15,7 @@ import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import { transcriptRepository } from '../db/repositories/transcript.repository.js';
 import { meetings } from '../db/schema/meetings.js';
 import { projects } from '../db/schema/organizations.js';
+import { requireOrganizationId } from '../lib/access.js';
 import { parseTranscript } from '../lib/transcript.js';
 import { momPipeline } from '../pipelines/mom.pipeline.js';
 
@@ -37,13 +38,18 @@ type UploadTranscriptPayload = z.infer<typeof uploadTranscriptSchema>;
 
 async function processUploadedTranscript(args: {
   projectId: string;
+  organizationId: string;
   payload: UploadTranscriptPayload;
 }) {
-  const { projectId, payload } = args;
+  const { projectId, organizationId, payload } = args;
   const { title, transcript, analysisMode, contextNote } = payload;
 
   // 1. Look up the project
-  const [project] = await db.select().from(projects).where(eq(projects.id, projectId)).limit(1);
+  const [project] = await db
+    .select()
+    .from(projects)
+    .where(and(eq(projects.id, projectId), eq(projects.organizationId, organizationId)))
+    .limit(1);
 
   if (!project) {
     throw new Error('Project not found');
@@ -143,6 +149,8 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/projects/:id/upload-transcript',
     async (request, reply) => {
       const { id: projectId } = request.params;
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
 
       // Validate body
       const parseResult = uploadTranscriptSchema.safeParse(request.body);
@@ -158,6 +166,7 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
       try {
         const result = await processUploadedTranscript({
           projectId,
+          organizationId,
           payload: { title, transcript, analysisMode, contextNote },
         });
 
@@ -183,6 +192,8 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/projects/:id/upload-transcripts/bulk',
     async (request, reply) => {
       const { id: projectId } = request.params;
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
       const parseResult = bulkUploadTranscriptSchema.safeParse(request.body);
 
       if (!parseResult.success) {
@@ -209,7 +220,7 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
         const results = [];
 
         for (const { payload } of sortedPayloads) {
-          results.push(await processUploadedTranscript({ projectId, payload }));
+          results.push(await processUploadedTranscript({ projectId, organizationId, payload }));
         }
 
         return reply.status(201).send({

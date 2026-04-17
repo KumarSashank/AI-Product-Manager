@@ -5,6 +5,7 @@
 
 import { FastifyInstance } from 'fastify';
 
+import { requireMeetingAccess } from '../lib/access.js';
 import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import {
   transcriptRepository,
@@ -35,6 +36,9 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
   fastify.post<{ Params: { id: string }; Body: TranscriptEventBody }>(
     '/api/v1/meetings/:id/transcripts',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { speaker, content, sequenceNumber, speakerId, isFinal, confidence, capturedAt } =
         request.body;
 
@@ -72,6 +76,9 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
   fastify.post<{ Params: { id: string }; Body: BatchTranscriptBody }>(
     '/api/v1/meetings/:id/transcripts/batch',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { events } = request.body;
 
       if (!events || !Array.isArray(events) || events.length === 0) {
@@ -95,7 +102,7 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
       await meetingRepository.incrementTranscriptCount(request.params.id, inserted.length);
 
       // Trigger Real-Time Extraction with concatenated text
-      const chunkText = events.map(e => `${e.speaker}: ${e.content}`).join('\n');
+      const chunkText = events.map((e) => `${e.speaker}: ${e.content}`).join('\n');
       actionItemsPipeline.extractLiveChunk(request.params.id, chunkText).catch(console.error);
 
       return reply.status(201).send({
@@ -109,10 +116,16 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
    * GET /api/v1/meetings/:id/transcripts
    * Get all transcripts for a meeting
    */
-  fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id/transcripts', async (request) => {
-    const events = await transcriptRepository.findByMeetingId(request.params.id);
-    return { events, count: events.length };
-  });
+  fastify.get<{ Params: { id: string } }>(
+    '/api/v1/meetings/:id/transcripts',
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
+      const events = await transcriptRepository.findByMeetingId(request.params.id);
+      return { events, count: events.length };
+    }
+  );
 
   /**
    * GET /api/v1/meetings/:id/transcripts/text
@@ -120,7 +133,10 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
    */
   fastify.get<{ Params: { id: string } }>(
     '/api/v1/meetings/:id/transcripts/text',
-    async (request) => {
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const text = await transcriptRepository.getTranscriptText(request.params.id);
       return { text };
     }
@@ -132,7 +148,10 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
    */
   fastify.get<{ Params: { id: string } }>(
     '/api/v1/meetings/:id/transcripts/by-speaker',
-    async (request) => {
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const bySpeaker = await transcriptRepository.getTranscriptBySpeaker(request.params.id);
       return { bySpeaker };
     }
@@ -144,7 +163,10 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
    */
   fastify.get<{ Params: { id: string }; Querystring: { limit?: string } }>(
     '/api/v1/meetings/:id/transcripts/latest',
-    async (request) => {
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const limit = parseInt(request.query.limit || '50', 10);
       const events = await transcriptRepository.findLatest(request.params.id, limit);
       return { events };

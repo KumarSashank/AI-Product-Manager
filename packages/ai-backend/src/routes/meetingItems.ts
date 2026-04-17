@@ -5,6 +5,7 @@
 
 import { FastifyInstance } from 'fastify';
 
+import { requireMeetingAccess } from '../lib/access.js';
 import {
   meetingItemsRepository,
   type NewMeetingItem,
@@ -62,6 +63,9 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.post<{ Params: { id: string }; Body: CreateItemBody }>(
     '/api/v1/meetings/:id/items',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const {
         itemType,
         title,
@@ -102,6 +106,9 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.post<{ Params: { id: string }; Body: CreateItemsBatchBody }>(
     '/api/v1/meetings/:id/items/batch',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { items } = request.body;
 
       if (!items || !Array.isArray(items) || items.length === 0) {
@@ -135,7 +142,10 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
    */
   fastify.get<{ Params: { id: string }; Querystring: { type?: string } }>(
     '/api/v1/meetings/:id/items',
-    async (request) => {
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { type } = request.query;
 
       if (type) {
@@ -160,6 +170,10 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
     if (!item) {
       return reply.status(404).send({ error: 'Item not found' });
     }
+
+    const meeting = await requireMeetingAccess(request, reply, item.meetingId);
+    if (!meeting) return;
+
     return { item };
   });
 
@@ -170,6 +184,14 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.patch<{ Params: { id: string }; Body: UpdateItemBody }>(
     '/api/v1/items/:id',
     async (request, reply) => {
+      const existingItem = await meetingItemsRepository.findById(request.params.id);
+      if (!existingItem) {
+        return reply.status(404).send({ error: 'Item not found' });
+      }
+
+      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId);
+      if (!meeting) return;
+
       const { title, description, assignee, assigneeEmail, dueDate, priority } = request.body;
 
       if (
@@ -208,6 +230,14 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.patch<{ Params: { id: string }; Body: UpdateStatusBody }>(
     '/api/v1/items/:id/status',
     async (request, reply) => {
+      const existingItem = await meetingItemsRepository.findById(request.params.id);
+      if (!existingItem) {
+        return reply.status(404).send({ error: 'Item not found' });
+      }
+
+      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId);
+      if (!meeting) return;
+
       const { status, updatedBy } = request.body;
 
       if (!status) {
@@ -223,21 +253,20 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   );
 
   /**
-   * GET /api/v1/items/:id/progress
-   * Get progress history for an item
-   */
-  fastify.get<{ Params: { id: string } }>('/api/v1/items/:id/progress', async (request) => {
-    const updates = await meetingItemsRepository.getProgressHistory(request.params.id);
-    return { updates };
-  });
-
-  /**
    * POST /api/v1/items/:id/tags
    * Add tag to item
    */
   fastify.post<{ Params: { id: string }; Body: { tag: string } }>(
     '/api/v1/items/:id/tags',
     async (request, reply) => {
+      const item = await meetingItemsRepository.findById(request.params.id);
+      if (!item) {
+        return reply.status(404).send({ error: 'Item not found' });
+      }
+
+      const meeting = await requireMeetingAccess(request, reply, item.meetingId);
+      if (!meeting) return;
+
       const { tag } = request.body;
       if (!tag) {
         return reply.status(400).send({ error: 'tag is required' });
@@ -249,12 +278,33 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   );
 
   /**
+   * GET /api/v1/items/:id/progress
+   * Get progress history for an item
+   */
+  fastify.get<{ Params: { id: string } }>('/api/v1/items/:id/progress', async (request, reply) => {
+    const item = await meetingItemsRepository.findById(request.params.id);
+    if (!item) {
+      return reply.status(404).send({ error: 'Item not found' });
+    }
+
+    const meeting = await requireMeetingAccess(request, reply, item.meetingId);
+    if (!meeting) return;
+
+    const updates = await meetingItemsRepository.getProgressHistory(request.params.id);
+    return { updates };
+  });
+
+  /**
    * GET /api/v1/users/:email/action-items
    * Get pending action items for a user
    */
   fastify.get<{ Params: { email: string } }>(
     '/api/v1/users/:email/action-items',
-    async (request) => {
+    async (request, reply) => {
+      if (request.user?.email !== request.params.email) {
+        return reply.status(403).send({ error: 'You do not have access to these action items' });
+      }
+
       const items = await meetingItemsRepository.findPendingByAssignee(request.params.email);
       return { items };
     }

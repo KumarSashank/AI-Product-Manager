@@ -12,23 +12,44 @@ export const BACKEND_BASE_URL =
  */
 async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
+  let response: Response;
 
-  const response = await fetch(url, {
-    ...options,
-    credentials: 'include', // Include cookies for auth
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  try {
+    response = await fetch(url, {
+      ...options,
+      credentials: 'include', // Include cookies for auth
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(
+        'The backend is not reachable. Start the AI backend on port 3002 and try again.'
+      );
+    }
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || 'Something went wrong');
+    throw error;
   }
 
-  return data;
+  let data: unknown = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    const errorMessage =
+      data && typeof data === 'object' && 'error' in data && typeof data.error === 'string'
+        ? data.error
+        : 'Something went wrong';
+    throw new Error(errorMessage);
+  }
+
+  return data as T;
 }
 
 // Auth API

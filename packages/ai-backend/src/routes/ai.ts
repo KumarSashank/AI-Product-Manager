@@ -5,6 +5,7 @@
 
 import { FastifyInstance } from 'fastify';
 
+import { requireMeetingAccess } from '../lib/access.js';
 import { actionItemsPipeline } from '../pipelines/actionItems.pipeline.js';
 import { momPipeline } from '../pipelines/mom.pipeline.js';
 import { ragService } from '../services/rag.service.js';
@@ -37,6 +38,8 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/generate-mom',
     async (request, reply) => {
       const { id } = request.params;
+      const meeting = await requireMeetingAccess(request, reply, id);
+      if (!meeting) return;
 
       // Start async generation
       const result = await momPipeline.generate(id);
@@ -66,6 +69,8 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/ai-status',
     async (request, reply) => {
       const { id } = request.params;
+      const meeting = await requireMeetingAccess(request, reply, id);
+      if (!meeting) return;
 
       const progress = momPipeline.getProgress(id);
 
@@ -88,6 +93,8 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/extract-items',
     async (request, reply) => {
       const { id } = request.params;
+      const meeting = await requireMeetingAccess(request, reply, id);
+      if (!meeting) return;
 
       const result = await actionItemsPipeline.extract(id);
 

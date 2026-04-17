@@ -9,6 +9,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { DEFAULT_DEV_ORG_ID } from '../db/bootstrap.js';
 import { db } from '../db/index.js';
+import { organizations } from '../db/schema/organizations.js';
 import { users, type User, type NewUser } from '../db/schema/users.js';
 
 /** Strip passwordHash from a user record */
@@ -40,6 +41,52 @@ function omitPassword(user: User): Omit<User, 'passwordHash'> {
 const SALT_ROUNDS = 12;
 const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-in-production';
 const JWT_EXPIRY = '7d';
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+
+async function ensureOrganizationForSignup(
+  displayName: string,
+  organizationId?: string
+): Promise<{ organizationId: string; role: string }> {
+  if (organizationId) {
+    const [existingOrganization] = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, organizationId))
+      .limit(1);
+
+    if (!existingOrganization) {
+      throw new Error('Workspace not found');
+    }
+
+    return { organizationId: existingOrganization.id, role: 'member' };
+  }
+
+  const workspaceName = `${displayName.trim() || 'New'} Workspace`;
+  const baseSlug = slugify(workspaceName) || 'workspace';
+  const slug = `${baseSlug}-${Date.now().toString(36)}`;
+
+  const [createdOrganization] = await db
+    .insert(organizations)
+    .values({
+      name: workspaceName,
+      slug,
+      isActive: true,
+    })
+    .returning();
+
+  return {
+    organizationId: createdOrganization?.id ?? DEFAULT_DEV_ORG_ID,
+    role: 'admin',
+  };
+}
 
 export interface JwtPayload {
   userId: string;
@@ -110,12 +157,14 @@ export async function createUser(
   }
 
   const passwordHash = await hashPassword(password);
+  const organization = await ensureOrganizationForSignup(displayName, organizationId);
 
   const newUser: NewUser = {
     email,
     passwordHash,
     displayName,
-    organizationId: organizationId ?? DEFAULT_DEV_ORG_ID,
+    organizationId: organization.organizationId,
+    role: organization.role,
   };
 
   const [created] = await db.insert(users).values(newUser).returning();

@@ -5,6 +5,7 @@
 
 import { FastifyInstance } from 'fastify';
 
+import { requireMeetingAccess, requireOrganizationId } from '../lib/access.js';
 import {
   momRepository,
   type NewMom,
@@ -40,6 +41,9 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: CreateMomBody }>(
     '/api/v1/meetings/:id/mom',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const {
         executiveSummary,
         detailedSummary,
@@ -69,6 +73,9 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
    * Get MoM for a meeting
    */
   fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id/mom', async (request, reply) => {
+    const meeting = await requireMeetingAccess(request, reply, request.params.id);
+    if (!meeting) return;
+
     const mom = await momRepository.findByMeetingId(request.params.id);
     if (!mom) {
       return reply.status(404).send({ error: 'MoM not found for this meeting' });
@@ -83,6 +90,9 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddHighlightBody }>(
     '/api/v1/meetings/:id/highlights',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { highlightType, content, importance, keywords } = request.body;
 
       if (!highlightType || !content) {
@@ -109,6 +119,9 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddHighlightsBatchBody }>(
     '/api/v1/meetings/:id/highlights/batch',
     async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { highlights } = request.body;
 
       if (!highlights || !Array.isArray(highlights) || highlights.length === 0) {
@@ -137,7 +150,10 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
    */
   fastify.get<{ Params: { id: string }; Querystring: { type?: string } }>(
     '/api/v1/meetings/:id/highlights',
-    async (request) => {
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
       const { type } = request.query;
 
       if (type) {
@@ -161,9 +177,14 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
    * GET /api/v1/mom/recent
    * Get recent MoMs
    */
-  fastify.get<{ Querystring: { limit?: string } }>('/api/v1/mom/recent', async (request) => {
+  fastify.get<{ Querystring: { limit?: string } }>('/api/v1/mom/recent', async (request, reply) => {
+    const organizationId = requireOrganizationId(request, reply);
+    if (!organizationId) return;
+
     const limit = parseInt(request.query.limit || '20', 10);
-    const moms = await momRepository.findRecent(limit);
+    const moms = (await momRepository.findRecent(limit)).filter(
+      (mom) => mom.meeting?.organizationId === organizationId
+    );
     return { moms };
   });
 }

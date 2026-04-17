@@ -44,6 +44,14 @@ export interface ItemStats {
 
 export class ActionItemsPipeline {
   /**
+   * Legacy compatibility hook for transcript streaming routes.
+   * We do final extraction at the meeting level, so live chunks are ignored for now.
+   */
+  async extractLiveChunk(_meetingId: string, _chunkText: string): Promise<void> {
+    return;
+  }
+
+  /**
    * Extract action items from a meeting transcript
    */
   async extract(meetingId: string): Promise<ExtractionResult> {
@@ -59,7 +67,7 @@ export class ActionItemsPipeline {
 
       if (!transcriptText || transcriptText.trim().length === 0) {
         return {
-          success: true,  // It worked, there just wasn't anything to extract
+          success: true, // It worked, there just wasn't anything to extract
           itemsCreated: 0,
           items: [],
           processingTimeMs: Date.now() - startTime,

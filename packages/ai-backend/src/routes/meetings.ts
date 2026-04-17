@@ -10,6 +10,7 @@ import { join } from 'path';
 import { FastifyInstance } from 'fastify';
 
 import { meetingRepository, type NewMeeting } from '../db/repositories/meeting.repository.js';
+import { requireMeetingAccess, requireOrganizationId } from '../lib/access.js';
 
 // Request/Response types
 interface CreateMeetingBody {
@@ -53,6 +54,9 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * Create a new meeting
    */
   fastify.post<{ Body: CreateMeetingBody }>('/api/v1/meetings', async (request, reply) => {
+    const requestOrganizationId = requireOrganizationId(request, reply);
+    if (!requestOrganizationId) return;
+
     const { title, googleMeetLink, organizationId, meetingType, startTime, captureSource } =
       request.body;
 
@@ -63,7 +67,7 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
     const meetingData: NewMeeting = {
       title,
       googleMeetLink,
-      organizationId: organizationId || null,
+      organizationId: organizationId || requestOrganizationId,
       meetingType: (meetingType as NewMeeting['meetingType']) || 'standup',
       startTime: startTime ? new Date(startTime) : null,
       status: 'scheduled',
@@ -79,10 +83,8 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * Get meeting by ID with participants
    */
   fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id', async (request, reply) => {
-    const meeting = await meetingRepository.findById(request.params.id);
-    if (!meeting) {
-      return reply.status(404).send({ error: 'Meeting not found' });
-    }
+    const meeting = await requireMeetingAccess(request, reply, request.params.id);
+    if (!meeting) return;
     return { meeting };
   });
 
@@ -91,10 +93,8 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * Start a meeting (bot joining)
    */
   fastify.post<{ Params: { id: string } }>('/api/v1/meetings/:id/start', async (request, reply) => {
-    const meeting = await meetingRepository.findById(request.params.id);
-    if (!meeting) {
-      return reply.status(404).send({ error: 'Meeting not found' });
-    }
+    const meeting = await requireMeetingAccess(request, reply, request.params.id);
+    if (!meeting) return;
 
     const updated = await meetingRepository.start(request.params.id);
     return { meeting: updated };
@@ -107,6 +107,9 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.patch<{ Params: { id: string }; Body: UpdateStatusBody }>(
     '/api/v1/meetings/:id/status',
     async (request, reply) => {
+      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!existingMeeting) return;
+
       const { status } = request.body;
       if (!status) {
         return reply.status(400).send({ error: 'status is required' });
@@ -127,6 +130,9 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string } }>(
     '/api/v1/meetings/:id/complete',
     async (request, reply) => {
+      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!existingMeeting) return;
+
       const meeting = await meetingRepository.complete(request.params.id);
       if (!meeting) {
         return reply.status(404).send({ error: 'Meeting not found or not started' });
@@ -142,6 +148,9 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddParticipantBody }>(
     '/api/v1/meetings/:id/participants',
     async (request, reply) => {
+      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!existingMeeting) return;
+
       const { displayName, email, isBot } = request.body;
       if (!displayName) {
         return reply.status(400).send({ error: 'displayName is required' });
@@ -162,10 +171,16 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * GET /api/v1/meetings/:id/participants
    * Get all participants for a meeting
    */
-  fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id/participants', async (request) => {
-    const participants = await meetingRepository.getParticipants(request.params.id);
-    return { participants };
-  });
+  fastify.get<{ Params: { id: string } }>(
+    '/api/v1/meetings/:id/participants',
+    async (request, reply) => {
+      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      if (!meeting) return;
+
+      const participants = await meetingRepository.getParticipants(request.params.id);
+      return { participants };
+    }
+  );
 
   /**
    * POST /api/v1/meetings/:id/audio
@@ -175,11 +190,8 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/audio',
     async (request, reply) => {
       const meetingId = request.params.id;
-      const meeting = await meetingRepository.findById(meetingId);
-
-      if (!meeting) {
-        return reply.status(404).send({ error: 'Meeting not found' });
-      }
+      const meeting = await requireMeetingAccess(request, reply, meetingId);
+      if (!meeting) return;
 
       const audioBuffer = request.body;
       if (!audioBuffer || !Buffer.isBuffer(audioBuffer) || audioBuffer.length === 0) {
@@ -206,6 +218,9 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * Serve the audio recording file for a meeting
    */
   fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id/audio', async (request, reply) => {
+    const meeting = await requireMeetingAccess(request, reply, request.params.id);
+    if (!meeting) return;
+
     const meetingId = request.params.id;
     const recordingPath = join(process.cwd(), 'uploads', 'recordings', `${meetingId}.webm`);
 
@@ -227,31 +242,17 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    */
   fastify.get<{ Params: { orgId: string }; Querystring: { limit?: string } }>(
     '/api/v1/organizations/:orgId/meetings',
-    async (request) => {
+    async (request, reply) => {
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
+
+      if (request.params.orgId !== organizationId) {
+        return reply.status(403).send({ error: 'You do not have access to this workspace' });
+      }
+
       const limit = parseInt(request.query.limit || '20', 10);
       const meetings = await meetingRepository.findRecent(request.params.orgId, limit);
       return { meetings };
     }
   );
-
-  /**
-   * GET /api/v1/meetings/:id/audio
-   * Stream the raw audio recording of the meeting a webm file
-   */
-  fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id/audio', async (request, reply) => {
-    // We need fs here dynamically or we can import it at top.
-    const fs = await import('fs');
-    const { getRecordingPath } = await import('../utils/storage.js');
-    
-    const filePath = getRecordingPath(request.params.id);
-    if (!fs.existsSync(filePath)) {
-      return reply.status(404).send({ error: 'Audio recording not found for this meeting' });
-    }
-
-    const stat = fs.statSync(filePath);
-    return reply
-      .header('Content-Type', 'audio/webm')
-      .header('Content-Length', stat.size)
-      .send(fs.createReadStream(filePath));
-  });
 }

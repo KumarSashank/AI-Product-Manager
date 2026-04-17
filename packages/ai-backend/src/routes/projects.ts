@@ -7,12 +7,12 @@ import { eq, desc, or, and, isNull } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
 
-import { DEFAULT_DEV_ORG_ID } from '../db/bootstrap.js';
 import { db } from '../db/index.js';
 import { meetingItems } from '../db/schema/meetingItems.js';
 import { meetings } from '../db/schema/meetings.js';
 import { moms } from '../db/schema/mom.js';
 import { projects } from '../db/schema/organizations.js';
+import { requireOrganizationId, requireProjectAccess } from '../lib/access.js';
 
 // Validation schemas
 const createProjectSchema = z.object({
@@ -34,9 +34,16 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
   /**
    * GET /api/v1/projects - List all projects
    */
-  server.get('/api/v1/projects', async (_request: FastifyRequest, reply: FastifyReply) => {
+  server.get('/api/v1/projects', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const allProjects = await db.select().from(projects).orderBy(desc(projects.updatedAt));
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
+
+      const allProjects = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.organizationId, organizationId))
+        .orderBy(desc(projects.updatedAt));
 
       // Get meeting/task counts
       const projectsWithCounts = await Promise.all(
@@ -50,7 +57,12 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
           const meetingResult = await db
             .select()
             .from(meetings)
-            .where(conditions.length > 1 ? or(...conditions) : conditions[0]!);
+            .where(
+              and(
+                eq(meetings.organizationId, organizationId),
+                conditions.length > 1 ? or(...conditions) : conditions[0]!
+              )
+            );
           const meetingCount = meetingResult.length;
 
           let taskCount = 0;
@@ -78,12 +90,16 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
    */
   server.post('/api/v1/projects', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
+
       const body = createProjectSchema.parse(request.body);
 
       const [project] = await db
         .insert(projects)
         .values({
-          organizationId: DEFAULT_DEV_ORG_ID,
+          organizationId,
+          createdBy: request.user?.userId ?? null,
           name: body.name,
           description: body.description ?? null,
           googleMeetLink: body.googleMeetLink ?? null,
@@ -108,27 +124,29 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
     try {
       const { id } = request.params as { id: string };
 
-      const [project] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+      const project = await requireProjectAccess(request, reply, id);
+      if (!project) return;
 
-      if (!project) {
-        return reply.status(404).send({ error: 'Project not found' });
-      }
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
 
       // Get meetings associated with this project (by projectId OR (by meet link IF unassigned))
       const conditions: any[] = [eq(meetings.projectId, project.id)];
       if (project.googleMeetLink) {
         conditions.push(
-            and(
-                eq(meetings.googleMeetLink, project.googleMeetLink),
-                isNull(meetings.projectId)
-            )
+          and(eq(meetings.googleMeetLink, project.googleMeetLink), isNull(meetings.projectId))
         );
       }
 
       const projectMeetings = await db
         .select()
         .from(meetings)
-        .where(conditions.length > 1 ? or(...conditions) : conditions[0]!)
+        .where(
+          and(
+            eq(meetings.organizationId, organizationId),
+            conditions.length > 1 ? or(...conditions) : conditions[0]!
+          )
+        )
         .orderBy(desc(meetings.startTime));
 
       const projectItems: (typeof meetingItems.$inferSelect)[] = [];
@@ -174,11 +192,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
       const { id } = request.params as { id: string };
       const body = updateProjectSchema.parse(request.body);
 
-      const [existing] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
-
-      if (!existing) {
-        return reply.status(404).send({ error: 'Project not found' });
-      }
+      const existing = await requireProjectAccess(request, reply, id);
+      if (!existing) return;
 
       const [updated] = await db
         .update(projects)
@@ -204,11 +219,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
       const { id } = request.params as { id: string };
       const { googleMeetLink } = z.object({ googleMeetLink: z.string().url() }).parse(request.body);
 
-      const [existing] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
-
-      if (!existing) {
-        return reply.status(404).send({ error: 'Project not found' });
-      }
+      const existing = await requireProjectAccess(request, reply, id);
+      if (!existing) return;
 
       const [updated] = await db
         .update(projects)
@@ -233,11 +245,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
     try {
       const { id } = request.params as { id: string };
 
-      const [existing] = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
-
-      if (!existing) {
-        return reply.status(404).send({ error: 'Project not found' });
-      }
+      const existing = await requireProjectAccess(request, reply, id);
+      if (!existing) return;
 
       await db.delete(projects).where(eq(projects.id, id));
       return reply.send({ success: true, message: 'Project deleted' });

@@ -86,7 +86,9 @@ export function AuthForm({ mode }: AuthFormProps) {
                 {isSignup ? 'Create your workspace account' : 'Welcome back'}
               </h1>
               <p className="mt-2 text-sm text-[var(--ink-soft)]">
-                {isSignup ? 'Set up access to the project workspace.' : 'Sign in to continue.'}
+                {isSignup
+                  ? 'We will create a private workspace for your projects and meeting memory.'
+                  : 'Sign in to continue.'}
               </p>
             </div>
 
