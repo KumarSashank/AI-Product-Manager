@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { projectsApi, Project } from '@/lib/api';
@@ -19,6 +20,7 @@ function permissionBadge(permission?: Project['permission']) {
 }
 
 export default function ProjectsPage() {
+  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -66,6 +68,7 @@ export default function ProjectsPage() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.description?.toLowerCase().includes(search.toLowerCase())
   );
+  const welcomeState = searchParams.get('welcome');
 
   return (
     <div>
@@ -89,6 +92,43 @@ export default function ProjectsPage() {
           New Project
         </button>
       </div>
+
+      {welcomeState && (
+        <div className="mb-6 rounded-[1.5rem] border border-[#1d4ed8]/12 bg-[linear-gradient(180deg,#eff6ff,#fffdf8)] p-5 shadow-[0_16px_40px_rgba(15,23,42,0.04)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-[#1d4ed8]">
+                {welcomeState === 'invited' ? 'Workspace joined' : 'Workspace created'}
+              </p>
+              <h2 className="mt-1 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                {welcomeState === 'invited'
+                  ? 'You are in. Next, open a project and start contributing.'
+                  : 'Your private workspace is ready. Let’s turn it into a working product environment.'}
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-[var(--ink-soft)]">
+                {welcomeState === 'invited'
+                  ? 'Projects, meetings, and AI memory are now scoped to the workspace you joined. Open any project you were invited to, or ask the owner to share one.'
+                  : 'Create a first project, connect a recurring Meet link if you have one, and upload a transcript to generate items and project memory.'}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setShowModal(true)}
+                className="rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+              >
+                Create project
+              </button>
+              <Link
+                href="/workspace"
+                className="rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm font-medium text-[var(--ink-muted)] transition hover:border-black/12 hover:text-[var(--ink-strong)]"
+              >
+                Open workspace
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search */}
       {projects.length > 0 && (
@@ -125,34 +165,87 @@ export default function ProjectsPage() {
         </div>
       ) : projects.length === 0 ? (
         /* Empty State */
-        <div className="rounded-[1.8rem] border border-black/6 bg-white/78 py-20 text-center shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#eff6ff]">
-            <svg
-              className="h-8 w-8 text-[#1d4ed8]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-              />
-            </svg>
+        <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[1.8rem] border border-black/6 bg-white/78 p-8 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#eff6ff]">
+              <svg
+                className="h-8 w-8 text-[#1d4ed8]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 className="font-[family:var(--font-display)] text-3xl tracking-[-0.03em] text-[var(--ink-strong)]">
+              No projects yet
+            </h3>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--ink-soft)]">
+              Projects are the unit of memory in the product. Each project keeps its own meetings,
+              transcripts, extracted items, and AI context so teams do not leak into each other.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={() => setShowModal(true)}
+                className="rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-5 py-2.5 text-sm font-medium text-white transition hover:-translate-y-0.5"
+              >
+                Create first project
+              </button>
+              <Link
+                href="/workspace"
+                className="rounded-xl border border-black/8 bg-white px-5 py-2.5 text-sm font-medium text-[var(--ink-muted)] transition hover:border-black/12 hover:text-[var(--ink-strong)]"
+              >
+                Review workspace
+              </Link>
+            </div>
           </div>
-          <h3 className="mb-1 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
-            No projects yet
-          </h3>
-          <p className="mb-6 text-sm text-[var(--ink-soft)]">
-            Create your first project to start tracking meetings
-          </p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-5 py-2.5 text-sm font-medium text-white transition hover:-translate-y-0.5"
-          >
-            Create Project
-          </button>
+
+          <div className="rounded-[1.8rem] border border-black/6 bg-white/82 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+            <p className="text-xs uppercase tracking-[0.24em] text-[#1d4ed8]">Recommended flow</p>
+            <div className="mt-4 space-y-4">
+              {[
+                {
+                  step: '01',
+                  title: 'Create a project',
+                  detail:
+                    'Use one project per product stream, initiative, or recurring team ritual.',
+                },
+                {
+                  step: '02',
+                  title: 'Connect a meeting source',
+                  detail:
+                    'Add a recurring Google Meet link or upload a transcript to create the first meeting record.',
+                },
+                {
+                  step: '03',
+                  title: 'Review the output',
+                  detail:
+                    'Check extracted items, unresolved questions, and ask AI using the project-scoped memory.',
+                },
+              ].map((item) => (
+                <div
+                  key={item.step}
+                  className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#f8fbff,#fffef8)] p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="font-[family:var(--font-display)] text-xl tracking-[-0.03em] text-[#1d4ed8]">
+                      {item.step}
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-[var(--ink-strong)]">{item.title}</p>
+                      <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">{item.detail}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         /* Project Grid */

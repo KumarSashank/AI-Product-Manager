@@ -65,10 +65,11 @@ export function AuthForm({ mode }: AuthFormProps) {
           displayName,
           inviteDetails ? inviteToken || undefined : undefined
         );
+        router.push(inviteDetails ? '/projects?welcome=invited' : '/projects?welcome=new');
       } else {
         await authApi.signin(email, password);
+        router.push('/projects');
       }
-      router.push('/projects');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
