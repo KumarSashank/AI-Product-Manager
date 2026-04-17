@@ -39,6 +39,17 @@ export async function audioStreamRoutes(fastify: FastifyInstance): Promise<void>
       const ws = connection.socket; // Raw WebSocket from SocketStream
       let sequenceNumber = 0;
 
+      const organizationId = request.user?.organizationId ?? null;
+      const meeting = organizationId ? await meetingRepository.findById(meetingId) : null;
+      const meetingOrganizationId =
+        meeting?.organizationId ?? meeting?.project?.organizationId ?? null;
+
+      if (!organizationId || !meeting || meetingOrganizationId !== organizationId) {
+        ws.send(JSON.stringify({ type: 'error', message: 'Meeting not found' }));
+        ws.close();
+        return;
+      }
+
       logger.info({ meetingId }, 'Audio stream WebSocket connected');
 
       // Check if there's already an active session for this meeting
@@ -56,9 +67,7 @@ export async function audioStreamRoutes(fastify: FastifyInstance): Promise<void>
       let participants: string[] = [];
       try {
         const meetingParticipants = await meetingRepository.getParticipants(meetingId);
-        participants = meetingParticipants
-          .filter((p) => !p.isBot)
-          .map((p) => p.displayName);
+        participants = meetingParticipants.filter((p) => !p.isBot).map((p) => p.displayName);
       } catch (error) {
         logger.debug({ error }, 'Could not fetch participants for speaker mapping');
       }
@@ -150,7 +159,10 @@ export async function audioStreamRoutes(fastify: FastifyInstance): Promise<void>
         // Binary audio data
         const binaryData = Buffer.isBuffer(data) ? data : Buffer.from(data);
         if (sequenceNumber % 50 === 0) {
-            logger.info({ meetingId, seq: sequenceNumber, bytes: binaryData.byteLength }, 'Received PCM chunk from extension');
+          logger.info(
+            { meetingId, seq: sequenceNumber, bytes: binaryData.byteLength },
+            'Received PCM chunk from extension'
+          );
         }
         transcriptionService.feedAudio(binaryData);
       });
@@ -187,6 +199,14 @@ export async function audioStreamRoutes(fastify: FastifyInstance): Promise<void>
    */
   fastify.get('/api/v1/meetings/:id/audio-stream/status', async (request, reply) => {
     const { id: meetingId } = request.params as { id: string };
+    const organizationId = request.user?.organizationId ?? null;
+    const meeting = organizationId ? await meetingRepository.findById(meetingId) : null;
+    const meetingOrganizationId =
+      meeting?.organizationId ?? meeting?.project?.organizationId ?? null;
+    if (!organizationId || !meeting || meetingOrganizationId !== organizationId) {
+      return reply.status(404).send({ error: 'Meeting not found' });
+    }
+
     const session = activeSessions.get(meetingId);
 
     if (!session) {

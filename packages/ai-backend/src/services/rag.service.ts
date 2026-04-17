@@ -3,7 +3,7 @@
  * @description Semantic search and context retrieval using embeddings
  */
 
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { db } from '../db/index.js';
 import {
@@ -11,6 +11,7 @@ import {
   type MeetingEmbedding,
   type NewMeetingEmbedding,
 } from '../db/schema/embeddings.js';
+import { meetings } from '../db/schema/meetings.js';
 
 import { openaiService } from './openai.service.js';
 
@@ -109,23 +110,30 @@ export class RAGService {
       limit?: number | undefined;
       contentTypes?: string[] | undefined;
       meetingId?: string | undefined;
+      projectId?: string | undefined;
+      organizationId?: string | undefined;
     } = {}
   ): Promise<SearchResult[]> {
-    const { limit = 10, contentTypes, meetingId } = options;
+    const { limit = 10, contentTypes, meetingId, projectId, organizationId } = options;
 
     // Generate query embedding
     const queryEmbedding = await openaiService.generateEmbedding(query);
 
-    // Fetch all embeddings (in production, use pgvector's <=> operator)
-    let queryBuilder = db.select().from(meetingEmbeddings);
+    const scopedMeetingIds = await this.getScopedMeetingIds({
+      meetingId,
+      projectId,
+      organizationId,
+    });
 
-    if (meetingId) {
-      queryBuilder = queryBuilder.where(
-        eq(meetingEmbeddings.meetingId, meetingId)
-      ) as typeof queryBuilder;
+    if (scopedMeetingIds.length === 0) {
+      return [];
     }
 
-    const records = await queryBuilder;
+    // Fetch all embeddings (in production, use pgvector's <=> operator)
+    const records = await db
+      .select()
+      .from(meetingEmbeddings)
+      .where(inArray(meetingEmbeddings.meetingId, scopedMeetingIds));
 
     // Calculate cosine similarity in memory (would be done by pgvector in production)
     const results: SearchResult[] = records
@@ -164,11 +172,13 @@ export class RAGService {
       maxTokens?: number | undefined;
       limit?: number | undefined;
       meetingId?: string | undefined;
+      projectId?: string | undefined;
+      organizationId?: string | undefined;
     } = {}
   ): Promise<RAGContext> {
-    const { maxTokens = 8000, limit = 5, meetingId } = options;
+    const { maxTokens = 8000, limit = 5, meetingId, projectId, organizationId } = options;
 
-    const results = await this.search(query, { limit, meetingId });
+    const results = await this.search(query, { limit, meetingId, projectId, organizationId });
 
     // Truncate results to fit within token budget
     let totalTokens = 0;
@@ -195,6 +205,29 @@ export class RAGService {
    */
   async deleteByMeeting(meetingId: string): Promise<void> {
     await db.delete(meetingEmbeddings).where(eq(meetingEmbeddings.meetingId, meetingId));
+  }
+
+  private async getScopedMeetingIds(args: {
+    meetingId?: string | undefined;
+    projectId?: string | undefined;
+    organizationId?: string | undefined;
+  }): Promise<string[]> {
+    const { meetingId, projectId, organizationId } = args;
+
+    if (meetingId) {
+      return [meetingId];
+    }
+
+    if (!organizationId) {
+      return [];
+    }
+
+    const whereClause = projectId
+      ? and(eq(meetings.organizationId, organizationId), eq(meetings.projectId, projectId))
+      : eq(meetings.organizationId, organizationId);
+
+    const rows = await db.select({ id: meetings.id }).from(meetings).where(whereClause);
+    return rows.map((row) => row.id);
   }
 
   /**

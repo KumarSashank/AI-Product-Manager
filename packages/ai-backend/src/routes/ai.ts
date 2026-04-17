@@ -5,7 +5,11 @@
 
 import { FastifyInstance } from 'fastify';
 
-import { requireMeetingAccess } from '../lib/access.js';
+import {
+  requireMeetingAccess,
+  requireOrganizationId,
+  requireProjectAccess,
+} from '../lib/access.js';
 import { actionItemsPipeline } from '../pipelines/actionItems.pipeline.js';
 import { momPipeline } from '../pipelines/mom.pipeline.js';
 import { ragService } from '../services/rag.service.js';
@@ -23,6 +27,7 @@ interface SearchBody {
   limit?: number;
   contentTypes?: string[];
   meetingId?: string;
+  projectId?: string;
 }
 
 // ============================================================================
@@ -121,7 +126,10 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
    * POST /api/v1/search
    */
   fastify.post<{ Body: SearchBody }>('/api/v1/search', async (request, reply) => {
-    const { query, limit = 10, contentTypes, meetingId } = request.body;
+    const organizationId = requireOrganizationId(request, reply);
+    if (!organizationId) return;
+
+    const { query, limit = 10, contentTypes, meetingId, projectId } = request.body;
 
     if (!query || query.trim().length === 0) {
       return reply.status(400).send({
@@ -129,10 +137,22 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
       });
     }
 
+    if (meetingId) {
+      const meeting = await requireMeetingAccess(request, reply, meetingId);
+      if (!meeting) return;
+    }
+
+    if (projectId) {
+      const project = await requireProjectAccess(request, reply, projectId);
+      if (!project) return;
+    }
+
     const results = await ragService.search(query, {
       limit,
       contentTypes,
       meetingId,
+      projectId,
+      organizationId,
     });
 
     return reply.send({
@@ -155,7 +175,10 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Body: SearchBody & { maxTokens?: number } }>(
     '/api/v1/context',
     async (request, reply) => {
-      const { query, maxTokens = 8000, limit = 5, meetingId } = request.body;
+      const organizationId = requireOrganizationId(request, reply);
+      if (!organizationId) return;
+
+      const { query, maxTokens = 8000, limit = 5, meetingId, projectId } = request.body;
 
       if (!query || query.trim().length === 0) {
         return reply.status(400).send({
@@ -163,10 +186,22 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
         });
       }
 
+      if (meetingId) {
+        const meeting = await requireMeetingAccess(request, reply, meetingId);
+        if (!meeting) return;
+      }
+
+      if (projectId) {
+        const project = await requireProjectAccess(request, reply, projectId);
+        if (!project) return;
+      }
+
       const context = await ragService.getContext(query, {
         maxTokens,
         limit,
         meetingId,
+        projectId,
+        organizationId,
       });
 
       return reply.send({
@@ -174,6 +209,7 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
         totalTokens: context.totalTokens,
         resultsCount: context.results.length,
         context: context.results.map((r) => r.content).join('\n\n---\n\n'),
+        sources: Array.from(new Set(context.results.map((result) => result.meetingId))),
       });
     }
   );

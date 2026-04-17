@@ -51,6 +51,12 @@ function inferDurationMinutes(args: {
 
 export async function benchmarkRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post('/api/v1/benchmark/transcript-only-mom', async (request, reply) => {
+    if (request.user?.role !== 'admin') {
+      return reply
+        .status(403)
+        .send({ error: 'Benchmark access is restricted to workspace admins' });
+    }
+
     const parseResult = transcriptOnlyBenchmarkSchema.safeParse(request.body);
 
     if (!parseResult.success) {

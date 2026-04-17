@@ -9,6 +9,8 @@ import path from 'path';
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import pino from 'pino';
 
+import { requireOrganizationId } from '../lib/access.js';
+
 const logger = pino({ name: 'bot-routes' });
 
 // Track active bot sessions
@@ -16,6 +18,8 @@ interface BotSession {
   process: ChildProcess;
   meetingId: string;
   meetLink: string;
+  ownerUserId: string;
+  ownerOrganizationId: string;
   startedAt: Date;
   status: 'starting' | 'joining' | 'in_meeting' | 'stopped' | 'error';
   logs: string[];
@@ -28,6 +32,13 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
    * POST /api/v1/bot/join - Spawn bot runner to join a meeting
    */
   server.post('/api/v1/bot/join', async (request: FastifyRequest, reply: FastifyReply) => {
+    const organizationId = requireOrganizationId(request, reply);
+    if (!organizationId) return;
+
+    if (!request.user?.userId) {
+      return reply.status(401).send({ error: 'Authentication required' });
+    }
+
     const { meetLink, meetingTitle } = request.body as {
       meetLink: string;
       meetingTitle?: string;
@@ -39,7 +50,11 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
 
     // Check if bot is already in this meeting
     for (const [, session] of activeSessions) {
-      if (session.meetLink === meetLink && !['stopped', 'error'].includes(session.status)) {
+      if (
+        session.ownerUserId === request.user.userId &&
+        session.meetLink === meetLink &&
+        !['stopped', 'error'].includes(session.status)
+      ) {
         return reply.status(409).send({
           error: 'Bot is already in this meeting',
           sessionId: session.meetingId,
@@ -77,6 +92,8 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
         process: botProcess,
         meetingId: sessionId,
         meetLink,
+        ownerUserId: request.user.userId,
+        ownerOrganizationId: organizationId,
         startedAt: new Date(),
         status: 'starting',
         logs: [],
@@ -147,6 +164,10 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
         return reply.status(404).send({ error: 'Bot session not found' });
       }
 
+      if (session.ownerUserId !== request.user?.userId) {
+        return reply.status(404).send({ error: 'Bot session not found' });
+      }
+
       return reply.send({
         sessionId,
         status: session.status,
@@ -171,6 +192,10 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
         return reply.status(404).send({ error: 'Bot session not found' });
       }
 
+      if (session.ownerUserId !== request.user?.userId) {
+        return reply.status(404).send({ error: 'Bot session not found' });
+      }
+
       if (['stopped', 'error'].includes(session.status)) {
         return reply.send({ message: 'Bot already stopped', status: session.status });
       }
@@ -189,13 +214,17 @@ export async function botRoutes(server: FastifyInstance): Promise<void> {
   /**
    * GET /api/v1/bot/sessions - List all bot sessions
    */
-  server.get('/api/v1/bot/sessions', async (_request: FastifyRequest, reply: FastifyReply) => {
-    const sessions = Array.from(activeSessions.entries()).map(([id, s]) => ({
-      sessionId: id,
-      status: s.status,
-      meetLink: s.meetLink,
-      startedAt: s.startedAt,
-    }));
+  server.get('/api/v1/bot/sessions', async (request: FastifyRequest, reply: FastifyReply) => {
+    const sessions = Array.from(activeSessions.entries())
+      .map(([id, s]) => ({
+        sessionId: id,
+        status: s.status,
+        meetLink: s.meetLink,
+        startedAt: s.startedAt,
+      }))
+      .filter(
+        (session) => activeSessions.get(session.sessionId)?.ownerUserId === request.user?.userId
+      );
 
     return reply.send({ sessions });
   });

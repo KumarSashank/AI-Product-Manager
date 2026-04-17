@@ -116,13 +116,13 @@ export const ragApi = {
   search: (query: string, projectId?: string) =>
     apiFetch<{ results: SearchResult[] }>('/search', {
       method: 'POST',
-      body: JSON.stringify({ query, meetingId: projectId }),
+      body: JSON.stringify({ query, projectId }),
     }),
 
   getContext: (query: string, projectId?: string) =>
     apiFetch<{ context: string; sources: string[] }>('/context', {
       method: 'POST',
-      body: JSON.stringify({ query, meetingId: projectId, maxTokens: 8000 }),
+      body: JSON.stringify({ query, projectId, maxTokens: 8000 }),
     }),
 };
 

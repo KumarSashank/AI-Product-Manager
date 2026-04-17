@@ -11,6 +11,7 @@ import { FastifyInstance } from 'fastify';
 import pino from 'pino';
 import fs from 'fs';
 
+import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import { getRecordingPath } from '../utils/storage.js';
 
 const logger = pino({ name: 'recording-stream-route' });
@@ -23,6 +24,17 @@ export async function recordingStreamRoutes(fastify: FastifyInstance): Promise<v
       const { id: meetingId } = request.params as { id: string };
       const ws = connection.socket;
       let totalBytes = 0;
+
+      const organizationId = request.user?.organizationId ?? null;
+      const meeting = organizationId ? await meetingRepository.findById(meetingId) : null;
+      const meetingOrganizationId =
+        meeting?.organizationId ?? meeting?.project?.organizationId ?? null;
+
+      if (!organizationId || !meeting || meetingOrganizationId !== organizationId) {
+        ws.send(JSON.stringify({ type: 'error', message: 'Meeting not found' }));
+        ws.close();
+        return;
+      }
 
       logger.info({ meetingId }, 'Recording stream WebSocket connected');
 
