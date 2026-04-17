@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ChatInterface } from '@/components/chat/ChatInterface';
@@ -52,6 +52,7 @@ function roleTone(role: 'owner' | 'editor' | 'viewer') {
 
 export default function ProjectDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const projectId = params.id as string;
 
   const [project, setProject] = useState<Project | null>(null);
@@ -123,6 +124,102 @@ export default function ProjectDetailPage() {
       (member) => member.id !== ownerId && !existingMemberIds.has(member.id)
     );
   }, [canManageCollaborators, collaborators, workspaceMembers]);
+
+  const projectSetup = useMemo(() => {
+    const steps = [
+      {
+        id: 'scope',
+        title: 'Project workspace created',
+        description: 'The project now has its own scoped memory, permissions, and meeting history.',
+        complete: true,
+        cta: null as null | { label: string; action: () => void },
+      },
+      {
+        id: 'source',
+        title: project?.googleMeetLink ? 'Meeting source connected' : 'Connect a meeting source',
+        description: project?.googleMeetLink
+          ? 'A recurring Google Meet link is attached. You can also upload transcripts at any time.'
+          : 'Add a recurring Meet link for ongoing capture, or skip straight to transcript upload.',
+        complete: Boolean(project?.googleMeetLink),
+        cta: canEditProject
+          ? ({
+              label: project?.googleMeetLink ? 'Update link' : 'Add Meet link',
+              action: () => setShowLinkModal(true),
+            } as const)
+          : null,
+      },
+      {
+        id: 'capture',
+        title: meetings.length > 0 ? 'First meeting captured' : 'Capture your first meeting',
+        description:
+          meetings.length > 0
+            ? 'The project has a meeting history now, so AI context can build across time.'
+            : 'Upload a transcript or use a connected capture method to create the first meeting record.',
+        complete: meetings.length > 0,
+        cta: canContributeMeetings
+          ? ({
+              label: 'Upload transcript',
+              action: () => setShowUploadModal(true),
+            } as const)
+          : null,
+      },
+      {
+        id: 'review',
+        title: items.length > 0 ? 'Execution items reviewed' : 'Review extracted output',
+        description:
+          items.length > 0
+            ? 'Action items and blockers are already flowing into the project workspace.'
+            : 'Once a meeting is processed, review MoM output and extracted items in the workspace.',
+        complete: items.length > 0,
+        cta:
+          meetings.length > 0
+            ? ({
+                label: 'Open items',
+                action: () => setActiveTab('items'),
+              } as const)
+            : null,
+      },
+      {
+        id: 'team',
+        title:
+          collaborators.members.length > 0
+            ? 'Team access shared'
+            : canManageCollaborators
+              ? 'Invite collaborators'
+              : 'Collaboration available',
+        description:
+          collaborators.members.length > 0
+            ? 'The project is shared with teammates using project-level permissions.'
+            : canManageCollaborators
+              ? 'Add editors or viewers so the right people can contribute without opening the whole workspace.'
+              : 'Owners can add collaborators when the project is ready for shared execution.',
+        complete: collaborators.members.length > 0,
+        cta: canManageCollaborators
+          ? ({
+              label: 'Manage access',
+              action: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+            } as const)
+          : null,
+      },
+    ];
+
+    const completed = steps.filter((step) => step.complete).length;
+    return {
+      steps,
+      completed,
+      total: steps.length,
+      isActive: searchParams.get('setup') === '1' || completed < steps.length,
+    };
+  }, [
+    canContributeMeetings,
+    canEditProject,
+    canManageCollaborators,
+    collaborators.members.length,
+    items.length,
+    meetings.length,
+    project?.googleMeetLink,
+    searchParams,
+  ]);
 
   async function loadProject() {
     setLoading(true);
@@ -456,6 +553,73 @@ export default function ProjectDetailPage() {
               <p className="mt-0.5 text-xs text-[var(--ink-soft)]">{card.label}</p>
             </div>
           ))}
+        </section>
+      )}
+
+      {projectSetup.isActive && (
+        <section className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#1d4ed8]">Project setup</p>
+              <h2 className="mt-2 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                Make this project operational in a few steps
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-[var(--ink-soft)]">
+                This checklist helps first-time users move from a blank project to a working
+                product-execution workflow with memory, extracted items, and collaborator access.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#f8fbff,#fffef8)] px-4 py-3 text-sm text-[var(--ink-soft)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)]">Progress</p>
+              <p className="mt-1 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                {projectSetup.completed}/{projectSetup.total}
+              </p>
+              <p className="mt-1 text-xs">
+                {projectSetup.completed === projectSetup.total
+                  ? 'This project is fully set up.'
+                  : 'Complete the remaining steps to get the most from the workspace.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {projectSetup.steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`rounded-[1.4rem] border p-4 ${
+                  step.complete
+                    ? 'border-emerald-200 bg-emerald-50/70'
+                    : 'border-black/6 bg-[rgba(248,251,255,0.8)]'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-[family:var(--font-display)] text-xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                    0{index + 1}
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium ${
+                      step.complete
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {step.complete ? 'Done' : 'Next'}
+                  </span>
+                </div>
+                <h3 className="mt-3 text-sm font-medium text-[var(--ink-strong)]">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-soft)]">{step.description}</p>
+                {step.cta && (
+                  <button
+                    onClick={step.cta.action}
+                    className="mt-4 rounded-xl border border-black/8 bg-white px-3.5 py-2 text-xs font-medium text-[var(--ink-muted)] transition hover:border-black/12 hover:text-[var(--ink-strong)]"
+                  >
+                    {step.cta.label}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
       )}
 

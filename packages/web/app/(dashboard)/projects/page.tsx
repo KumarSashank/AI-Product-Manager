@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { projectsApi, Project } from '@/lib/api';
@@ -20,6 +20,7 @@ function permissionBadge(permission?: Project['permission']) {
 }
 
 export default function ProjectsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ export default function ProjectsPage() {
     e.preventDefault();
     setCreating(true);
     try {
-      await projectsApi.create({
+      const response = await projectsApi.create({
         name: newProject.name,
         description: newProject.description || undefined,
         googleMeetLink: newProject.googleMeetLink || undefined,
@@ -55,7 +56,7 @@ export default function ProjectsPage() {
       });
       setShowModal(false);
       setNewProject({ name: '', description: '', googleMeetLink: '' });
-      loadProjects();
+      router.push(`/projects/${response.project.id}?setup=1`);
     } catch (err) {
       console.error('Failed to create project:', err);
     } finally {
