@@ -50,6 +50,181 @@ function roleTone(role: 'owner' | 'editor' | 'viewer') {
   }
 }
 
+type ProjectHealthLevel = 'healthy' | 'needs_attention' | 'at_risk';
+
+interface ProjectHealthSummary {
+  level: ProjectHealthLevel;
+  label: string;
+  description: string;
+  openItems: number;
+  overdueItems: number;
+  dueSoonItems: number;
+  riskItems: number;
+  unassignedItems: number;
+  ownerCoverage: number;
+  dueDateCoverage: number;
+  lastMeetingAt: string | null;
+  topSignals: string[];
+  recentMomentum: Array<{
+    id: string;
+    title: string;
+    dateLabel: string;
+    itemCount: number;
+    transcriptCount: number;
+    hasMom: boolean;
+  }>;
+}
+
+function isClosedStatus(status: MeetingItemStatus): boolean {
+  return ['completed', 'cancelled'].includes(status);
+}
+
+function formatShortDate(value?: string | null): string | null {
+  if (!value) return null;
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return null;
+
+  return new Intl.DateTimeFormat('en', {
+    month: 'short',
+    day: 'numeric',
+  }).format(parsed);
+}
+
+function getMeetingTimestamp(meeting: Meeting): number | null {
+  const candidates = [meeting.startTime, meeting.endTime];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const parsed = new Date(candidate);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.getTime();
+    }
+  }
+
+  return null;
+}
+
+function buildExecutionHealth(
+  items: MeetingItem[],
+  meetings: Meeting[],
+  moms: Record<string, MoM>
+): ProjectHealthSummary {
+  const now = Date.now();
+  const nextWeek = now + 7 * 24 * 60 * 60 * 1000;
+
+  const openItems = items.filter((item) => !isClosedStatus(item.status));
+  const overdueItems = openItems.filter((item) => {
+    if (!item.dueDate) return false;
+    const dueAt = new Date(item.dueDate).getTime();
+    return !Number.isNaN(dueAt) && dueAt < now;
+  });
+  const dueSoonItems = openItems.filter((item) => {
+    if (!item.dueDate) return false;
+    const dueAt = new Date(item.dueDate).getTime();
+    return !Number.isNaN(dueAt) && dueAt >= now && dueAt <= nextWeek;
+  });
+  const riskItems = openItems.filter(
+    (item) =>
+      item.status === 'blocked' ||
+      ['risk', 'blocker', 'dependency', 'question'].includes(item.itemType)
+  );
+  const unassignedItems = openItems.filter((item) => !item.assignee?.trim() && !item.assigneeEmail);
+
+  const ownerCoverage =
+    openItems.length === 0
+      ? 1
+      : openItems.filter((item) => item.assignee?.trim() || item.assigneeEmail).length /
+        openItems.length;
+  const dueDateCoverage =
+    openItems.length === 0 ? 1 : openItems.filter((item) => item.dueDate).length / openItems.length;
+
+  let level: ProjectHealthLevel = 'healthy';
+  if (
+    overdueItems.length >= 2 ||
+    riskItems.length >= 3 ||
+    (openItems.length >= 4 && ownerCoverage < 0.6)
+  ) {
+    level = 'at_risk';
+  } else if (
+    overdueItems.length > 0 ||
+    dueSoonItems.length > 1 ||
+    riskItems.length > 0 ||
+    unassignedItems.length > 0
+  ) {
+    level = 'needs_attention';
+  }
+
+  const levelMeta = {
+    healthy: {
+      label: 'Healthy',
+      description:
+        'This project is moving with clear ownership and no major execution pressure right now.',
+    },
+    needs_attention: {
+      label: 'Needs attention',
+      description:
+        'The project is active, but a few ownership, timing, or risk signals should be addressed soon.',
+    },
+    at_risk: {
+      label: 'At risk',
+      description:
+        'Execution signals suggest this project may slip without follow-up on overdue work, blockers, or missing ownership.',
+    },
+  } as const;
+
+  const topSignals = [
+    overdueItems.length > 0
+      ? `${overdueItems.length} overdue ${overdueItems.length === 1 ? 'item' : 'items'}`
+      : null,
+    dueSoonItems.length > 0
+      ? `${dueSoonItems.length} ${dueSoonItems.length === 1 ? 'deadline' : 'deadlines'} due in 7 days`
+      : null,
+    riskItems.length > 0
+      ? `${riskItems.length} open ${riskItems.length === 1 ? 'risk or blocker' : 'risks or blockers'}`
+      : null,
+    unassignedItems.length > 0
+      ? `${unassignedItems.length} ${unassignedItems.length === 1 ? 'item has' : 'items have'} no owner`
+      : null,
+    meetings.length === 0 ? 'No meeting history yet' : null,
+  ]
+    .filter((value): value is string => Boolean(value))
+    .slice(0, 3);
+
+  const recentMomentum = [...meetings]
+    .sort((left, right) => (getMeetingTimestamp(right) ?? 0) - (getMeetingTimestamp(left) ?? 0))
+    .slice(0, 3)
+    .map((meeting) => ({
+      id: meeting.id,
+      title: meeting.title,
+      dateLabel: formatShortDate(meeting.startTime || meeting.endTime) ?? 'Recent',
+      itemCount: items.filter((item) => item.meetingId === meeting.id).length,
+      transcriptCount: meeting.totalTranscriptEvents ?? 0,
+      hasMom: Boolean(moms[meeting.id]),
+    }));
+
+  const latestMeeting = [...meetings]
+    .map((meeting) => getMeetingTimestamp(meeting))
+    .filter((value): value is number => typeof value === 'number')
+    .sort((left, right) => right - left)[0];
+
+  return {
+    level,
+    label: levelMeta[level].label,
+    description: levelMeta[level].description,
+    openItems: openItems.length,
+    overdueItems: overdueItems.length,
+    dueSoonItems: dueSoonItems.length,
+    riskItems: riskItems.length,
+    unassignedItems: unassignedItems.length,
+    ownerCoverage,
+    dueDateCoverage,
+    lastMeetingAt: latestMeeting ? formatShortDate(new Date(latestMeeting).toISOString()) : null,
+    topSignals,
+    recentMomentum,
+  };
+}
+
 export default function ProjectDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -124,6 +299,11 @@ export default function ProjectDetailPage() {
       (member) => member.id !== ownerId && !existingMemberIds.has(member.id)
     );
   }, [canManageCollaborators, collaborators, workspaceMembers]);
+
+  const executionHealth = useMemo(
+    () => buildExecutionHealth(items, meetings, moms),
+    [items, meetings, moms]
+  );
 
   const projectSetup = useMemo(() => {
     const steps = [
@@ -555,6 +735,194 @@ export default function ProjectDetailPage() {
           ))}
         </section>
       )}
+
+      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#1d4ed8]">Execution health</p>
+              <h2 className="mt-2 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                {executionHealth.label}
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-soft)]">
+                {executionHealth.description}
+              </p>
+            </div>
+
+            <div
+              className={`rounded-2xl border px-4 py-3 text-sm ${
+                executionHealth.level === 'healthy'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                  : executionHealth.level === 'needs_attention'
+                    ? 'border-amber-200 bg-amber-50 text-amber-700'
+                    : 'border-rose-200 bg-rose-50 text-rose-700'
+              }`}
+            >
+              <p className="text-xs uppercase tracking-[0.18em]">Open execution</p>
+              <p className="mt-1 font-[family:var(--font-display)] text-2xl tracking-[-0.03em]">
+                {executionHealth.openItems}
+              </p>
+              <p className="mt-1 text-xs">
+                {executionHealth.lastMeetingAt
+                  ? `Last meeting ${executionHealth.lastMeetingAt}`
+                  : 'No meetings processed yet'}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-[1.4rem] border border-black/6 bg-[linear-gradient(180deg,#f8fbff,#fffef8)] p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)]">
+                Attention signals
+              </p>
+              {executionHealth.topSignals.length > 0 ? (
+                <ul className="mt-3 space-y-3 text-sm text-[var(--ink-soft)]">
+                  {executionHealth.topSignals.map((signal) => (
+                    <li key={signal} className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#1d4ed8]" />
+                      <span>{signal}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-[var(--ink-soft)]">
+                  No active risk signals detected from the current project history.
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-[1.4rem] border border-black/6 bg-white p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)]">
+                Accountability coverage
+              </p>
+              <div className="mt-4 space-y-4">
+                <div>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-[var(--ink-strong)]">Owner coverage</span>
+                    <span className="text-[var(--ink-soft)]">
+                      {Math.round(executionHealth.ownerCoverage * 100)}%
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-100">
+                    <div
+                      className="h-2 rounded-full bg-[linear-gradient(90deg,#1d4ed8,#0891b2)]"
+                      style={{ width: `${Math.round(executionHealth.ownerCoverage * 100)}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-[var(--ink-strong)]">Due-date coverage</span>
+                    <span className="text-[var(--ink-soft)]">
+                      {Math.round(executionHealth.dueDateCoverage * 100)}%
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-100">
+                    <div
+                      className="h-2 rounded-full bg-[linear-gradient(90deg,#0f766e,#22c55e)]"
+                      style={{ width: `${Math.round(executionHealth.dueDateCoverage * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {
+                label: 'Overdue',
+                value: executionHealth.overdueItems,
+                tone: 'text-rose-600',
+                surface: 'border-rose-100 bg-rose-50/70',
+              },
+              {
+                label: 'Due in 7 days',
+                value: executionHealth.dueSoonItems,
+                tone: 'text-amber-600',
+                surface: 'border-amber-100 bg-amber-50/70',
+              },
+              {
+                label: 'Risks / blockers',
+                value: executionHealth.riskItems,
+                tone: 'text-violet-600',
+                surface: 'border-violet-100 bg-violet-50/70',
+              },
+              {
+                label: 'Unassigned',
+                value: executionHealth.unassignedItems,
+                tone: 'text-slate-700',
+                surface: 'border-black/6 bg-white/82',
+              },
+            ].map((card) => (
+              <div
+                key={card.label}
+                className={`rounded-[1.3rem] border p-4 shadow-[0_14px_36px_rgba(15,23,42,0.04)] ${card.surface}`}
+              >
+                <p className={`text-2xl font-bold ${card.tone}`}>{card.value}</p>
+                <p className="mt-0.5 text-xs text-[var(--ink-soft)]">{card.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-[1.6rem] border border-black/6 bg-white/84 p-5 shadow-[0_14px_36px_rgba(15,23,42,0.04)]">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="font-[family:var(--font-display)] text-xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                  Recent momentum
+                </h3>
+                <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                  Recent meetings that are shaping project memory and execution status.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {executionHealth.recentMomentum.length > 0 ? (
+                executionHealth.recentMomentum.map((meeting) => (
+                  <Link
+                    key={meeting.id}
+                    href={`/meetings/${meeting.id}`}
+                    className="flex items-start justify-between gap-3 rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#f8fbff,#fffef8)] p-4 transition hover:border-black/12"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-[var(--ink-strong)]">
+                        {meeting.title}
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--ink-soft)]">{meeting.dateLabel}</p>
+                    </div>
+                    <div className="flex flex-wrap justify-end gap-2 text-[11px] font-medium">
+                      <span className="rounded-full border border-black/8 bg-white px-2.5 py-1 text-[var(--ink-muted)]">
+                        {meeting.itemCount} items
+                      </span>
+                      <span className="rounded-full border border-black/8 bg-white px-2.5 py-1 text-[var(--ink-muted)]">
+                        {meeting.transcriptCount} transcript events
+                      </span>
+                      <span
+                        className={`rounded-full px-2.5 py-1 ${
+                          meeting.hasMom
+                            ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                            : 'border border-amber-200 bg-amber-50 text-amber-700'
+                        }`}
+                      >
+                        {meeting.hasMom ? 'MoM ready' : 'MoM pending'}
+                      </span>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.75)] p-4 text-sm text-[var(--ink-soft)]">
+                  Process the first meeting to start building a visible execution trail for this
+                  project.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {projectSetup.isActive && (
         <section className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
