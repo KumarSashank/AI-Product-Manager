@@ -83,7 +83,7 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
    * Get meeting by ID with participants
    */
   fastify.get<{ Params: { id: string } }>('/api/v1/meetings/:id', async (request, reply) => {
-    const meeting = await requireMeetingAccess(request, reply, request.params.id);
+    const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
     if (!meeting) return;
     return { meeting };
   });
@@ -107,7 +107,12 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.patch<{ Params: { id: string }; Body: UpdateStatusBody }>(
     '/api/v1/meetings/:id/status',
     async (request, reply) => {
-      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      const existingMeeting = await requireMeetingAccess(
+        request,
+        reply,
+        request.params.id,
+        'editor'
+      );
       if (!existingMeeting) return;
 
       const { status } = request.body;
@@ -130,7 +135,12 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string } }>(
     '/api/v1/meetings/:id/complete',
     async (request, reply) => {
-      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      const existingMeeting = await requireMeetingAccess(
+        request,
+        reply,
+        request.params.id,
+        'editor'
+      );
       if (!existingMeeting) return;
 
       const meeting = await meetingRepository.complete(request.params.id);
@@ -148,7 +158,12 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddParticipantBody }>(
     '/api/v1/meetings/:id/participants',
     async (request, reply) => {
-      const existingMeeting = await requireMeetingAccess(request, reply, request.params.id);
+      const existingMeeting = await requireMeetingAccess(
+        request,
+        reply,
+        request.params.id,
+        'editor'
+      );
       if (!existingMeeting) return;
 
       const { displayName, email, isBot } = request.body;
@@ -174,7 +189,7 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.get<{ Params: { id: string } }>(
     '/api/v1/meetings/:id/participants',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const participants = await meetingRepository.getParticipants(request.params.id);
@@ -190,7 +205,7 @@ export async function meetingRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/audio',
     async (request, reply) => {
       const meetingId = request.params.id;
-      const meeting = await requireMeetingAccess(request, reply, meetingId);
+      const meeting = await requireMeetingAccess(request, reply, meetingId, 'editor');
       if (!meeting) return;
 
       const audioBuffer = request.body;

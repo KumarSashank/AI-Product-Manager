@@ -41,7 +41,7 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: CreateMomBody }>(
     '/api/v1/meetings/:id/mom',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const {
@@ -90,7 +90,7 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddHighlightBody }>(
     '/api/v1/meetings/:id/highlights',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const { highlightType, content, importance, keywords } = request.body;
@@ -119,7 +119,7 @@ export async function momRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post<{ Params: { id: string }; Body: AddHighlightsBatchBody }>(
     '/api/v1/meetings/:id/highlights/batch',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const { highlights } = request.body;

@@ -36,7 +36,7 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
   fastify.post<{ Params: { id: string }; Body: TranscriptEventBody }>(
     '/api/v1/meetings/:id/transcripts',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const { speaker, content, sequenceNumber, speakerId, isFinal, confidence, capturedAt } =
@@ -76,7 +76,7 @@ export async function transcriptRoutes(fastify: FastifyInstance): Promise<void> 
   fastify.post<{ Params: { id: string }; Body: BatchTranscriptBody }>(
     '/api/v1/meetings/:id/transcripts/batch',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const { events } = request.body;

@@ -5,6 +5,19 @@ import { useEffect, useState } from 'react';
 
 import { projectsApi, Project } from '@/lib/api';
 
+function permissionBadge(permission?: Project['permission']) {
+  switch (permission) {
+    case 'owner':
+      return 'bg-[#eff6ff] text-[#1d4ed8] border-[#1d4ed8]/15';
+    case 'editor':
+      return 'bg-cyan-50 text-cyan-700 border-cyan-200';
+    case 'viewer':
+      return 'bg-slate-100 text-slate-700 border-slate-200';
+    default:
+      return 'bg-slate-100 text-slate-700 border-slate-200';
+  }
+}
+
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,6 +180,15 @@ export default function ProjectsPage() {
                   </svg>
                 </div>
                 <div className="flex items-center gap-2">
+                  {project.permission && (
+                    <span
+                      className={`rounded-md border px-2 py-0.5 text-[11px] ${permissionBadge(
+                        project.permission
+                      )}`}
+                    >
+                      {project.permission}
+                    </span>
+                  )}
                   {project.isRecurring && (
                     <span className="rounded-md border border-[#1d4ed8]/20 bg-[#eff6ff] px-2 py-0.5 text-[11px] text-[#1d4ed8]">
                       Recurring

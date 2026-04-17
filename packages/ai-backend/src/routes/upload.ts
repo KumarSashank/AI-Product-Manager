@@ -15,7 +15,7 @@ import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import { transcriptRepository } from '../db/repositories/transcript.repository.js';
 import { meetings } from '../db/schema/meetings.js';
 import { projects } from '../db/schema/organizations.js';
-import { requireOrganizationId } from '../lib/access.js';
+import { requireOrganizationId, requireProjectAccess } from '../lib/access.js';
 import { parseTranscript } from '../lib/transcript.js';
 import { momPipeline } from '../pipelines/mom.pipeline.js';
 
@@ -149,6 +149,7 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/projects/:id/upload-transcript',
     async (request, reply) => {
       const { id: projectId } = request.params;
+      if (!(await requireProjectAccess(request, reply, projectId, 'editor'))) return;
       const organizationId = requireOrganizationId(request, reply);
       if (!organizationId) return;
 
@@ -192,6 +193,7 @@ export async function uploadRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/projects/:id/upload-transcripts/bulk',
     async (request, reply) => {
       const { id: projectId } = request.params;
+      if (!(await requireProjectAccess(request, reply, projectId, 'editor'))) return;
       const organizationId = requireOrganizationId(request, reply);
       if (!organizationId) return;
       const parseResult = bulkUploadTranscriptSchema.safeParse(request.body);

@@ -12,6 +12,8 @@ import { meetingItems } from '../db/schema/meetingItems.js';
 import { meetings } from '../db/schema/meetings.js';
 import { moms } from '../db/schema/mom.js';
 import { projects } from '../db/schema/organizations.js';
+import { projectCollaborators } from '../db/schema/projectCollaborators.js';
+import { users } from '../db/schema/users.js';
 import { requireOrganizationId, requireProjectAccess } from '../lib/access.js';
 
 // Validation schemas
@@ -30,6 +32,56 @@ const updateProjectSchema = z.object({
   status: z.enum(['active', 'completed', 'archived']).optional(),
 });
 
+const createCollaboratorSchema = z.object({
+  userId: z.string().uuid('A valid workspace user is required'),
+  role: z.enum(['viewer', 'editor']).default('viewer'),
+});
+
+const updateCollaboratorSchema = z.object({
+  role: z.enum(['viewer', 'editor']),
+});
+
+async function getAcceptedCollaborators(projectId: string) {
+  const collaborators = await db
+    .select()
+    .from(projectCollaborators)
+    .where(
+      and(
+        eq(projectCollaborators.projectId, projectId),
+        eq(projectCollaborators.status, 'accepted')
+      )
+    );
+
+  const collaboratorUserIds = collaborators
+    .map((collaborator) => collaborator.userId)
+    .filter((userId): userId is string => Boolean(userId));
+
+  const workspaceUsers = collaboratorUserIds.length
+    ? await db
+        .select()
+        .from(users)
+        .where(or(...collaboratorUserIds.map((userId) => eq(users.id, userId))))
+    : [];
+
+  const usersById = new Map(workspaceUsers.map((user) => [user.id, user]));
+
+  return collaborators.map((collaborator) => {
+    const user = collaborator.userId ? usersById.get(collaborator.userId) : null;
+
+    return {
+      id: collaborator.id,
+      userId: collaborator.userId,
+      email: collaborator.email,
+      role: collaborator.role,
+      status: collaborator.status,
+      acceptedAt: collaborator.acceptedAt,
+      createdAt: collaborator.createdAt,
+      displayName: user?.displayName ?? collaborator.email,
+      isActive: user?.isActive ?? true,
+    };
+  });
+}
+
 export async function projectRoutes(server: FastifyInstance): Promise<void> {
   /**
    * GET /api/v1/projects - List all projects
@@ -45,9 +97,51 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
         .where(eq(projects.organizationId, organizationId))
         .orderBy(desc(projects.updatedAt));
 
+      const userId = request.user?.userId ?? null;
+      const userEmail = request.user?.email?.toLowerCase() ?? null;
+      let accessibleProjects = allProjects;
+      let collaboratorPermissions = new Map<string, 'viewer' | 'editor'>();
+
+      if (request.user?.role !== 'admin') {
+        const collaboratorConditions = [];
+        if (userId) {
+          collaboratorConditions.push(eq(projectCollaborators.userId, userId));
+        }
+        if (userEmail) {
+          collaboratorConditions.push(eq(projectCollaborators.email, userEmail));
+        }
+
+        const collaboratorRows =
+          collaboratorConditions.length > 0
+            ? await db
+                .select()
+                .from(projectCollaborators)
+                .where(
+                  and(
+                    eq(projectCollaborators.status, 'accepted'),
+                    collaboratorConditions.length === 1
+                      ? collaboratorConditions[0]!
+                      : or(...collaboratorConditions)
+                  )
+                )
+            : [];
+
+        collaboratorPermissions = new Map(
+          collaboratorRows.map((collaborator) => [
+            collaborator.projectId,
+            collaborator.role === 'editor' ? 'editor' : 'viewer',
+          ])
+        );
+
+        accessibleProjects = allProjects.filter(
+          (project) =>
+            (userId && project.createdBy === userId) || collaboratorPermissions.has(project.id)
+        );
+      }
+
       // Get meeting/task counts
       const projectsWithCounts = await Promise.all(
-        allProjects.map(async (project) => {
+        accessibleProjects.map(async (project) => {
           // Build conditions: always check projectId, optionally check googleMeetLink
           const conditions = [eq(meetings.projectId, project.id)];
           if (project.googleMeetLink) {
@@ -74,7 +168,12 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
             taskCount += items.length;
           }
 
-          return { ...project, meetingCount, taskCount };
+          const permission =
+            request.user?.role === 'admin' || (userId && project.createdBy === userId)
+              ? 'owner'
+              : (collaboratorPermissions.get(project.id) ?? 'viewer');
+
+          return { ...project, meetingCount, taskCount, permission };
         })
       );
 
@@ -124,8 +223,9 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
     try {
       const { id } = request.params as { id: string };
 
-      const project = await requireProjectAccess(request, reply, id);
-      if (!project) return;
+      const access = await requireProjectAccess(request, reply, id);
+      if (!access) return;
+      const { project, permission } = access;
 
       const organizationId = requireOrganizationId(request, reply);
       if (!organizationId) return;
@@ -166,8 +266,36 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
         }
       }
 
+      const owner =
+        project.createdBy != null
+          ? ((
+              await db
+                .select({
+                  id: users.id,
+                  email: users.email,
+                  displayName: users.displayName,
+                  role: users.role,
+                })
+                .from(users)
+                .where(eq(users.id, project.createdBy))
+                .limit(1)
+            )[0] ?? null)
+          : null;
+
+      const collaborators = await getAcceptedCollaborators(project.id);
+
       return reply.send({
         project,
+        permissions: {
+          role: permission,
+          canEditProject: permission === 'owner',
+          canManageCollaborators: permission === 'owner',
+          canEditItems: permission === 'owner' || permission === 'editor',
+        },
+        collaborators: {
+          owner,
+          members: collaborators,
+        },
         meetings: projectMeetings,
         items: projectItems,
         moms: projectMoms,
@@ -192,8 +320,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
       const { id } = request.params as { id: string };
       const body = updateProjectSchema.parse(request.body);
 
-      const existing = await requireProjectAccess(request, reply, id);
-      if (!existing) return;
+      const access = await requireProjectAccess(request, reply, id, 'owner');
+      if (!access) return;
 
       const [updated] = await db
         .update(projects)
@@ -219,8 +347,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
       const { id } = request.params as { id: string };
       const { googleMeetLink } = z.object({ googleMeetLink: z.string().url() }).parse(request.body);
 
-      const existing = await requireProjectAccess(request, reply, id);
-      if (!existing) return;
+      const access = await requireProjectAccess(request, reply, id, 'owner');
+      if (!access) return;
 
       const [updated] = await db
         .update(projects)
@@ -245,8 +373,8 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
     try {
       const { id } = request.params as { id: string };
 
-      const existing = await requireProjectAccess(request, reply, id);
-      if (!existing) return;
+      const access = await requireProjectAccess(request, reply, id, 'owner');
+      if (!access) return;
 
       await db.delete(projects).where(eq(projects.id, id));
       return reply.send({ success: true, message: 'Project deleted' });
@@ -255,4 +383,231 @@ export async function projectRoutes(server: FastifyInstance): Promise<void> {
       return reply.status(500).send({ error: 'Failed to delete project' });
     }
   });
+
+  server.get(
+    '/api/v1/projects/:id/collaborators',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { id } = request.params as { id: string };
+        const access = await requireProjectAccess(request, reply, id);
+        if (!access) return;
+
+        const owner =
+          access.project.createdBy != null
+            ? ((
+                await db
+                  .select({
+                    id: users.id,
+                    email: users.email,
+                    displayName: users.displayName,
+                    role: users.role,
+                  })
+                  .from(users)
+                  .where(eq(users.id, access.project.createdBy))
+                  .limit(1)
+              )[0] ?? null)
+            : null;
+
+        return reply.send({
+          collaborators: {
+            owner,
+            members: await getAcceptedCollaborators(id),
+          },
+        });
+      } catch (error) {
+        console.error('List project collaborators error:', error);
+        return reply.status(500).send({ error: 'Failed to list project collaborators' });
+      }
+    }
+  );
+
+  server.post<{ Params: { id: string } }>(
+    '/api/v1/projects/:id/collaborators',
+    async (request, reply) => {
+      try {
+        const { id } = request.params;
+        const access = await requireProjectAccess(request, reply, id, 'owner');
+        if (!access) return;
+
+        const body = createCollaboratorSchema.parse(request.body);
+
+        const [member] = await db.select().from(users).where(eq(users.id, body.userId)).limit(1);
+
+        if (!member || member.organizationId !== access.project.organizationId) {
+          return reply.status(404).send({ error: 'Workspace member not found' });
+        }
+
+        if (access.project.createdBy === member.id) {
+          return reply.status(409).send({ error: 'Project owner already has access' });
+        }
+
+        const [existingCollaborator] = await db
+          .select()
+          .from(projectCollaborators)
+          .where(
+            and(eq(projectCollaborators.projectId, id), eq(projectCollaborators.userId, member.id))
+          )
+          .limit(1);
+
+        let collaborator;
+
+        if (existingCollaborator) {
+          [collaborator] = await db
+            .update(projectCollaborators)
+            .set({
+              email: member.email,
+              role: body.role,
+              status: 'accepted',
+              acceptedAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .where(eq(projectCollaborators.id, existingCollaborator.id))
+            .returning();
+        } else {
+          [collaborator] = await db
+            .insert(projectCollaborators)
+            .values({
+              projectId: id,
+              userId: member.id,
+              email: member.email,
+              role: body.role,
+              status: 'accepted',
+              invitedBy: request.user?.userId ?? null,
+              acceptedAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .returning();
+        }
+
+        if (!collaborator) {
+          return reply.status(500).send({ error: 'Failed to persist project collaborator' });
+        }
+
+        return reply.status(201).send({
+          collaborator: {
+            id: collaborator.id,
+            userId: collaborator.userId,
+            email: collaborator.email,
+            role: collaborator.role,
+            status: collaborator.status,
+            acceptedAt: collaborator.acceptedAt,
+            createdAt: collaborator.createdAt,
+            displayName: member.displayName,
+            isActive: member.isActive,
+          },
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.status(400).send({ error: 'Validation failed', details: error.errors });
+        }
+
+        console.error('Add project collaborator error:', error);
+        return reply.status(500).send({ error: 'Failed to add project collaborator' });
+      }
+    }
+  );
+
+  server.patch<{ Params: { id: string; collaboratorId: string } }>(
+    '/api/v1/projects/:id/collaborators/:collaboratorId',
+    async (request, reply) => {
+      try {
+        const { id, collaboratorId } = request.params;
+        const access = await requireProjectAccess(request, reply, id, 'owner');
+        if (!access) return;
+
+        const body = updateCollaboratorSchema.parse(request.body);
+
+        const [existingCollaborator] = await db
+          .select()
+          .from(projectCollaborators)
+          .where(
+            and(
+              eq(projectCollaborators.id, collaboratorId),
+              eq(projectCollaborators.projectId, id),
+              eq(projectCollaborators.status, 'accepted')
+            )
+          )
+          .limit(1);
+
+        if (!existingCollaborator) {
+          return reply.status(404).send({ error: 'Collaborator not found' });
+        }
+
+        const [updatedCollaborator] = await db
+          .update(projectCollaborators)
+          .set({ role: body.role, updatedAt: new Date() })
+          .where(eq(projectCollaborators.id, collaboratorId))
+          .returning();
+
+        if (!updatedCollaborator) {
+          return reply.status(500).send({ error: 'Failed to update collaborator' });
+        }
+
+        const member =
+          updatedCollaborator.userId != null
+            ? ((
+                await db
+                  .select()
+                  .from(users)
+                  .where(eq(users.id, updatedCollaborator.userId))
+                  .limit(1)
+              )[0] ?? null)
+            : null;
+
+        return reply.send({
+          collaborator: {
+            id: updatedCollaborator.id,
+            userId: updatedCollaborator.userId,
+            email: updatedCollaborator.email,
+            role: updatedCollaborator.role,
+            status: updatedCollaborator.status,
+            acceptedAt: updatedCollaborator.acceptedAt,
+            createdAt: updatedCollaborator.createdAt,
+            displayName: member?.displayName ?? updatedCollaborator.email,
+            isActive: member?.isActive ?? true,
+          },
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.status(400).send({ error: 'Validation failed', details: error.errors });
+        }
+
+        console.error('Update project collaborator error:', error);
+        return reply.status(500).send({ error: 'Failed to update collaborator' });
+      }
+    }
+  );
+
+  server.delete<{ Params: { id: string; collaboratorId: string } }>(
+    '/api/v1/projects/:id/collaborators/:collaboratorId',
+    async (request, reply) => {
+      try {
+        const { id, collaboratorId } = request.params;
+        const access = await requireProjectAccess(request, reply, id, 'owner');
+        if (!access) return;
+
+        const [existingCollaborator] = await db
+          .select()
+          .from(projectCollaborators)
+          .where(
+            and(
+              eq(projectCollaborators.id, collaboratorId),
+              eq(projectCollaborators.projectId, id),
+              eq(projectCollaborators.status, 'accepted')
+            )
+          )
+          .limit(1);
+
+        if (!existingCollaborator) {
+          return reply.status(404).send({ error: 'Collaborator not found' });
+        }
+
+        await db.delete(projectCollaborators).where(eq(projectCollaborators.id, collaboratorId));
+        return reply.send({ success: true });
+      } catch (error) {
+        console.error('Delete project collaborator error:', error);
+        return reply.status(500).send({ error: 'Failed to remove collaborator' });
+      }
+    }
+  );
 }

@@ -43,7 +43,7 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/generate-mom',
     async (request, reply) => {
       const { id } = request.params;
-      const meeting = await requireMeetingAccess(request, reply, id);
+      const meeting = await requireMeetingAccess(request, reply, id, 'editor');
       if (!meeting) return;
 
       // Start async generation
@@ -74,7 +74,7 @@ export async function aiRoutes(fastify: FastifyInstance): Promise<void> {
     '/api/v1/meetings/:id/ai-status',
     async (request, reply) => {
       const { id } = request.params;
-      const meeting = await requireMeetingAccess(request, reply, id);
+      const meeting = await requireMeetingAccess(request, reply, id, 'editor');
       if (!meeting) return;
 
       const progress = momPipeline.getProgress(id);

@@ -114,6 +114,8 @@ export const projectsApi = {
   get: (id: string) =>
     apiFetch<{
       project: Project;
+      permissions: ProjectPermissions;
+      collaborators: ProjectCollaborators;
       meetings: Meeting[];
       items: MeetingItem[];
       moms: Record<string, MoM>;
@@ -140,6 +142,29 @@ export const projectsApi = {
 
   delete: (id: string) =>
     apiFetch<{ success: boolean }>(`/projects/${id}`, {
+      method: 'DELETE',
+    }),
+
+  listCollaborators: (id: string) =>
+    apiFetch<{ collaborators: ProjectCollaborators }>(`/projects/${id}/collaborators`),
+
+  addCollaborator: (id: string, data: ProjectCollaboratorCreateInput) =>
+    apiFetch<{ collaborator: ProjectCollaborator }>(`/projects/${id}/collaborators`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateCollaborator: (id: string, collaboratorId: string, data: ProjectCollaboratorUpdateInput) =>
+    apiFetch<{ collaborator: ProjectCollaborator }>(
+      `/projects/${id}/collaborators/${collaboratorId}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      }
+    ),
+
+  removeCollaborator: (id: string, collaboratorId: string) =>
+    apiFetch<{ success: boolean }>(`/projects/${id}/collaborators/${collaboratorId}`, {
       method: 'DELETE',
     }),
 };
@@ -353,10 +378,53 @@ export interface Project {
   googleMeetLink?: string;
   isRecurring: boolean;
   status: string;
+  permission?: ProjectPermission;
   meetingCount?: number;
   taskCount?: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export type ProjectPermission = 'owner' | 'editor' | 'viewer';
+
+export interface ProjectPermissions {
+  role: ProjectPermission;
+  canEditProject: boolean;
+  canManageCollaborators: boolean;
+  canEditItems: boolean;
+}
+
+export interface ProjectOwner {
+  id: string;
+  email: string;
+  displayName?: string | null;
+  role: string;
+}
+
+export interface ProjectCollaborator {
+  id: string;
+  userId?: string | null;
+  email: string;
+  role: 'viewer' | 'editor';
+  status: string;
+  acceptedAt?: string | null;
+  createdAt: string;
+  displayName?: string | null;
+  isActive?: boolean;
+}
+
+export interface ProjectCollaborators {
+  owner: ProjectOwner | null;
+  members: ProjectCollaborator[];
+}
+
+export interface ProjectCollaboratorCreateInput {
+  userId: string;
+  role: 'viewer' | 'editor';
+}
+
+export interface ProjectCollaboratorUpdateInput {
+  role: 'viewer' | 'editor';
 }
 
 export interface CreateProjectInput {

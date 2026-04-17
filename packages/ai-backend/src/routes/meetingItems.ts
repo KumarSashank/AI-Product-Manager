@@ -63,7 +63,7 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.post<{ Params: { id: string }; Body: CreateItemBody }>(
     '/api/v1/meetings/:id/items',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const {
@@ -106,7 +106,7 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
   fastify.post<{ Params: { id: string }; Body: CreateItemsBatchBody }>(
     '/api/v1/meetings/:id/items/batch',
     async (request, reply) => {
-      const meeting = await requireMeetingAccess(request, reply, request.params.id);
+      const meeting = await requireMeetingAccess(request, reply, request.params.id, 'editor');
       if (!meeting) return;
 
       const { items } = request.body;
@@ -189,7 +189,7 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
         return reply.status(404).send({ error: 'Item not found' });
       }
 
-      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId);
+      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId, 'editor');
       if (!meeting) return;
 
       const { title, description, assignee, assigneeEmail, dueDate, priority } = request.body;
@@ -235,7 +235,7 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
         return reply.status(404).send({ error: 'Item not found' });
       }
 
-      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId);
+      const meeting = await requireMeetingAccess(request, reply, existingItem.meetingId, 'editor');
       if (!meeting) return;
 
       const { status, updatedBy } = request.body;
@@ -264,7 +264,7 @@ export async function meetingItemsRoutes(fastify: FastifyInstance): Promise<void
         return reply.status(404).send({ error: 'Item not found' });
       }
 
-      const meeting = await requireMeetingAccess(request, reply, item.meetingId);
+      const meeting = await requireMeetingAccess(request, reply, item.meetingId, 'editor');
       if (!meeting) return;
 
       const { tag } = request.body;
