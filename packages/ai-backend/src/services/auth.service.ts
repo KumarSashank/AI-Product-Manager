@@ -9,7 +9,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { DEFAULT_DEV_ORG_ID } from '../db/bootstrap.js';
 import { db } from '../db/index.js';
-import { organizations } from '../db/schema/organizations.js';
+import { organizations, workspaceInvitations } from '../db/schema/organizations.js';
 import { users, type User, type NewUser } from '../db/schema/users.js';
 
 /** Strip passwordHash from a user record */
@@ -51,10 +51,43 @@ function slugify(value: string): string {
     .slice(0, 40);
 }
 
+async function resolveInvitationForSignup(inviteToken: string, email: string) {
+  const [invitation] = await db
+    .select()
+    .from(workspaceInvitations)
+    .where(eq(workspaceInvitations.token, inviteToken))
+    .limit(1);
+
+  if (!invitation || invitation.status !== 'pending') {
+    throw new Error('Invitation is no longer valid');
+  }
+
+  if (invitation.expiresAt < new Date()) {
+    throw new Error('Invitation has expired');
+  }
+
+  if (invitation.email.toLowerCase() !== email.trim().toLowerCase()) {
+    throw new Error('Use the email address that was invited to this workspace');
+  }
+
+  return invitation;
+}
+
 async function ensureOrganizationForSignup(
   displayName: string,
-  organizationId?: string
-): Promise<{ organizationId: string; role: string }> {
+  email: string,
+  organizationId?: string,
+  inviteToken?: string
+): Promise<{ organizationId: string; role: string; invitationId?: string }> {
+  if (inviteToken) {
+    const invitation = await resolveInvitationForSignup(inviteToken, email);
+    return {
+      organizationId: invitation.organizationId,
+      role: invitation.role,
+      invitationId: invitation.id,
+    };
+  }
+
   if (organizationId) {
     const [existingOrganization] = await db
       .select()
@@ -147,7 +180,8 @@ export async function createUser(
   email: string,
   password: string,
   displayName: string,
-  organizationId?: string
+  organizationId?: string,
+  inviteToken?: string
 ): Promise<AuthResult> {
   // Check if user already exists
   const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -157,7 +191,12 @@ export async function createUser(
   }
 
   const passwordHash = await hashPassword(password);
-  const organization = await ensureOrganizationForSignup(displayName, organizationId);
+  const organization = await ensureOrganizationForSignup(
+    displayName,
+    email,
+    organizationId,
+    inviteToken
+  );
 
   const newUser: NewUser = {
     email,
@@ -174,6 +213,17 @@ export async function createUser(
   }
 
   const token = generateToken(created);
+
+  if (organization.invitationId) {
+    await db
+      .update(workspaceInvitations)
+      .set({
+        status: 'accepted',
+        acceptedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(workspaceInvitations.id, organization.invitationId));
+  }
 
   return { user: omitPassword(created), token };
 }
@@ -226,4 +276,50 @@ export async function getUserByEmail(email: string): Promise<Omit<User, 'passwor
   if (!user) return null;
 
   return omitPassword(user);
+}
+
+export async function getInvitationByToken(token: string): Promise<{
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  expiresAt: Date;
+  workspace: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+} | null> {
+  const [invitation] = await db
+    .select()
+    .from(workspaceInvitations)
+    .where(eq(workspaceInvitations.token, token))
+    .limit(1);
+
+  if (!invitation) {
+    return null;
+  }
+
+  const [workspace] = await db
+    .select({
+      id: organizations.id,
+      name: organizations.name,
+      slug: organizations.slug,
+    })
+    .from(organizations)
+    .where(eq(organizations.id, invitation.organizationId))
+    .limit(1);
+
+  if (!workspace) {
+    return null;
+  }
+
+  return {
+    id: invitation.id,
+    email: invitation.email,
+    role: invitation.role,
+    status: invitation.status,
+    expiresAt: invitation.expiresAt,
+    workspace,
+  };
 }

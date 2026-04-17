@@ -14,6 +14,7 @@ const signupSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   displayName: z.string().min(1, 'Display name is required'),
   organizationId: z.string().uuid().optional(),
+  inviteToken: z.string().min(1).optional(),
 });
 
 const signinSchema = z.object({
@@ -42,7 +43,8 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
         body.email,
         body.password,
         body.displayName,
-        body.organizationId
+        body.organizationId,
+        body.inviteToken
       );
 
       reply.setCookie('auth_token', token, cookieOptions);
@@ -67,6 +69,35 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       return reply.status(500).send({ error: 'Failed to create account' });
     }
   });
+
+  /**
+   * GET /auth/invite/:token - Resolve a public invite preview
+   */
+  server.get(
+    '/api/v1/auth/invite/:token',
+    async (request: FastifyRequest<{ Params: { token: string } }>, reply: FastifyReply) => {
+      try {
+        const invitation = await authService.getInvitationByToken(request.params.token);
+
+        if (!invitation) {
+          return reply.status(404).send({ error: 'Invitation not found' });
+        }
+
+        if (invitation.status !== 'pending') {
+          return reply.status(410).send({ error: 'Invitation is no longer valid' });
+        }
+
+        if (invitation.expiresAt < new Date()) {
+          return reply.status(410).send({ error: 'Invitation has expired' });
+        }
+
+        return reply.send({ invitation });
+      } catch (error) {
+        console.error('Get invitation error:', error);
+        return reply.status(500).send({ error: 'Failed to load invitation' });
+      }
+    }
+  );
 
   /**
    * POST /auth/signin - Login with email and password

@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 import { db } from '../db/index.js';
 import { meetings } from '../db/schema/meetings.js';
-import { organizations, projects } from '../db/schema/organizations.js';
+import { organizations, projects, workspaceInvitations } from '../db/schema/organizations.js';
 import { users } from '../db/schema/users.js';
 import { requireOrganizationId } from '../lib/access.js';
 
@@ -21,6 +21,11 @@ const updateWorkspaceSchema = z
   .refine((value) => value.name !== undefined || value.logoUrl !== undefined, {
     message: 'At least one field must be provided',
   });
+
+const createInvitationSchema = z.object({
+  email: z.string().email('A valid email address is required'),
+  role: z.enum(['admin', 'member']).default('member'),
+});
 
 function requireAdmin(request: FastifyRequest, reply: FastifyReply): boolean {
   if (request.user?.role !== 'admin') {
@@ -126,6 +131,141 @@ export async function workspaceRoutes(server: FastifyInstance): Promise<void> {
       return reply.status(500).send({ error: 'Failed to list workspace members' });
     }
   });
+
+  server.get(
+    '/api/v1/workspace/invitations',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const organizationId = requireOrganizationId(request, reply);
+        if (!organizationId) return;
+        if (!requireAdmin(request, reply)) return;
+
+        const invitations = await db
+          .select()
+          .from(workspaceInvitations)
+          .where(eq(workspaceInvitations.organizationId, organizationId));
+
+        return reply.send({
+          invitations: invitations
+            .map((invitation) => ({
+              id: invitation.id,
+              email: invitation.email,
+              role: invitation.role,
+              status: invitation.status,
+              token: invitation.token,
+              invitedBy: invitation.invitedBy,
+              expiresAt: invitation.expiresAt,
+              acceptedAt: invitation.acceptedAt,
+              createdAt: invitation.createdAt,
+              updatedAt: invitation.updatedAt,
+            }))
+            .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime()),
+        });
+      } catch (error) {
+        console.error('List workspace invitations error:', error);
+        return reply.status(500).send({ error: 'Failed to list workspace invitations' });
+      }
+    }
+  );
+
+  server.post(
+    '/api/v1/workspace/invitations',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const organizationId = requireOrganizationId(request, reply);
+        if (!organizationId) return;
+        if (!requireAdmin(request, reply)) return;
+
+        const body = createInvitationSchema.parse(request.body);
+        const normalizedEmail = body.email.trim().toLowerCase();
+
+        const [existingMember] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, normalizedEmail))
+          .limit(1);
+
+        if (existingMember?.organizationId === organizationId) {
+          return reply.status(409).send({ error: 'This person is already in the workspace' });
+        }
+
+        if (existingMember && existingMember.organizationId !== organizationId) {
+          return reply.status(409).send({
+            error: 'This email already belongs to another workspace account in the current model',
+          });
+        }
+
+        const existingInvitations = await db
+          .select()
+          .from(workspaceInvitations)
+          .where(eq(workspaceInvitations.organizationId, organizationId));
+
+        const activeInvitation = existingInvitations.find(
+          (invitation) =>
+            invitation.email.toLowerCase() === normalizedEmail &&
+            invitation.status === 'pending' &&
+            invitation.expiresAt > new Date()
+        );
+
+        if (activeInvitation) {
+          return reply
+            .status(409)
+            .send({ error: 'A pending invitation already exists for this email' });
+        }
+
+        const [invitation] = await db
+          .insert(workspaceInvitations)
+          .values({
+            organizationId,
+            email: normalizedEmail,
+            role: body.role,
+            token: crypto.randomUUID(),
+            status: 'pending',
+            invitedBy: request.user?.userId ?? null,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            updatedAt: new Date(),
+          })
+          .returning();
+
+        return reply.status(201).send({ invitation });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.status(400).send({ error: 'Validation failed', details: error.errors });
+        }
+
+        console.error('Create workspace invitation error:', error);
+        return reply.status(500).send({ error: 'Failed to create workspace invitation' });
+      }
+    }
+  );
+
+  server.delete(
+    '/api/v1/workspace/invitations/:id',
+    async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+      try {
+        const organizationId = requireOrganizationId(request, reply);
+        if (!organizationId) return;
+        if (!requireAdmin(request, reply)) return;
+
+        const [invitation] = await db
+          .select()
+          .from(workspaceInvitations)
+          .where(eq(workspaceInvitations.id, request.params.id))
+          .limit(1);
+
+        if (!invitation || invitation.organizationId !== organizationId) {
+          return reply.status(404).send({ error: 'Invitation not found' });
+        }
+
+        await db.delete(workspaceInvitations).where(eq(workspaceInvitations.id, invitation.id));
+
+        return reply.send({ success: true });
+      } catch (error) {
+        console.error('Delete workspace invitation error:', error);
+        return reply.status(500).send({ error: 'Failed to delete workspace invitation' });
+      }
+    }
+  );
 
   server.patch('/api/v1/workspace', async (request: FastifyRequest, reply: FastifyReply) => {
     try {

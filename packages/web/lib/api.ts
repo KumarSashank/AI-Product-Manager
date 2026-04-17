@@ -54,10 +54,10 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
 
 // Auth API
 export const authApi = {
-  signup: (email: string, password: string, displayName: string) =>
+  signup: (email: string, password: string, displayName: string, inviteToken?: string) =>
     apiFetch<{ user: User }>('/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ email, password, displayName }),
+      body: JSON.stringify({ email, password, displayName, inviteToken }),
     }),
 
   signin: (email: string, password: string) =>
@@ -72,6 +72,9 @@ export const authApi = {
     }),
 
   me: () => apiFetch<{ user: User }>('/auth/me'),
+
+  getInvite: (token: string) =>
+    apiFetch<{ invitation: WorkspaceInvitationPreview }>(`/auth/invite/${token}`),
 };
 
 export const workspaceApi = {
@@ -88,6 +91,19 @@ export const workspaceApi = {
     apiFetch<{ workspace: Workspace }>('/workspace', {
       method: 'PATCH',
       body: JSON.stringify(data),
+    }),
+
+  listInvitations: () => apiFetch<{ invitations: WorkspaceInvitation[] }>('/workspace/invitations'),
+
+  createInvitation: (data: WorkspaceInvitationCreateInput) =>
+    apiFetch<{ invitation: WorkspaceInvitation }>('/workspace/invitations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  deleteInvitation: (id: string) =>
+    apiFetch<{ success: boolean }>(`/workspace/invitations/${id}`, {
+      method: 'DELETE',
     }),
 };
 
@@ -297,6 +313,37 @@ export interface WorkspaceMember extends WorkspaceUser {
 export interface WorkspaceUpdateInput {
   name?: string;
   logoUrl?: string | null;
+}
+
+export interface WorkspaceInvitation {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  token: string;
+  invitedBy?: string | null;
+  expiresAt: string;
+  acceptedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkspaceInvitationPreview {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  expiresAt: string;
+  workspace: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+export interface WorkspaceInvitationCreateInput {
+  email: string;
+  role: 'admin' | 'member';
 }
 
 export interface Project {

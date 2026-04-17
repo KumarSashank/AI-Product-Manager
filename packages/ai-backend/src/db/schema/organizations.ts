@@ -42,6 +42,23 @@ export const teamMembers = pgTable('team_members', {
   joinedAt: timestamp('joined_at').defaultNow().notNull(),
 });
 
+// Workspace invitations
+export const workspaceInvitations = pgTable('workspace_invitations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id),
+  email: text('email').notNull(),
+  role: text('role').default('member').notNull(),
+  token: text('token').notNull().unique(),
+  status: text('status').default('pending').notNull(),
+  invitedBy: uuid('invited_by'),
+  expiresAt: timestamp('expires_at').notNull(),
+  acceptedAt: timestamp('accepted_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // Projects
 export const projects = pgTable('projects', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -65,6 +82,7 @@ export const projects = pgTable('projects', {
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   teams: many(teams),
   projects: many(projects),
+  invitations: many(workspaceInvitations),
 }));
 
 export const teamsRelations = relations(teams, ({ one, many }) => ({
@@ -80,6 +98,13 @@ export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
   team: one(teams, {
     fields: [teamMembers.teamId],
     references: [teams.id],
+  }),
+}));
+
+export const workspaceInvitationsRelations = relations(workspaceInvitations, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [workspaceInvitations.organizationId],
+    references: [organizations.id],
   }),
 }));
 

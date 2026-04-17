@@ -26,3 +26,6 @@ export * from './embeddings';
 
 // Users
 export * from './users';
+
+// Legacy project collaborator invites
+export * from './projectCollaborators';

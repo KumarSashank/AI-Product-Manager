@@ -36,6 +36,7 @@ function isPublicRoute(url: string): boolean {
 
   // Health check and auth routes are public
   if (path && PUBLIC_ROUTES.includes(path)) return true;
+  if (path?.startsWith('/api/v1/auth/invite/')) return true;
 
   // Also allow /health without /api/v1 prefix
   if (path === '/health') return true;

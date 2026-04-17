@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { authApi } from '@/lib/api';
 
@@ -12,13 +12,45 @@ interface AuthFormProps {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [inviteDetails, setInviteDetails] = useState<{
+    workspaceName: string;
+    role: string;
+    email: string;
+  } | null>(null);
+  const [inviteLoading, setInviteLoading] = useState(false);
 
   const isSignup = mode === 'signup';
+  const inviteToken = searchParams.get('invite') ?? '';
+
+  useEffect(() => {
+    if (!isSignup || !inviteToken) {
+      setInviteDetails(null);
+      return;
+    }
+
+    setInviteLoading(true);
+    authApi
+      .getInvite(inviteToken)
+      .then((response) => {
+        setInviteDetails({
+          workspaceName: response.invitation.workspace.name,
+          role: response.invitation.role,
+          email: response.invitation.email,
+        });
+        setEmail((current) => current || response.invitation.email);
+      })
+      .catch((err) => {
+        setInviteDetails(null);
+        setError(err instanceof Error ? err.message : 'Failed to load invitation');
+      })
+      .finally(() => setInviteLoading(false));
+  }, [inviteToken, isSignup]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +59,12 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     try {
       if (isSignup) {
-        await authApi.signup(email, password, displayName);
+        await authApi.signup(
+          email,
+          password,
+          displayName,
+          inviteDetails ? inviteToken || undefined : undefined
+        );
       } else {
         await authApi.signin(email, password);
       }
@@ -83,16 +120,35 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <LogoGlyph />
               </div>
               <h1 className="font-[family:var(--font-display)] text-3xl tracking-[-0.04em] text-[var(--ink-strong)]">
-                {isSignup ? 'Create your workspace account' : 'Welcome back'}
+                {isSignup
+                  ? inviteDetails
+                    ? 'Join invited workspace'
+                    : 'Create your workspace account'
+                  : 'Welcome back'}
               </h1>
               <p className="mt-2 text-sm text-[var(--ink-soft)]">
                 {isSignup
-                  ? 'We will create a private workspace for your projects and meeting memory.'
+                  ? inviteDetails
+                    ? `Finish signup to join ${inviteDetails.workspaceName} as a ${inviteDetails.role}.`
+                    : 'We will create a private workspace for your projects and meeting memory.'
                   : 'Sign in to continue.'}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignup && inviteLoading && (
+                <div className="rounded-xl border border-black/8 bg-black/[0.03] px-3.5 py-3 text-sm text-[var(--ink-soft)]">
+                  Loading invitation details...
+                </div>
+              )}
+
+              {isSignup && inviteDetails && (
+                <div className="rounded-xl border border-[#1d4ed8]/15 bg-[#eff6ff] px-3.5 py-3 text-sm text-[#1d4ed8]">
+                  This invitation is for <span className="font-medium">{inviteDetails.email}</span>{' '}
+                  in <span className="font-medium">{inviteDetails.workspaceName}</span>.
+                </div>
+              )}
+
               {isSignup && (
                 <Field label="Full name">
                   <input
@@ -113,6 +169,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   className={inputClassName}
                   placeholder="you@example.com"
+                  disabled={Boolean(inviteDetails)}
                   required
                 />
               </Field>

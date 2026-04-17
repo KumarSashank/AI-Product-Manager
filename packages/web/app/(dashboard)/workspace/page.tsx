@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 
 import {
   Workspace,
+  WorkspaceInvitation,
+  WorkspaceInvitationCreateInput,
   WorkspaceMember,
   WorkspaceStats,
   WorkspaceUpdateInput,
@@ -12,6 +14,7 @@ import {
 } from '@/lib/api';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+type InviteState = 'idle' | 'saving' | 'saved' | 'error';
 
 function formatDate(value?: string | null): string {
   if (!value) return 'Not yet';
@@ -27,11 +30,19 @@ export default function WorkspacePage() {
   const [stats, setStats] = useState<WorkspaceStats | null>(null);
   const [currentUser, setCurrentUser] = useState<WorkspaceUser | null>(null);
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
+  const [invitations, setInvitations] = useState<WorkspaceInvitation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [inviteState, setInviteState] = useState<InviteState>('idle');
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
   const [form, setForm] = useState<WorkspaceUpdateInput>({ name: '', logoUrl: '' });
+  const [inviteForm, setInviteForm] = useState<WorkspaceInvitationCreateInput>({
+    email: '',
+    role: 'member',
+  });
 
   useEffect(() => {
     void loadWorkspace();
@@ -51,6 +62,11 @@ export default function WorkspacePage() {
     };
   }, [members]);
 
+  const pendingInvitations = useMemo(
+    () => invitations.filter((invitation) => invitation.status === 'pending'),
+    [invitations]
+  );
+
   async function loadWorkspace() {
     setLoading(true);
     setError(null);
@@ -61,10 +77,16 @@ export default function WorkspacePage() {
         workspaceApi.listMembers(),
       ]);
 
+      const invitationsResponse =
+        workspaceResponse.currentUser?.role === 'admin'
+          ? await workspaceApi.listInvitations()
+          : { invitations: [] };
+
       setWorkspace(workspaceResponse.workspace);
       setStats(workspaceResponse.stats);
       setCurrentUser(workspaceResponse.currentUser);
       setMembers(membersResponse.members);
+      setInvitations(invitationsResponse.invitations);
       setForm({
         name: workspaceResponse.workspace.name,
         logoUrl: workspaceResponse.workspace.logoUrl ?? '',
@@ -105,6 +127,57 @@ export default function WorkspacePage() {
     }
   }
 
+  async function handleInviteSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!isAdmin) return;
+
+    setInviteState('saving');
+    setInviteError(null);
+
+    try {
+      const response = await workspaceApi.createInvitation({
+        email: inviteForm.email.trim(),
+        role: inviteForm.role,
+      });
+
+      setInvitations((current) =>
+        [response.invitation, ...current].sort(
+          (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
+        )
+      );
+      setInviteForm({ email: '', role: 'member' });
+      setInviteState('saved');
+
+      window.setTimeout(() => {
+        setInviteState((current) => (current === 'saved' ? 'idle' : current));
+      }, 2400);
+    } catch (err) {
+      setInviteState('error');
+      setInviteError(err instanceof Error ? err.message : 'Failed to create invitation');
+    }
+  }
+
+  async function handleDeleteInvite(id: string) {
+    try {
+      await workspaceApi.deleteInvitation(id);
+      setInvitations((current) => current.filter((invitation) => invitation.id !== id));
+      setCopiedInviteId((current) => (current === id ? null : current));
+    } catch (err) {
+      setInviteState('error');
+      setInviteError(err instanceof Error ? err.message : 'Failed to remove invitation');
+    }
+  }
+
+  async function handleCopyInvite(invitation: WorkspaceInvitation) {
+    const inviteUrl = `${window.location.origin}/signup?invite=${invitation.token}`;
+    await navigator.clipboard.writeText(inviteUrl);
+    setCopiedInviteId(invitation.id);
+
+    window.setTimeout(() => {
+      setCopiedInviteId((current) => (current === invitation.id ? null : current));
+    }, 2200);
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -134,9 +207,9 @@ export default function WorkspacePage() {
                 {workspace.name}
               </h1>
               <p className="mt-1 max-w-2xl text-sm text-[var(--ink-soft)]">
-                This workspace owns its own projects, meetings, transcripts, and AI memory. The next
-                SaaS slice will build invitations and collaborator onboarding on top of this
-                foundation.
+                This workspace owns its own projects, meetings, transcripts, and AI memory. It now
+                also supports shareable collaborator invites, which makes the tenancy model visible
+                and usable instead of purely internal.
               </p>
             </div>
           </div>
@@ -177,9 +250,9 @@ export default function WorkspacePage() {
             hint: `${memberSummary.inactiveMembers} inactive`,
           },
           {
-            label: 'Last sign-in',
-            value: formatDate(currentUser.lastLoginAt),
-            hint: currentUser.email,
+            label: 'Pending invites',
+            value: pendingInvitations.length,
+            hint: 'Direct signup links',
           },
         ].map((card) => (
           <div
@@ -205,8 +278,7 @@ export default function WorkspacePage() {
               General settings
             </h2>
             <p className="mt-1 text-sm text-[var(--ink-soft)]">
-              Keep the workspace identity clean and consistent before we add invites and external
-              collaboration.
+              Keep the workspace identity clean and consistent before we add richer collaboration.
             </p>
           </div>
 
@@ -280,8 +352,8 @@ export default function WorkspacePage() {
               Membership snapshot
             </h2>
             <p className="mt-1 text-sm text-[var(--ink-soft)]">
-              The current tenant model is account-specific. Invitations and external collaborator
-              onboarding are the next backlog slice.
+              The current tenant model is account-specific. Collaboration now starts with member
+              visibility and shareable invites.
             </p>
           </div>
 
@@ -332,6 +404,160 @@ export default function WorkspacePage() {
           </div>
         </div>
       </section>
+
+      {isAdmin ? (
+        <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+          <form
+            onSubmit={handleInviteSubmit}
+            className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]"
+          >
+            <div className="mb-5">
+              <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                Invite collaborators
+              </h2>
+              <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                Create a direct signup link for this workspace. Email delivery is still manual, but
+                the invitation model is now real and scoped.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">
+                  Invite email
+                </label>
+                <input
+                  type="email"
+                  value={inviteForm.email}
+                  onChange={(event) =>
+                    setInviteForm((current) => ({ ...current, email: event.target.value }))
+                  }
+                  disabled={inviteState === 'saving'}
+                  className="w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.9)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15 disabled:cursor-not-allowed disabled:opacity-70"
+                  placeholder="collaborator@example.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">
+                  Access role
+                </label>
+                <select
+                  value={inviteForm.role}
+                  onChange={(event) =>
+                    setInviteForm((current) => ({
+                      ...current,
+                      role: event.target.value as WorkspaceInvitationCreateInput['role'],
+                    }))
+                  }
+                  disabled={inviteState === 'saving'}
+                  className="w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.9)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  <option value="member">Member</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#f8fbff,#fffef8)] p-4 text-sm text-[var(--ink-soft)]">
+                <p className="font-medium text-[var(--ink-strong)]">Current behavior</p>
+                <p className="mt-1">
+                  Invites are valid for 7 days and currently support one workspace per account. That
+                  keeps the collaboration model honest while we design broader multi-workspace
+                  support.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <button
+                type="submit"
+                disabled={inviteState === 'saving'}
+                className="rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-4 py-2.5 text-sm font-medium text-white shadow-[0_14px_28px_rgba(13,77,170,0.14)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {inviteState === 'saving' ? 'Creating invite...' : 'Create invite'}
+              </button>
+              {inviteState === 'saved' && (
+                <span className="text-sm text-emerald-600">Invitation created.</span>
+              )}
+              {inviteError && <span className="text-sm text-rose-600">{inviteError}</span>}
+            </div>
+          </form>
+
+          <div className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                  Pending invitations
+                </h2>
+                <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                  Share the signup link directly today. Delivery automation and richer acceptance
+                  flows are the next collaboration milestone.
+                </p>
+              </div>
+              <span className="rounded-full border border-black/8 px-3 py-1 text-xs text-[var(--ink-soft)]">
+                {pendingInvitations.length} pending
+              </span>
+            </div>
+
+            {pendingInvitations.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.7)] px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
+                No invitations yet. Create one to generate a workspace join link.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {pendingInvitations.map((invitation) => (
+                  <div
+                    key={invitation.id}
+                    className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#ffffff,#fbfdff)] p-4"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-[var(--ink-strong)]">
+                          {invitation.email}
+                        </p>
+                        <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                          {invitation.role} access - expires {formatDate(invitation.expiresAt)}
+                        </p>
+                      </div>
+                      <span className="rounded-md border border-[#1d4ed8]/15 bg-[#eff6ff] px-2 py-1 text-[11px] text-[#1d4ed8]">
+                        {invitation.status}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void handleCopyInvite(invitation)}
+                        className="rounded-lg border border-black/8 px-3 py-2 text-sm font-medium text-[var(--ink-strong)] transition hover:bg-black/[0.03]"
+                      >
+                        {copiedInviteId === invitation.id ? 'Copied link' : 'Copy signup link'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void handleDeleteInvite(invitation.id)}
+                        className="rounded-lg border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                      >
+                        Revoke
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ) : (
+        <section className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+          <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+            Collaboration access
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--ink-soft)]">
+            Invitation management is limited to workspace admins. Member visibility is already live,
+            and admin-managed invite links are now part of the workspace model.
+          </p>
+        </section>
+      )}
     </div>
   );
 }
