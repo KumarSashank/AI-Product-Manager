@@ -40,94 +40,164 @@ export function AuthForm({ mode }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0E14]">
-      <div className="w-full max-w-sm px-6">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 mb-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[linear-gradient(180deg,#f8fbff_0%,#fffdf8_42%,#fcfcf8_100%)] px-6 py-12">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(29,78,216,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(8,145,178,0.12),transparent_28%)]" />
+
+      <div className="grid w-full max-w-5xl gap-10 lg:grid-cols-[0.95fr_0.9fr] lg:items-center">
+        <div className="hidden lg:block">
+          <div className="max-w-xl">
+            <p className="text-sm uppercase tracking-[0.28em] text-[#1d4ed8]">
+              Product execution workspace
+            </p>
+            <h1 className="mt-4 font-[family:var(--font-display)] text-5xl leading-[1.04] tracking-[-0.045em] text-[var(--ink-strong)]">
+              Keep project context, accountability, and meeting evidence in one place.
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-[var(--ink-muted)]">
+              Sign in to manage project workspaces, review extracted items, and generate minutes of
+              meeting with longitudinal context.
+            </p>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                'Structured project memory across meetings',
+                'Owner-aware action items and deadline tracking',
+                'Benchmark-backed transcript workflows',
+                'Capture methods with explicit maturity states',
+              ].map((point) => (
+                <div
+                  key={point}
+                  className="rounded-[1.4rem] border border-black/5 bg-white/78 p-4 text-sm leading-6 text-[var(--ink-muted)] shadow-[0_14px_34px_rgba(15,23,42,0.05)]"
+                >
+                  <div className="mb-3 h-2.5 w-2.5 rounded-full bg-[#1d4ed8]" />
+                  {point}
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-white">Meeting AI</h1>
-          <p className="text-gray-500 text-sm mt-1">{isSignup ? 'Create your account' : 'Sign in to continue'}</p>
         </div>
 
-        {/* Form */}
-        <div className="bg-[#161B26] border border-white/[0.08] rounded-xl p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isSignup && (
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+        <div className="w-full">
+          <div className="mx-auto max-w-md rounded-[2rem] border border-black/5 bg-white/88 p-7 shadow-[0_28px_90px_rgba(15,23,42,0.08)] backdrop-blur">
+            <div className="mb-8 text-center">
+              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] text-white shadow-[0_16px_30px_rgba(13,77,170,0.18)]">
+                <LogoGlyph />
+              </div>
+              <h1 className="font-[family:var(--font-display)] text-3xl tracking-[-0.04em] text-[var(--ink-strong)]">
+                {isSignup ? 'Create your workspace account' : 'Welcome back'}
+              </h1>
+              <p className="mt-2 text-sm text-[var(--ink-soft)]">
+                {isSignup ? 'Set up access to the project workspace.' : 'Sign in to continue.'}
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignup && (
+                <Field label="Full name">
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className={inputClassName}
+                    placeholder="John Doe"
+                    required
+                  />
+                </Field>
+              )}
+
+              <Field label="Email">
                 <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
-                  placeholder="John Doe"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={inputClassName}
+                  placeholder="you@example.com"
                   required
                 />
-              </div>
-            )}
+              </Field>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+              <Field label="Password">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={inputClassName}
+                  placeholder={isSignup ? 'At least 8 characters' : 'Enter password'}
+                  minLength={isSignup ? 8 : undefined}
+                  required
+                />
+              </Field>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
-                placeholder={isSignup ? 'At least 8 characters' : 'Enter password'}
-                minLength={isSignup ? 8 : undefined}
-                required
-              />
-            </div>
+              {error && (
+                <div className="rounded-xl border border-red-300 bg-red-50 px-3.5 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
 
-            {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-500 disabled:opacity-50 transition"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Processing...
-                </span>
-              ) : isSignup ? 'Create Account' : 'Sign In'}
-            </button>
-          </form>
-
-          <div className="mt-5 text-center">
-            <p className="text-gray-500 text-sm">
-              {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
-              <Link
-                href={isSignup ? '/signin' : '/signup'}
-                className="text-purple-400 hover:text-purple-300 font-medium transition"
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] py-3 text-sm font-semibold text-white shadow-[0_16px_28px_rgba(13,77,170,0.16)] transition hover:-translate-y-0.5 disabled:opacity-50"
               >
-                {isSignup ? 'Sign in' : 'Sign up'}
-              </Link>
-            </p>
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Processing...
+                  </span>
+                ) : isSignup ? (
+                  'Create account'
+                ) : (
+                  'Sign in'
+                )}
+              </button>
+            </form>
+
+            <div className="mt-5 text-center">
+              <p className="text-sm text-[var(--ink-soft)]">
+                {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+                <Link
+                  href={isSignup ? '/signin' : '/signup'}
+                  className="font-medium text-[#1d4ed8] transition hover:text-[#0f3fae]"
+                >
+                  {isSignup ? 'Sign in' : 'Sign up'}
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function LogoGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path
+        d="M4 6.5C4 5.11929 5.11929 4 6.5 4H11V18H6.5C5.11929 18 4 16.8807 4 15.5V6.5Z"
+        fill="currentColor"
+      />
+      <path
+        d="M11 4H15.5C16.8807 4 18 5.11929 18 6.5V9.5H11V4Z"
+        fill="currentColor"
+        fillOpacity="0.72"
+      />
+      <path
+        d="M11 12.5H18V15.5C18 16.8807 16.8807 18 15.5 18H11V12.5Z"
+        fill="currentColor"
+        fillOpacity="0.44"
+      />
+    </svg>
+  );
+}
+
+const inputClassName =
+  'w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.8)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/20 focus:border-[#1d4ed8]/35 transition';

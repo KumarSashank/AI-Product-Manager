@@ -4,7 +4,8 @@
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api/v1';
-export const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:3002';
+export const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:3002';
 
 /**
  * Generic fetch wrapper with error handling
@@ -166,14 +167,12 @@ export const meetingsApi = {
   list: (organizationId: string) =>
     apiFetch<{ meetings: Meeting[] }>(`/organizations/${organizationId}/meetings`),
 
-  get: (id: string) =>
-    apiFetch<{ meeting: Meeting }>(`/meetings/${id}`),
+  get: (id: string) => apiFetch<{ meeting: Meeting }>(`/meetings/${id}`),
 
   getTranscripts: (id: string) =>
     apiFetch<{ events: TranscriptEvent[] }>(`/meetings/${id}/transcripts`),
 
-  getItems: (id: string) =>
-    apiFetch<{ items: MeetingItem[] }>(`/meetings/${id}/items`),
+  getItems: (id: string) => apiFetch<{ items: MeetingItem[] }>(`/meetings/${id}/items`),
 
   generateMom: (id: string) =>
     apiFetch<MoMGenerationResult>(`/meetings/${id}/generate-mom`, {
@@ -187,8 +186,7 @@ export const meetingsApi = {
       body: JSON.stringify({}),
     }),
 
-  getAiStatus: (id: string) =>
-    apiFetch<AiStatus>(`/meetings/${id}/ai-status`),
+  getAiStatus: (id: string) => apiFetch<AiStatus>(`/meetings/${id}/ai-status`),
 };
 
 export const meetingItemsApi = {
@@ -207,23 +205,10 @@ export const meetingItemsApi = {
 
 // MoM API
 export const momApi = {
-  getByMeeting: (meetingId: string) =>
-    apiFetch<{ mom: MoM }>(`/meetings/${meetingId}/mom`),
+  getByMeeting: (meetingId: string) => apiFetch<{ mom: MoM }>(`/meetings/${meetingId}/mom`),
 
   getHighlights: (meetingId: string) =>
     apiFetch<{ highlights: Highlight[] }>(`/meetings/${meetingId}/highlights`),
-};
-
-// Meetings API
-export const meetingsApi = {
-  list: (orgId: string) =>
-    apiFetch<{ meetings: Meeting[] }>(`/organizations/${orgId}/meetings`),
-    
-  get: (meetingId: string) =>
-    apiFetch<{ meeting: Meeting }>(`/meetings/${meetingId}`),
-    
-  getTranscripts: (meetingId: string) =>
-    apiFetch<{ events: TranscriptEvent[] }>(`/meetings/${meetingId}/transcripts`),
 };
 
 // Types
@@ -283,7 +268,14 @@ export interface TranscriptEvent {
 }
 
 export interface AiStatus {
-  status: 'idle' | 'pending' | 'fetching_transcript' | 'generating' | 'saving' | 'completed' | 'error';
+  status:
+    | 'idle'
+    | 'pending'
+    | 'fetching_transcript'
+    | 'generating'
+    | 'saving'
+    | 'completed'
+    | 'error';
   progress?: number;
   message: string;
 }

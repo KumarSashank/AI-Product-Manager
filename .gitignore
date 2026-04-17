@@ -45,5 +45,8 @@ temp/
 benchmark/reports/*.json
 benchmark/reports/*.md
 
-# Web package (not ready yet)
-packages/web/
+# Worktree leftovers from richer web branches
+packages/web/app/(dashboard)/meetings/
+packages/web/components/items/
+packages/web/components/mom/
+packages/web/components/transcript/

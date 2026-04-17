@@ -1,10 +1,13 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import type { NextConfig } from 'next';
 
+const packageDir = path.dirname(fileURLToPath(import.meta.url));
+
 const nextConfig: NextConfig = {
   turbopack: {
-    root: path.join(__dirname, '../..'),
+    root: path.join(packageDir, '../..'),
   },
 };
 

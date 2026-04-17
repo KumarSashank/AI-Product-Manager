@@ -48,9 +48,10 @@ export default function ProjectsPage() {
     }
   };
 
-  const filtered = projects.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.description?.toLowerCase().includes(search.toLowerCase())
+  const filtered = projects.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.description?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -58,12 +59,16 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Projects</h1>
-          <p className="text-gray-500 text-sm mt-1">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+          <h1 className="font-[family:var(--font-display)] text-3xl tracking-[-0.04em] text-[var(--ink-strong)]">
+            Projects
+          </h1>
+          <p className="mt-1 text-sm text-[var(--ink-soft)]">
+            {projects.length} project{projects.length !== 1 ? 's' : ''}
+          </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition flex items-center gap-2"
+          className="flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-4 py-2.5 text-sm font-medium text-white shadow-[0_14px_28px_rgba(13,77,170,0.14)] transition hover:-translate-y-0.5"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -76,15 +81,25 @@ export default function ProjectsPage() {
       {projects.length > 0 && (
         <div className="mb-6">
           <div className="relative max-w-md">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search projects..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 focus:border-purple-500/50 transition"
+              className="w-full rounded-xl border border-black/10 bg-white pl-10 pr-4 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15"
             />
           </div>
         </div>
@@ -93,21 +108,35 @@ export default function ProjectsPage() {
       {/* Loading */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1d4ed8] border-t-transparent" />
         </div>
       ) : projects.length === 0 ? (
         /* Empty State */
-        <div className="text-center py-20 bg-white/[0.02] border border-white/[0.06] rounded-xl">
-          <div className="w-16 h-16 rounded-full bg-white/[0.04] flex items-center justify-center mx-auto mb-5">
-            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        <div className="rounded-[1.8rem] border border-black/6 bg-white/78 py-20 text-center shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#eff6ff]">
+            <svg
+              className="h-8 w-8 text-[#1d4ed8]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+              />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-1">No projects yet</h3>
-          <p className="text-gray-500 text-sm mb-6">Create your first project to start tracking meetings</p>
+          <h3 className="mb-1 font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+            No projects yet
+          </h3>
+          <p className="mb-6 text-sm text-[var(--ink-soft)]">
+            Create your first project to start tracking meetings
+          </p>
           <button
             onClick={() => setShowModal(true)}
-            className="px-5 py-2.5 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition"
+            className="rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-5 py-2.5 text-sm font-medium text-white transition hover:-translate-y-0.5"
           >
             Create Project
           </button>
@@ -119,48 +148,82 @@ export default function ProjectsPage() {
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.12] rounded-xl p-5 transition-all"
+              className="group rounded-[1.6rem] border border-black/6 bg-white/82 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.05)] transition-all hover:-translate-y-1 hover:border-black/10 hover:shadow-[0_24px_56px_rgba(15,23,42,0.08)]"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eff6ff]">
+                  <svg
+                    className="h-5 w-5 text-[#1d4ed8]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                    />
                   </svg>
                 </div>
                 <div className="flex items-center gap-2">
                   {project.isRecurring && (
-                    <span className="px-2 py-0.5 text-[11px] rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                    <span className="rounded-md border border-[#1d4ed8]/20 bg-[#eff6ff] px-2 py-0.5 text-[11px] text-[#1d4ed8]">
                       Recurring
                     </span>
                   )}
-                  <span className={`px-2 py-0.5 text-[11px] rounded-md border ${
-                    project.status === 'active'
-                      ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                      : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
-                  }`}>
+                  <span
+                    className={`px-2 py-0.5 text-[11px] rounded-md border ${
+                      project.status === 'active'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-slate-100 text-slate-600 border-slate-200'
+                    }`}
+                  >
                     {project.status}
                   </span>
                 </div>
               </div>
 
-              <h3 className="text-[15px] font-semibold text-white mb-1 group-hover:text-purple-300 transition">
+              <h3 className="mb-1 text-[15px] font-semibold text-[var(--ink-strong)] transition group-hover:text-[#1d4ed8]">
                 {project.name}
               </h3>
 
               {project.description && (
-                <p className="text-gray-500 text-sm mb-3 line-clamp-2">{project.description}</p>
+                <p className="mb-3 line-clamp-2 text-sm text-[var(--ink-soft)]">
+                  {project.description}
+                </p>
               )}
 
-              <div className="flex items-center gap-4 pt-3 border-t border-white/[0.04] text-xs text-gray-500">
+              <div className="flex items-center gap-4 border-t border-black/6 pt-3 text-xs text-[var(--ink-soft)]">
                 <span className="flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
                   </svg>
                   {project.meetingCount || 0} meetings
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
                   </svg>
                   {project.taskCount || 0} items
                 </span>
@@ -169,7 +232,7 @@ export default function ProjectsPage() {
             </Link>
           ))}
           {filtered.length === 0 && search && (
-            <div className="col-span-full text-center py-12 text-gray-500 text-sm">
+            <div className="col-span-full py-12 text-center text-sm text-[var(--ink-soft)]">
               No projects match &ldquo;{search}&rdquo;
             </div>
           )}
@@ -178,18 +241,22 @@ export default function ProjectsPage() {
 
       {/* Create Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-[#161B26] border border-white/[0.08] rounded-xl p-6 max-w-md w-full shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-5">Create New Project</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(16,32,50,0.26)] px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[1.8rem] border border-black/6 bg-white p-6 shadow-[0_28px_90px_rgba(15,23,42,0.16)]">
+            <h2 className="mb-5 font-[family:var(--font-display)] text-3xl tracking-[-0.03em] text-[var(--ink-strong)]">
+              Create New Project
+            </h2>
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Project Name</label>
+                <label className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">
+                  Project Name
+                </label>
                 <input
                   type="text"
                   value={newProject.name}
                   onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
+                  className="w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.9)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15"
                   placeholder="Sprint Planning, Daily Standup..."
                   required
                   autoFocus
@@ -197,30 +264,30 @@ export default function ProjectsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Description <span className="text-gray-600">(optional)</span>
+                <label className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">
+                  Description <span className="text-[var(--ink-soft)]">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={newProject.description}
                   onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
+                  className="w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.9)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15"
                   placeholder="Weekly team sync for sprint progress"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Google Meet Link <span className="text-gray-600">(optional)</span>
+                <label className="mb-1.5 block text-sm font-medium text-[var(--ink-strong)]">
+                  Google Meet Link <span className="text-[var(--ink-soft)]">(optional)</span>
                 </label>
                 <input
                   type="url"
                   value={newProject.googleMeetLink}
                   onChange={(e) => setNewProject({ ...newProject, googleMeetLink: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition"
+                  className="w-full rounded-xl border border-black/10 bg-[rgba(248,251,255,0.9)] px-3.5 py-2.5 text-sm text-[var(--ink-strong)] placeholder:text-[var(--ink-soft)] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/15"
                   placeholder="https://meet.google.com/abc-defg-hij"
                 />
-                <p className="text-xs text-gray-600 mt-1.5">
+                <p className="mt-1.5 text-xs text-[var(--ink-soft)]">
                   For recurring meetings, paste the same link to group sessions together.
                 </p>
               </div>
@@ -229,14 +296,14 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-2.5 rounded-lg bg-white/[0.06] text-gray-300 text-sm font-medium hover:bg-white/[0.1] transition"
+                  className="flex-1 rounded-xl border border-black/8 bg-slate-100 py-2.5 text-sm font-medium text-[var(--ink-muted)] transition hover:bg-slate-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="flex-1 py-2.5 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-500 disabled:opacity-50 transition"
+                  className="flex-1 rounded-xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-50"
                 >
                   {creating ? 'Creating...' : 'Create Project'}
                 </button>

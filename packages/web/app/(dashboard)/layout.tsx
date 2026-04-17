@@ -11,8 +11,13 @@ const navItems = [
     label: 'Projects',
     href: '/projects',
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.6}
+          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+        />
       </svg>
     ),
   },
@@ -40,105 +45,130 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+      <div className="flex min-h-screen items-center justify-center bg-[var(--surface-base)]">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1d4ed8] border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] flex">
-      {/* ── Sidebar ── */}
-      <aside className={`fixed top-0 left-0 h-full z-40 flex flex-col border-r border-white/[0.06] bg-[#0F1219] transition-all duration-200 ${sidebarCollapsed ? 'w-[68px]' : 'w-[240px]'}`}>
-        {/* Logo */}
-        <div className="h-16 flex items-center gap-3 px-4 border-b border-white/[0.06]">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
+    <div className="flex min-h-screen bg-[linear-gradient(180deg,#f8fbff_0%,#fffdf8_38%,#fcfcf8_100%)]">
+      <aside
+        className={`fixed left-0 top-0 z-40 flex h-full flex-col border-r border-black/6 bg-white/88 backdrop-blur-xl transition-all duration-200 ${
+          sidebarCollapsed ? 'w-[72px]' : 'w-[248px]'
+        }`}
+      >
+        <div className="flex h-16 items-center gap-3 border-b border-black/6 px-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] text-white shadow-[0_14px_28px_rgba(13,77,170,0.18)]">
+            <LogoGlyph />
           </div>
-          {!sidebarCollapsed && <span className="text-lg font-semibold text-white tracking-tight">Meeting AI</span>}
+          {!sidebarCollapsed && (
+            <div>
+              <p className="font-[family:var(--font-display)] text-lg tracking-[-0.03em] text-[var(--ink-strong)]">
+                AI Product Manager
+              </p>
+              <p className="text-xs text-[var(--ink-soft)]">Execution workspace</p>
+            </div>
+          )}
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 py-4 px-3 space-y-1">
+        <nav className="flex-1 space-y-1 px-3 py-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-white/[0.08] text-white'
-                    : 'text-gray-400 hover:bg-white/[0.04] hover:text-gray-200'
+                    ? 'bg-[linear-gradient(135deg,rgba(29,78,216,0.12),rgba(8,145,178,0.1))] text-[var(--ink-strong)]'
+                    : 'text-[var(--ink-muted)] hover:bg-black/[0.03] hover:text-[var(--ink-strong)]'
                 }`}
               >
-                <span className={isActive ? 'text-purple-400' : ''}>{item.icon}</span>
+                <span className={isActive ? 'text-[#1d4ed8]' : 'text-[var(--ink-soft)]'}>
+                  {item.icon}
+                </span>
                 {!sidebarCollapsed && <span>{item.label}</span>}
               </Link>
             );
           })}
         </nav>
 
-        {/* Collapse toggle */}
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="mx-3 mb-2 p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/[0.04] transition"
+          className="mx-3 mb-2 rounded-xl p-2 text-[var(--ink-soft)] transition hover:bg-black/[0.03] hover:text-[var(--ink-strong)]"
         >
-          <svg className={`w-4 h-4 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+          <svg
+            className={`h-4 w-4 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+            />
           </svg>
         </button>
 
-        {/* User */}
-        <div className="border-t border-white/[0.06] p-3">
+        <div className="border-t border-black/6 p-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] text-xs font-bold text-white">
               {user?.displayName?.charAt(0)?.toUpperCase() || '?'}
             </div>
+
             {!sidebarCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-white font-medium truncate">{user?.displayName}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-              </div>
-            )}
-            {!sidebarCollapsed && (
-              <button
-                onClick={handleLogout}
-                className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-white/[0.06] transition"
-                title="Sign out"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
+              <>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-[var(--ink-strong)]">
+                    {user?.displayName}
+                  </p>
+                  <p className="truncate text-xs text-[var(--ink-soft)]">{user?.email}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-md p-1.5 text-[var(--ink-soft)] transition hover:bg-black/[0.04] hover:text-[var(--ink-strong)]"
+                  title="Sign out"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </button>
+              </>
             )}
           </div>
         </div>
       </aside>
 
-      {/* ── Main Content ── */}
-      <div className={`flex-1 transition-all duration-200 ${sidebarCollapsed ? 'ml-[68px]' : 'ml-[240px]'}`}>
-        {/* Top Bar */}
-        <header className="h-16 border-b border-white/[0.06] bg-[#0B0E14]/80 backdrop-blur-md sticky top-0 z-30 flex items-center px-8">
+      <div
+        className={`flex-1 transition-all duration-200 ${
+          sidebarCollapsed ? 'ml-[72px]' : 'ml-[248px]'
+        }`}
+      >
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-black/6 bg-[rgba(252,252,248,0.84)] px-8 backdrop-blur-xl">
           <Breadcrumbs pathname={pathname} />
         </header>
 
-        {/* Page Content */}
-        <main className="px-8 py-6 max-w-[1400px]">{children}</main>
+        <main className="max-w-[1400px] px-8 py-6">{children}</main>
       </div>
     </div>
   );
 }
 
-/* ── Breadcrumbs ── */
 function Breadcrumbs({ pathname }: { pathname: string }) {
   const segments = pathname.split('/').filter(Boolean);
 
   const crumbs: { label: string; href?: string }[] = [];
 
-  for (let i = 0; i < segments.length; i++) {
+  for (let i = 0; i < segments.length; i += 1) {
     const seg = segments[i];
     const href = '/' + segments.slice(0, i + 1).join('/');
 
@@ -147,33 +177,63 @@ function Breadcrumbs({ pathname }: { pathname: string }) {
     } else if (seg === 'meetings' && i === 0) {
       crumbs.push({ label: 'Meetings', href });
     } else if (i > 0 && segments[i - 1] === 'projects') {
-      // Project ID — show as "Project"
-      crumbs.push({ label: 'Project Detail', href });
+      crumbs.push({ label: 'Project detail', href });
     } else if (i > 0 && segments[i - 1] === 'meetings') {
-      crumbs.push({ label: 'Meeting Detail' });
+      crumbs.push({ label: 'Meeting detail' });
     }
   }
 
-  if (crumbs.length === 0) return null;
+  if (crumbs.length === 0) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      {crumbs.map((crumb, i) => (
-        <div key={i} className="flex items-center gap-2">
-          {i > 0 && (
-            <svg className="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {crumbs.map((crumb, index) => (
+        <div key={`${crumb.label}-${index}`} className="flex items-center gap-2">
+          {index > 0 && (
+            <svg
+              className="h-3.5 w-3.5 text-[var(--ink-soft)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           )}
-          {crumb.href && i < crumbs.length - 1 ? (
-            <Link href={crumb.href} className="text-gray-400 hover:text-white transition">
+          {crumb.href && index < crumbs.length - 1 ? (
+            <Link
+              href={crumb.href}
+              className="text-[var(--ink-muted)] transition hover:text-[var(--ink-strong)]"
+            >
               {crumb.label}
             </Link>
           ) : (
-            <span className="text-gray-300 font-medium">{crumb.label}</span>
+            <span className="font-medium text-[var(--ink-strong)]">{crumb.label}</span>
           )}
         </div>
       ))}
     </div>
+  );
+}
+
+function LogoGlyph() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path
+        d="M4 6.5C4 5.11929 5.11929 4 6.5 4H11V18H6.5C5.11929 18 4 16.8807 4 15.5V6.5Z"
+        fill="currentColor"
+      />
+      <path
+        d="M11 4H15.5C16.8807 4 18 5.11929 18 6.5V9.5H11V4Z"
+        fill="currentColor"
+        fillOpacity="0.72"
+      />
+      <path
+        d="M11 12.5H18V15.5C18 16.8807 16.8807 18 15.5 18H11V12.5Z"
+        fill="currentColor"
+        fillOpacity="0.44"
+      />
+    </svg>
   );
 }
