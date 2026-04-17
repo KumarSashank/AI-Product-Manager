@@ -140,6 +140,21 @@ export async function workspaceRoutes(server: FastifyInstance): Promise<void> {
         if (!organizationId) return;
         if (!requireAdmin(request, reply)) return;
 
+        const workspaceMembers = await db
+          .select()
+          .from(users)
+          .where(eq(users.organizationId, organizationId));
+
+        const memberLookup = new Map(
+          workspaceMembers.map((member) => [
+            member.id,
+            {
+              displayName: member.displayName,
+              email: member.email,
+            },
+          ])
+        );
+
         const invitations = await db
           .select()
           .from(workspaceInvitations)
@@ -154,6 +169,12 @@ export async function workspaceRoutes(server: FastifyInstance): Promise<void> {
               status: invitation.status,
               token: invitation.token,
               invitedBy: invitation.invitedBy,
+              invitedByName: invitation.invitedBy
+                ? (memberLookup.get(invitation.invitedBy)?.displayName ?? null)
+                : null,
+              invitedByEmail: invitation.invitedBy
+                ? (memberLookup.get(invitation.invitedBy)?.email ?? null)
+                : null,
               expiresAt: invitation.expiresAt,
               acceptedAt: invitation.acceptedAt,
               createdAt: invitation.createdAt,

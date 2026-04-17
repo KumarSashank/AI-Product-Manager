@@ -347,6 +347,8 @@ export interface WorkspaceInvitation {
   status: string;
   token: string;
   invitedBy?: string | null;
+  invitedByName?: string | null;
+  invitedByEmail?: string | null;
   expiresAt: string;
   acceptedAt?: string | null;
   createdAt: string;

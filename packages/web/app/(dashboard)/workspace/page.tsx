@@ -25,6 +25,30 @@ function formatDate(value?: string | null): string {
   });
 }
 
+function getInvitationStatus(invitation: WorkspaceInvitation): 'pending' | 'accepted' | 'expired' {
+  if (invitation.status === 'accepted' || invitation.acceptedAt) {
+    return 'accepted';
+  }
+
+  if (new Date(invitation.expiresAt).getTime() < Date.now()) {
+    return 'expired';
+  }
+
+  return 'pending';
+}
+
+function invitationStatusTone(status: 'pending' | 'accepted' | 'expired'): string {
+  switch (status) {
+    case 'accepted':
+      return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+    case 'expired':
+      return 'border-slate-200 bg-slate-100 text-slate-600';
+    case 'pending':
+    default:
+      return 'border-[#1d4ed8]/15 bg-[#eff6ff] text-[#1d4ed8]';
+  }
+}
+
 export default function WorkspacePage() {
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [stats, setStats] = useState<WorkspaceStats | null>(null);
@@ -63,7 +87,22 @@ export default function WorkspacePage() {
   }, [members]);
 
   const pendingInvitations = useMemo(
-    () => invitations.filter((invitation) => invitation.status === 'pending'),
+    () => invitations.filter((invitation) => getInvitationStatus(invitation) === 'pending'),
+    [invitations]
+  );
+
+  const historicalInvitations = useMemo(
+    () => invitations.filter((invitation) => getInvitationStatus(invitation) !== 'pending'),
+    [invitations]
+  );
+
+  const invitationSummary = useMemo(
+    () => ({
+      accepted: invitations.filter((invitation) => getInvitationStatus(invitation) === 'accepted')
+        .length,
+      expired: invitations.filter((invitation) => getInvitationStatus(invitation) === 'expired')
+        .length,
+    }),
     [invitations]
   );
 
@@ -252,7 +291,10 @@ export default function WorkspacePage() {
           {
             label: 'Pending invites',
             value: pendingInvitations.length,
-            hint: 'Direct signup links',
+            hint:
+              invitationSummary.accepted > 0
+                ? `${invitationSummary.accepted} accepted`
+                : 'Direct signup links',
           },
         ].map((card) => (
           <div
@@ -484,67 +526,147 @@ export default function WorkspacePage() {
             </div>
           </form>
 
-          <div className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
-            <div className="mb-5 flex items-center justify-between gap-4">
-              <div>
-                <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
-                  Pending invitations
-                </h2>
-                <p className="mt-1 text-sm text-[var(--ink-soft)]">
-                  Share the signup link directly today. Delivery automation and richer acceptance
-                  flows are the next collaboration milestone.
-                </p>
+          <div className="space-y-6">
+            <div className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                    Pending invitations
+                  </h2>
+                  <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                    Share the signup link directly today. Delivery automation and richer acceptance
+                    flows are the next collaboration milestone.
+                  </p>
+                </div>
+                <span className="rounded-full border border-black/8 px-3 py-1 text-xs text-[var(--ink-soft)]">
+                  {pendingInvitations.length} pending
+                </span>
               </div>
-              <span className="rounded-full border border-black/8 px-3 py-1 text-xs text-[var(--ink-soft)]">
-                {pendingInvitations.length} pending
-              </span>
+
+              {pendingInvitations.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.7)] px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
+                  No invitations yet. Create one to generate a workspace join link.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {pendingInvitations.map((invitation) => {
+                    const effectiveStatus = getInvitationStatus(invitation);
+
+                    return (
+                      <div
+                        key={invitation.id}
+                        className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#ffffff,#fbfdff)] p-4"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-[var(--ink-strong)]">
+                              {invitation.email}
+                            </p>
+                            <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                              {invitation.role} access • created {formatDate(invitation.createdAt)}
+                            </p>
+                            <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                              Invited by{' '}
+                              {invitation.invitedByName ||
+                                invitation.invitedByEmail ||
+                                'workspace admin'}{' '}
+                              • expires {formatDate(invitation.expiresAt)}
+                            </p>
+                          </div>
+                          <span
+                            className={`rounded-md border px-2 py-1 text-[11px] ${invitationStatusTone(effectiveStatus)}`}
+                          >
+                            {effectiveStatus}
+                          </span>
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => void handleCopyInvite(invitation)}
+                            className="rounded-lg border border-black/8 px-3 py-2 text-sm font-medium text-[var(--ink-strong)] transition hover:bg-black/[0.03]"
+                          >
+                            {copiedInviteId === invitation.id ? 'Copied link' : 'Copy signup link'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleDeleteInvite(invitation.id)}
+                            className="rounded-lg border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                          >
+                            Revoke
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            {pendingInvitations.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.7)] px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
-                No invitations yet. Create one to generate a workspace join link.
+            <div className="rounded-[1.8rem] border border-black/6 bg-white/84 p-6 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="font-[family:var(--font-display)] text-2xl tracking-[-0.03em] text-[var(--ink-strong)]">
+                    Invitation history
+                  </h2>
+                  <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                    Keep a lightweight audit trail of accepted and expired workspace invites.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 text-[11px] font-medium">
+                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                    {invitationSummary.accepted} accepted
+                  </span>
+                  <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-slate-600">
+                    {invitationSummary.expired} expired
+                  </span>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {pendingInvitations.map((invitation) => (
-                  <div
-                    key={invitation.id}
-                    className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#ffffff,#fbfdff)] p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-[var(--ink-strong)]">
-                          {invitation.email}
-                        </p>
-                        <p className="mt-1 text-xs text-[var(--ink-soft)]">
-                          {invitation.role} access - expires {formatDate(invitation.expiresAt)}
-                        </p>
-                      </div>
-                      <span className="rounded-md border border-[#1d4ed8]/15 bg-[#eff6ff] px-2 py-1 text-[11px] text-[#1d4ed8]">
-                        {invitation.status}
-                      </span>
-                    </div>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => void handleCopyInvite(invitation)}
-                        className="rounded-lg border border-black/8 px-3 py-2 text-sm font-medium text-[var(--ink-strong)] transition hover:bg-black/[0.03]"
+              {historicalInvitations.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-black/10 bg-[rgba(248,251,255,0.7)] px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
+                  Invitation history will appear here once links are accepted or expire.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {historicalInvitations.map((invitation) => {
+                    const effectiveStatus = getInvitationStatus(invitation);
+
+                    return (
+                      <div
+                        key={invitation.id}
+                        className="rounded-2xl border border-black/6 bg-[linear-gradient(180deg,#ffffff,#fbfdff)] p-4"
                       >
-                        {copiedInviteId === invitation.id ? 'Copied link' : 'Copy signup link'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void handleDeleteInvite(invitation.id)}
-                        className="rounded-lg border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
-                      >
-                        Revoke
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                        <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-[var(--ink-strong)]">
+                              {invitation.email}
+                            </p>
+                            <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                              Invited by{' '}
+                              {invitation.invitedByName ||
+                                invitation.invitedByEmail ||
+                                'workspace admin'}{' '}
+                              on {formatDate(invitation.createdAt)}
+                            </p>
+                            <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                              {effectiveStatus === 'accepted'
+                                ? `Accepted ${formatDate(invitation.acceptedAt)}`
+                                : `Expired ${formatDate(invitation.expiresAt)}`}
+                            </p>
+                          </div>
+                          <span
+                            className={`rounded-md border px-2 py-1 text-[11px] ${invitationStatusTone(effectiveStatus)}`}
+                          >
+                            {effectiveStatus}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </section>
       ) : (
