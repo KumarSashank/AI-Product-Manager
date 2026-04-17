@@ -493,6 +493,12 @@ export interface MeetingItem {
   status: MeetingItemStatus;
   priority?: string;
   dueDate?: string;
+  aiConfidence?: number | null;
+  sourceTranscriptRange?: {
+    startSeq: number;
+    endSeq: number;
+  } | null;
+  metadata?: Record<string, unknown> | null;
   createdAt: string;
   updatedAt?: string;
 }
