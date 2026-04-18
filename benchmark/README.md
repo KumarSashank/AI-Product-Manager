@@ -23,7 +23,7 @@ For a given scenario, the runner:
 4. fetches generated MoM and extracted items after every meeting
 5. runs expectation checks for each meeting
 6. evaluates final project-state expectations where applicable
-7. writes a JSON comparison report under `benchmark/reports/`
+7. writes both JSON and Markdown summary reports under `benchmark/reports/`
 
 ## Directory Layout
 
@@ -135,6 +135,11 @@ The generated report includes:
 - aggregate pass/fail totals
 
 See [report schema](./schema/longitudinal-report.schema.json).
+
+For every run, the harness now writes:
+
+- a machine-readable `.json` report
+- a reviewer-friendly `.md` summary with rankings, per-meeting scores, and failing checks
 
 ## Expected Result On This Branch
 

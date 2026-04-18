@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -597,6 +599,157 @@ function buildComparison(systemReports: BenchmarkSystemReport[]): BenchmarkCompa
   };
 }
 
+function formatPercent(value: number): string {
+  return `${Math.round(value * 100)}%`;
+}
+
+function collectFailingChecks(systemReport: BenchmarkSystemReport): Array<{
+  scope: string;
+  category: string;
+  target: string;
+  details?: string;
+}> {
+  const meetingFailures = systemReport.meetings.flatMap((meeting) =>
+    meeting.expectationResults
+      .filter((result) => !result.passed)
+      .map((result) => ({
+        scope: `Meeting ${meeting.sequenceNumber}: ${meeting.title}`,
+        category: result.category,
+        target: result.target,
+        details: result.details,
+      }))
+  );
+
+  const finalFailures = systemReport.finalProjectChecks
+    .filter((result) => !result.passed)
+    .map((result) => ({
+      scope: 'Final project state',
+      category: result.category,
+      target: result.target,
+      details: result.details,
+    }));
+
+  return [...meetingFailures, ...finalFailures];
+}
+
+function renderMarkdownReport(report: BenchmarkReport): string {
+  const lines: string[] = [];
+
+  lines.push(`# Benchmark Summary`);
+  lines.push('');
+  lines.push(`## Scenario`);
+  lines.push('');
+  lines.push(`- Scenario: ${report.scenario.displayName}`);
+  lines.push(`- Scenario ID: ${report.scenario.scenarioId}`);
+  lines.push(`- Started: ${report.run.startedAt}`);
+  lines.push(`- Finished: ${report.run.finishedAt}`);
+  lines.push(`- API base URL: ${report.run.apiBaseUrl}`);
+  lines.push(`- Systems run: ${report.summary.systemsRun}`);
+  lines.push(`- Total meetings processed: ${report.summary.totalMeetingsProcessed}`);
+  lines.push(
+    `- Aggregate checks: ${report.summary.checksPassed} passed / ${report.summary.checksFailed} failed`
+  );
+  if (report.summary.bestSystemId) {
+    lines.push(`- Best system: ${report.summary.bestSystemId}`);
+  }
+  lines.push('');
+
+  lines.push(`## System Summary`);
+  lines.push('');
+  lines.push(`| System | Mode | Passed | Failed | Pass Rate |`);
+  lines.push(`| --- | --- | ---: | ---: | ---: |`);
+  for (const systemReport of report.systems) {
+    const totalChecks = systemReport.summary.checksPassed + systemReport.summary.checksFailed;
+    lines.push(
+      `| ${systemReport.systemLabel} | ${systemReport.systemMode} | ${systemReport.summary.checksPassed} | ${systemReport.summary.checksFailed} | ${totalChecks > 0 ? formatPercent(systemReport.summary.checksPassed / totalChecks) : '0%'} |`
+    );
+  }
+  lines.push('');
+
+  if (report.comparison) {
+    lines.push(`## Comparison`);
+    lines.push('');
+    lines.push(`### Ranking`);
+    lines.push('');
+    lines.push(`| Rank | System | Passed | Failed | Pass Rate |`);
+    lines.push(`| --- | --- | ---: | ---: | ---: |`);
+    report.comparison.ranking.forEach((entry, index) => {
+      lines.push(
+        `| ${index + 1} | ${entry.systemLabel} | ${entry.checksPassed} | ${entry.checksFailed} | ${formatPercent(entry.passRate)} |`
+      );
+    });
+    lines.push('');
+
+    lines.push(`### Per-meeting scores`);
+    lines.push('');
+    lines.push(
+      `| Meeting | ${report.comparison.ranking.map((entry) => entry.systemLabel).join(' | ')} |`
+    );
+    lines.push(`| --- | ${report.comparison.ranking.map(() => '---').join(' | ')} |`);
+    for (const meeting of report.comparison.perMeeting) {
+      const scoreCells = report.comparison.ranking.map((entry) => {
+        const score = meeting.scores.find((candidate) => candidate.systemId === entry.systemId);
+        return score ? `${score.checksPassed} / ${score.checksFailed}` : `0 / 0`;
+      });
+      lines.push(`| ${meeting.sequenceNumber}. ${meeting.slug} | ${scoreCells.join(' | ')} |`);
+    }
+    lines.push('');
+  }
+
+  for (const systemReport of report.systems) {
+    lines.push(`## ${systemReport.systemLabel}`);
+    lines.push('');
+    lines.push(`- Strategy: ${systemReport.runContext.strategySummary}`);
+    if (systemReport.runContext.projectName) {
+      lines.push(`- Project name: ${systemReport.runContext.projectName}`);
+    }
+    lines.push(`- Meetings processed: ${systemReport.summary.meetingsProcessed}`);
+    lines.push(`- Checks passed: ${systemReport.summary.checksPassed}`);
+    lines.push(`- Checks failed: ${systemReport.summary.checksFailed}`);
+    lines.push('');
+
+    lines.push(`### Meeting breakdown`);
+    lines.push('');
+    lines.push(`| Meeting | Transcript Events | Items | Passed | Failed |`);
+    lines.push(`| --- | ---: | ---: | ---: | ---: |`);
+    for (const meeting of systemReport.meetings) {
+      const passed = meeting.expectationResults.filter((result) => result.passed).length;
+      const failed = meeting.expectationResults.filter((result) => !result.passed).length;
+      lines.push(
+        `| ${meeting.sequenceNumber}. ${meeting.title} | ${meeting.transcriptEventCount ?? 0} | ${meeting.itemSnapshot.length} | ${passed} | ${failed} |`
+      );
+    }
+    lines.push('');
+
+    const failingChecks = collectFailingChecks(systemReport);
+    if (failingChecks.length > 0) {
+      lines.push(`### Failing checks`);
+      lines.push('');
+      for (const failure of failingChecks) {
+        lines.push(`- ${failure.scope} | ${failure.category} | ${failure.target}`);
+        if (failure.details) {
+          lines.push(`  - ${failure.details}`);
+        }
+      }
+      lines.push('');
+    } else {
+      lines.push(`### Failing checks`);
+      lines.push('');
+      lines.push(`- None`);
+      lines.push('');
+    }
+  }
+
+  lines.push(`## Interpretation`);
+  lines.push('');
+  lines.push(
+    `This benchmark is intended to show whether project memory and accountability-aware reasoning outperform transcript-only analysis on recurring meeting sequences.`
+  );
+  lines.push('');
+
+  return `${lines.join('\n').trim()}\n`;
+}
+
 async function evaluateCurrentSystem(args: {
   apiBaseUrl: string;
   scenario: BenchmarkScenario;
@@ -900,6 +1053,7 @@ async function main(): Promise<void> {
 
   const reportFileName = `${startedAt.toISOString().replace(/[:.]/g, '-')}-${scenario.scenarioId}.json`;
   const reportPath = path.join(reportDir, reportFileName);
+  const markdownPath = reportPath.replace(/\.json$/u, '.md');
   const comparison = buildComparison(systemReports);
   const allSystemSummaries = systemReports.map((systemReport) => systemReport.summary);
   const checksPassed = allSystemSummaries.reduce((sum, value) => sum + value.checksPassed, 0);
@@ -937,6 +1091,7 @@ async function main(): Promise<void> {
   };
 
   await writeFile(reportPath, JSON.stringify(report, null, 2), 'utf8');
+  await writeFile(markdownPath, renderMarkdownReport(report), 'utf8');
 
   console.log(
     JSON.stringify(
@@ -951,6 +1106,7 @@ async function main(): Promise<void> {
         })),
         bestSystemId,
         reportPath,
+        markdownPath,
       },
       null,
       2
