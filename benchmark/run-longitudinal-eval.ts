@@ -616,7 +616,7 @@ function collectFailingChecks(systemReport: BenchmarkSystemReport): Array<{
         scope: `Meeting ${meeting.sequenceNumber}: ${meeting.title}`,
         category: result.category,
         target: result.target,
-        details: result.details,
+        ...(result.details ? { details: result.details } : {}),
       }))
   );
 
@@ -626,7 +626,7 @@ function collectFailingChecks(systemReport: BenchmarkSystemReport): Array<{
       scope: 'Final project state',
       category: result.category,
       target: result.target,
-      details: result.details,
+      ...(result.details ? { details: result.details } : {}),
     }));
 
   return [...meetingFailures, ...finalFailures];
