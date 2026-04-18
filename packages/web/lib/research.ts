@@ -16,6 +16,49 @@ export const benchmarkSuiteOverview = {
   ],
 };
 
+export const benchmarkScenarioCatalog = [
+  {
+    scenarioId: 'onboarding_growth_initiative_v1',
+    displayName: 'Onboarding Growth Initiative',
+    meetingCount: 5,
+    focus:
+      'Carry-forward accountability, launch readiness, unresolved questions, and whether a project-memory system can reconcile shifting execution state over time.',
+    transcriptFolderHref: `${REPO_URL}/tree/main/benchmark/scenarios/onboarding_growth_initiative/transcripts`,
+  },
+  {
+    scenarioId: 'release_recovery_cycle_v1',
+    displayName: 'Release Recovery Cycle',
+    meetingCount: 4,
+    focus:
+      'Incident recovery memory, rollback decision closure, launch gating, vendor escalation tracking, and transition from firefighting into release readiness.',
+    transcriptFolderHref: `${REPO_URL}/tree/main/benchmark/scenarios/release_recovery_cycle/transcripts`,
+  },
+];
+
+export const benchmarkAblations = [
+  {
+    id: 'current_system',
+    label: 'Stateful execution memory',
+    status: 'live',
+    description:
+      'Uses project memory, carry-forward reconciliation, evidence metadata, and accountability-aware extraction across recurring meetings.',
+  },
+  {
+    id: 'transcript_only',
+    label: 'Transcript-only baseline',
+    status: 'live',
+    description:
+      'Reasoning is limited to the current meeting transcript and meeting-local metadata, with no prior project state or carry-forward context.',
+  },
+  {
+    id: 'next_ablation',
+    label: 'Next ablations to add',
+    status: 'planned',
+    description:
+      'Planned follow-ups include memory-without-evidence, extraction-only without reconciliation, and lifecycle-transition scoring against gold labels.',
+  },
+];
+
 export const researchLayers = [
   {
     title: 'Extraction quality',
@@ -71,5 +114,11 @@ export const researchArtifacts = [
     href: `${REPO_URL}/blob/main/benchmark/README.md`,
     description:
       'How to run the multi-scenario suite and compare the stateful system against the transcript-only baseline.',
+  },
+  {
+    label: 'Suite runner',
+    href: `${REPO_URL}/blob/main/benchmark/run-benchmark-suite.ts`,
+    description:
+      'The orchestration script that executes every registered scenario and writes aggregate JSON plus Markdown research artifacts.',
   },
 ];
