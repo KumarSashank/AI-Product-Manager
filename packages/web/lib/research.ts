@@ -3,8 +3,8 @@ export const REPO_URL = 'https://github.com/KumarSashank/AI-Product-Manager';
 export const benchmarkHeadline = {
   scenario: 'Onboarding Growth Initiative - 5 Week Accountability Regression',
   meetings: 5,
-  currentSystem: { passed: 38, failed: 0 },
-  transcriptOnly: { passed: 32, failed: 6 },
+  currentSystem: { passed: 37, failed: 1 },
+  transcriptOnly: { passed: 34, failed: 4 },
 };
 
 export const benchmarkSuiteOverview = {
@@ -114,6 +114,12 @@ export const researchArtifacts = [
     href: `${REPO_URL}/blob/main/benchmark/README.md`,
     description:
       'How to run the multi-scenario suite and compare the stateful system against the transcript-only baseline.',
+  },
+  {
+    label: 'Latest suite reports',
+    href: `${REPO_URL}/tree/main/benchmark/reports/suites`,
+    description:
+      'Committed JSON and Markdown outputs from the latest benchmark suite run, including aggregate totals and per-scenario breakdowns.',
   },
   {
     label: 'Suite runner',

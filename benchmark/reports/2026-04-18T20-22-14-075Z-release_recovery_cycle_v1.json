@@ -1,0 +1,2201 @@
+{
+  "scenario": {
+    "scenarioId": "release_recovery_cycle_v1",
+    "displayName": "Release Recovery Cycle - 4 Week Reliability Regression",
+    "schemaVersion": "1.0.0",
+    "sourcePath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/scenarios/release_recovery_cycle/scenario.json"
+  },
+  "run": {
+    "startedAt": "2026-04-18T20:22:14.075Z",
+    "finishedAt": "2026-04-18T20:24:09.480Z",
+    "apiBaseUrl": "http://127.0.0.1:3102/api/v1",
+    "requestedSystems": [
+      "current_system",
+      "transcript_only"
+    ],
+    "reportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-22-14-075Z-release_recovery_cycle_v1.json",
+    "health": {
+      "status": "healthy",
+      "version": "0.0.1",
+      "timestamp": "2026-04-18T20:22:14.086Z",
+      "services": [
+        "database",
+        "meetings",
+        "transcripts",
+        "mom",
+        "items"
+      ]
+    }
+  },
+  "summary": {
+    "systemsRun": 2,
+    "totalMeetingsProcessed": 8,
+    "checksPassed": 51,
+    "checksFailed": 17,
+    "bestSystemId": "current_system"
+  },
+  "systems": [
+    {
+      "systemId": "current_system",
+      "systemLabel": "Current Stateful Accountability System",
+      "systemMode": "stateful_api",
+      "runContext": {
+        "strategySummary": "Uses the product-memory pipeline through the backend API: transcript storage, structured extraction, reconciliation against prior project state, and final MoM generation.",
+        "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+        "projectName": "Release Recovery Cycle Benchmark 1776543734309"
+      },
+      "summary": {
+        "meetingsProcessed": 4,
+        "checksPassed": 28,
+        "checksFailed": 6
+      },
+      "meetings": [
+        {
+          "sequenceNumber": 1,
+          "slug": "week1_incident_kickoff",
+          "title": "Release Recovery Cycle - Week 1 Incident Kickoff",
+          "requestStatus": 201,
+          "transcriptEventCount": 12,
+          "momGeneration": {
+            "success": true,
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "highlightsCreated": 6,
+            "itemsCreated": 7,
+            "processingTimeMs": 16317
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Conduct launch-freeze review",
+              "status": "pending",
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Decision on rollback vs. feature flag",
+              "status": "pending",
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Create a recovery dashboard",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Create a support macro and known-issues note",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Escalate issue to payment vendor",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Develop feature-flag containment plan and rollback checklist",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "High risk due to launch freeze",
+              "status": "pending",
+              "assignee": null,
+              "priority": "critical"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "rollback",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "support macro",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "payment vendor",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "incident",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch freeze",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "latency",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+          "executiveSummary": "The meeting focused on addressing the checkout latency spike following the payment SDK update, leading to a launch freeze for the May 20 release. Key decisions include developing a recovery dashboard, escalating the issue to the payment vendor, and determining the rollback strategy, all critical to resuming the release schedule.",
+          "detailedSummary": "## Objective Context\nThe meeting served as a kickoff for the Release Recovery Cycle, addressing a critical incident caused by a payment SDK update that led to increased checkout latency and a subsequent launch freeze.\n\n## Decisions Made\n- Develop a recovery dashboard by May 14 to monitor key metrics.\n- Escalate the issue to the payment vendor by end of day.\n- Create a support macro and known-issues note immediately.\n- Prepare a feature-flag containment plan and rollback checklist by May 13.\n\n## Product Implications\nThe incident impacts user experience due to increased checkout latency and potential conversion drops, necessitating immediate corrective actions to stabilize the product environment.\n\n## Delivery Risks Blockers\n- High risk due to ongoing launch freeze until visibility on dashboard metrics, vendor response, and feature-flag containment is achieved.\n\n## Open Questions\n- Should we fully roll back the checkout SDK or stabilize behind a feature flag?\n- Can the fallback flow maintain conversion rates?\n- Is the payment vendor acknowledging responsibility for the regression?\n\n## Next Steps\n- Complete the recovery dashboard by May 14.\n- Finalize the feature-flag containment plan and rollback checklist by May 13.\n- Conduct a launch-freeze review on May 15."
+        },
+        {
+          "sequenceNumber": 2,
+          "slug": "week2_stabilization_review",
+          "title": "Release Recovery Cycle - Week 2 Stabilization Review",
+          "requestStatus": 201,
+          "transcriptEventCount": 13,
+          "momGeneration": {
+            "success": true,
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "highlightsCreated": 6,
+            "itemsCreated": 8,
+            "processingTimeMs": 16429
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "No full rollback for now",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Own the fallback runbook",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "decision",
+              "title": "Launch gate remains until vendor clarity and error budget improvement",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Define and track launch-gate threshold",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Dashboard is live and support macro completed",
+              "status": "pending",
+              "assignee": "Neha, Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "risk",
+              "title": "Error budget burn still above target",
+              "status": "pending",
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "blocker",
+              "title": "QA needs formal runbook for fallback path",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Vendor escalation acknowledged",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "feature flag",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "runbook",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "vendor escalation",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "stabilization",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "error budget",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch gate",
+              "passed": false,
+              "details": "Phrase missing from meeting summary."
+            }
+          ],
+          "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+          "executiveSummary": "The stabilization review confirmed that the launch freeze will remain in place until vendor clarity and error budget improvements are achieved. Key decisions include maintaining the current fallback flow and defining explicit thresholds for reopening the launch.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to assess the stabilization of the release recovery cycle and make critical decisions regarding the launch freeze and rollback strategies.\n\n## Product Implications\nThe decision to maintain the fallback flow and the launch freeze impacts the release timeline and requires close monitoring of error budget metrics."
+        },
+        {
+          "sequenceNumber": 3,
+          "slug": "week3_gate_review",
+          "title": "Release Recovery Cycle - Week 3 Gate Review",
+          "requestStatus": 201,
+          "transcriptEventCount": 14,
+          "momGeneration": {
+            "success": true,
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "highlightsCreated": 5,
+            "itemsCreated": 5,
+            "processingTimeMs": 16124
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "No full rollback required",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "critical"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete launch checklist",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Tune alert rules",
+              "status": "pending",
+              "assignee": "Arjun",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft incident postmortem",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "decision",
+              "title": "Add postmortem, alert tuning, and launch checklist as first-class items",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch checklist",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "fallback flow",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "postmortem",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "alert tuning",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "vendor",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "May 20",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "decision",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+          "executiveSummary": "The gate review confirmed the decision to proceed with the patched SDK and fallback flow, contingent on the completion of a launch checklist and achieving one more clean day before May 20. Key actions include finalizing the launch checklist, tuning alert rules, and drafting an incident postmortem to ensure operational learnings are captured. Readiness remains conditional because Open action item remains active: Own the fallback runbook due 2026-05-16; Open decision remains active: Launch gate remains until vendor clarity and error budget improvement.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to assess the readiness of the release following vendor updates and recovery data, focusing on whether the release can proceed as scheduled.\n\n## Product Implications\nThe decision to use the patched SDK and fallback flow impacts the release timeline and requires completion of the launch checklist and alert tuning to ensure stability.\n\n## Delivery Risks Blockers\n- Alert noise causing false positives needs tuning to prevent on-call fatigue.\n- Launch checklist completion and one more clean day are prerequisites for proceeding with the release.\n\n## Open Questions\n- Will the alert tuning be sufficient to reduce noise to acceptable levels?\n\n## Next Steps\n- Complete the launch checklist by May 19.\n- Tune alert rules by May 21.\n- Draft the incident postmortem by May 22."
+        },
+        {
+          "sequenceNumber": 4,
+          "slug": "week4_recovery_readiness",
+          "title": "Release Recovery Cycle - Week 4 Recovery Readiness",
+          "requestStatus": 201,
+          "transcriptEventCount": 12,
+          "momGeneration": {
+            "success": true,
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "highlightsCreated": 6,
+            "itemsCreated": 6,
+            "processingTimeMs": 13772
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Complete launch checklist",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft incident postmortem",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Close vendor escalation",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Tune alert rules",
+              "status": "pending",
+              "assignee": "Arjun",
+              "priority": "medium"
+            },
+            {
+              "itemType": "decision",
+              "title": "Proceed with the patched SDK and documented fallback flow",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "critical"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Release is ready",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch checklist",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "alert tuning",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "postmortem",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "support macro",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "should we fully roll back the checkout sdk",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "full rollback question",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "ready",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "fallback",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "vendor",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+          "executiveSummary": "The final recovery-readiness review confirmed the release is ready, with the launch checklist complete and vendor escalation closed. The only remaining follow-up item is alert tuning, which will not block the release. Readiness remains conditional because Open action item remains active: Escalate issue to payment vendor due 2026-05-12; Open action item remains active: Create a recovery dashboard due 2026-05-14.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to finalize the recovery-readiness status for the upcoming release, ensuring all critical items were addressed.\n\n## Product Implications\nThe release can proceed with the patched SDK and fallback flow, ensuring continuity and stability in the product's performance."
+        }
+      ],
+      "finalProjectChecks": [
+        {
+          "category": "project_item_status",
+          "target": "launch checklist => completed",
+          "passed": true,
+          "details": "Found status completed for \"Add postmortem, alert tuning, and launch checklist as first-class items\"."
+        },
+        {
+          "category": "project_item_status",
+          "target": "alert tuning => pending",
+          "passed": false,
+          "details": "Matching items found, but statuses were: Add postmortem, alert tuning, and launch checklist as first-class items=completed."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "full rollback question",
+          "passed": true,
+          "details": "No open matching item found."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "should we fully roll back the checkout sdk",
+          "passed": true,
+          "details": "No open matching item found."
+        }
+      ],
+      "finalProjectSnapshot": {
+        "project": {
+          "id": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+          "organizationId": "b806cd9b-e790-4686-9bc1-c962c8a1ce57",
+          "teamId": null,
+          "createdBy": "18891e15-6abc-459c-a9a7-974024db73b1",
+          "name": "Release Recovery Cycle Benchmark 1776543734309",
+          "description": "Recurring product and engineering reviews focused on incident recovery, launch gating, accountability, and cross-meeting decision continuity.",
+          "googleMeetLink": "uploaded://transcript-adee7dd4-c090-4ea8-b7d3-e0e9cb9ce425",
+          "isRecurring": true,
+          "status": "active",
+          "startDate": null,
+          "endDate": null,
+          "createdAt": "2026-04-18T20:22:14.311Z",
+          "updatedAt": "2026-04-18T20:22:14.319Z"
+        },
+        "meetings": [
+          {
+            "id": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "organizationId": "b806cd9b-e790-4686-9bc1-c962c8a1ce57",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-adee7dd4-c090-4ea8-b7d3-e0e9cb9ce425",
+            "title": "Release Recovery Cycle - Week 4 Recovery Readiness",
+            "description": "Act like a senior AI product manager. Track incident follow-up, rollback decisions, launch gates, unresolved questions, deadlines, owner accountability, and what remains risky from week to week.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-05-22T13:00:00.000Z",
+            "endTime": "2026-04-18T20:23:03.390Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 12,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:23:03.388Z",
+            "updatedAt": "2026-04-18T20:23:03.388Z"
+          },
+          {
+            "id": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "organizationId": "b806cd9b-e790-4686-9bc1-c962c8a1ce57",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-adee7dd4-c090-4ea8-b7d3-e0e9cb9ce425",
+            "title": "Release Recovery Cycle - Week 3 Gate Review",
+            "description": "Act like a senior AI product manager. Track incident follow-up, rollback decisions, launch gates, unresolved questions, deadlines, owner accountability, and what remains risky from week to week.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-05-19T13:00:00.000Z",
+            "endTime": "2026-04-18T20:22:47.185Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 14,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:22:47.185Z",
+            "updatedAt": "2026-04-18T20:22:47.185Z"
+          },
+          {
+            "id": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "organizationId": "b806cd9b-e790-4686-9bc1-c962c8a1ce57",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-adee7dd4-c090-4ea8-b7d3-e0e9cb9ce425",
+            "title": "Release Recovery Cycle - Week 2 Stabilization Review",
+            "description": "Act like a senior AI product manager. Track incident follow-up, rollback decisions, launch gates, unresolved questions, deadlines, owner accountability, and what remains risky from week to week.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-05-15T13:00:00.000Z",
+            "endTime": "2026-04-18T20:22:30.697Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 13,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:22:30.697Z",
+            "updatedAt": "2026-04-18T20:22:30.697Z"
+          },
+          {
+            "id": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "organizationId": "b806cd9b-e790-4686-9bc1-c962c8a1ce57",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-adee7dd4-c090-4ea8-b7d3-e0e9cb9ce425",
+            "title": "Release Recovery Cycle - Week 1 Incident Kickoff",
+            "description": "Act like a senior AI product manager. Track incident follow-up, rollback decisions, launch gates, unresolved questions, deadlines, owner accountability, and what remains risky from week to week.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-05-12T13:00:00.000Z",
+            "endTime": "2026-04-18T20:22:14.320Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 12,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:22:14.320Z",
+            "updatedAt": "2026-04-18T20:22:14.320Z"
+          }
+        ],
+        "items": [
+          {
+            "id": "06aea7a8-7e64-4d76-b97c-02f05c5426b4",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Complete launch checklist",
+            "description": "Subhash confirmed that the launch checklist is complete and the patched SDK build is merged.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Launch checklist is complete. Engineering also merged the patched SDK build and documented the fallback flow.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": "Engineering team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "848d5dee-c136-4762-958d-d6e343047ecc",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 2,
+              "startSeq": 2
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "f0a72156-f3d0-433a-9cb1-fc2c2206e53b",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Draft incident postmortem",
+            "description": "Maya completed the postmortem draft and shared it with leads.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The postmortem draft is complete and shared with leads.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "7663ded6-7d8e-44ac-8d49-9c2889a041ac",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 3,
+              "startSeq": 3
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "ff7dce34-e609-446b-83ef-d99bf422e364",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Close vendor escalation",
+            "description": "Rahul confirmed that vendor escalation is fully closed with written confirmation and patch notes on record.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Vendor escalation is fully closed. We have their written confirmation and patch notes on record.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "328e76b3-85ab-42de-aca5-d17f1ce8cc4d",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 4,
+              "startSeq": 4
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "e7c3c5dc-cae0-4536-bbce-74d4c59ca125",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Tune alert rules",
+            "description": "Arjun mentioned that alert tuning is better but not finished, with one fallback alert still too sensitive.",
+            "assignee": "Arjun",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Alert tuning is better, but not finished. We reduced the noisy rules, though one fallback alert is still too sensitive during traffic spikes.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Arjun",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "b42729e8-f1cf-437d-80f8-4f324716e48d",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "medium",
+              "relatedPriorMeetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 5
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "2a152be5-fffa-40ba-8f9a-bc049ff822f6",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "decision",
+            "title": "Proceed with the patched SDK and documented fallback flow",
+            "description": "Kumar confirmed that the decision to proceed with the patched SDK and fallback flow is closed, with no full rollback.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Yes, that decision is closed. We are proceeding with the patched SDK plus documented fallback flow. No full rollback.",
+              "relationType": "resolves_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "62bc4baa-34d5-4f7b-b9da-02f8a9a0024f",
+              "relatedPriorItemType": "decision",
+              "projectPrioritySignal": "critical",
+              "relatedPriorMeetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "ae8439de-cb52-4d10-99b7-36e3cde7440f",
+            "meetingId": "0d8bd92a-f41a-4b8c-b3ae-c6611d28548d",
+            "momId": "bf48f287-092f-4f44-a64f-c69094d25c3a",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "project_update",
+            "title": "Release is ready",
+            "description": "Kumar confirmed that the release is ready, with alert tuning as follow-up work.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Correct. The release is ready. We should keep alert tuning open as follow-up work after recovery rather than blocking the train.",
+              "relationType": "references_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "a89a760d-0769-4d9a-aff3-27882dc22d78",
+              "relatedPriorItemType": "decision",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 8,
+              "startSeq": 8
+            },
+            "createdAt": "2026-04-18T20:23:17.223Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "b42729e8-f1cf-437d-80f8-4f324716e48d",
+            "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Tune alert rules",
+            "description": "Arjun will own alert tuning and clean up noisy rules by May 21.",
+            "assignee": "Arjun",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-21",
+            "status": "in_progress",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I’ll own alert tuning and should have the noisy rules cleaned up by Thursday, May 21.",
+              "accountability": {
+                "ownerLabel": "Arjun",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:23:03.369Z",
+            "updatedAt": "2026-04-18T20:23:17.207Z"
+          },
+          {
+            "id": "62bc4baa-34d5-4f7b-b9da-02f8a9a0024f",
+            "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "decision",
+            "title": "No full rollback required",
+            "description": "The decision is to use the patched SDK plus fallback flow, with launch gated on checklist completion and one more clean day before May 20.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Yes. We are not doing a full rollback. The decision is patched SDK plus fallback flow, with launch gated on checklist completion and one more clean day before May 20.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "108f2741-7eb2-44de-ab71-4b3f428ad892",
+              "relatedPriorItemType": "decision",
+              "projectPrioritySignal": "critical",
+              "relatedPriorMeetingId": "19daa497-e166-4469-952a-2fd1e04ee973"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 9,
+              "startSeq": 9
+            },
+            "createdAt": "2026-04-18T20:23:03.369Z",
+            "updatedAt": "2026-04-18T20:23:17.209Z"
+          },
+          {
+            "id": "a89a760d-0769-4d9a-aff3-27882dc22d78",
+            "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "decision",
+            "title": "Add postmortem, alert tuning, and launch checklist as first-class items",
+            "description": null,
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Agreed. Add postmortem as a first-class item. Also add alert tuning and the final launch checklist.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "a69aab7f-17dd-4783-b85d-4681bcc94f5e",
+              "relatedPriorItemType": "decision",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "19daa497-e166-4469-952a-2fd1e04ee973"
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 7,
+              "startSeq": 7
+            },
+            "createdAt": "2026-04-18T20:23:03.369Z",
+            "updatedAt": "2026-04-18T20:23:17.211Z"
+          },
+          {
+            "id": "848d5dee-c136-4762-958d-d6e343047ecc",
+            "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Complete launch checklist",
+            "description": "Subhash will own the launch checklist and complete it by May 19.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-19",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I’ll own the launch checklist and finish it by tonight, May 19.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "8dff551e-44ff-4ac3-a1dd-2320d1cb540d",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:23:03.369Z",
+            "updatedAt": "2026-04-18T20:23:17.198Z"
+          },
+          {
+            "id": "7663ded6-7d8e-44ac-8d49-9c2889a041ac",
+            "meetingId": "18875be2-2974-4fb9-9ea1-e182c779a17f",
+            "momId": "23991bf0-a0dd-4d37-b3a2-92ca6d422696",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Draft incident postmortem",
+            "description": "Maya will draft the incident postmortem by May 22.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-22",
+            "status": "in_progress",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I can draft the postmortem by Friday, May 22.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "6012dba2-7941-40d4-bbed-04a0e23a1589",
+              "relatedPriorItemType": "project_update",
+              "projectPrioritySignal": "medium",
+              "relatedPriorMeetingId": "19daa497-e166-4469-952a-2fd1e04ee973"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 12,
+              "startSeq": 12
+            },
+            "createdAt": "2026-04-18T20:23:03.369Z",
+            "updatedAt": "2026-04-18T20:23:17.201Z"
+          },
+          {
+            "id": "5e824a30-1aee-4572-8354-8f548dd7bcfe",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Own the fallback runbook",
+            "description": "Subhash to own the fallback runbook by Saturday, May 16.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-16",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Then add the runbook explicitly. Subhash, can you own the fallback runbook by Saturday, May 16?",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "8dff551e-44ff-4ac3-a1dd-2320d1cb540d",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 8,
+              "startSeq": 7
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:17.223Z"
+          },
+          {
+            "id": "83b8dd95-ee75-4757-a3e6-799772ffeca4",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "risk",
+            "title": "Error budget burn still above target",
+            "description": "Despite improvements, the error budget burn is still above target during peak traffic.",
+            "assignee": null,
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Checkout latency improved after we gated the new SDK behind a feature flag, but error budget burn is still above target on peak traffic.",
+              "accountability": {
+                "ownerLabel": null,
+                "accountableTeam": null,
+                "accountabilityType": "unknown"
+              }
+            },
+            "aiConfidence": 0.85,
+            "sourceTranscriptRange": {
+              "endSeq": 2,
+              "startSeq": 2
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:03.358Z"
+          },
+          {
+            "id": "c40a6eaf-c59b-414f-a750-24ee17910344",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "blocker",
+            "title": "QA needs formal runbook for fallback path",
+            "description": "QA requires a formal operational runbook for the fallback path, despite having the test matrix.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "QA still needs a formal runbook for the fallback path. We have the test matrix, but we do not yet have a clean operational runbook for on-call.",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": "QA team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 6,
+              "startSeq": 6
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:03.360Z"
+          },
+          {
+            "id": "f4966d00-7966-47e4-ad69-19659fb1eb9a",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "project_update",
+            "title": "Vendor escalation acknowledged",
+            "description": "Rahul confirmed that the payment vendor acknowledged the issue and promised a root-cause update by Monday, May 18.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Payment vendor escalation is open. They acknowledged the issue overnight and promised a root-cause update by Monday, May 18.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "328e76b3-85ab-42de-aca5-d17f1ce8cc4d",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 4,
+              "startSeq": 4
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:03.356Z"
+          },
+          {
+            "id": "6012dba2-7941-40d4-bbed-04a0e23a1589",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "project_update",
+            "title": "Dashboard is live and support macro completed",
+            "description": "Neha confirmed the dashboard is live. Maya confirmed the support macro and incident note are complete.",
+            "assignee": "Neha, Maya",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The dashboard is live. Checkout latency improved after we gated the new SDK behind a feature flag... Support macro is done, and the incident note is in the internal help center.",
+              "accountability": {
+                "ownerLabel": "Neha, Maya",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 2
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:17.215Z"
+          },
+          {
+            "id": "4c6b6ae8-f1f4-4f36-ac67-07c30ddd78d3",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Define and track launch-gate threshold",
+            "description": "Define an explicit threshold for reopening the launch. The launch should not be reopened unless checkout latency is back within the agreed error budget for three consecutive days.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "We should also define an explicit threshold. I suggest that we do not reopen the launch unless checkout latency is back within the agreed error budget for three consecutive days.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "28e22cfc-7d0c-49a2-8592-6d4f0d302135",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d"
+            },
+            "aiConfidence": 0.85,
+            "sourceTranscriptRange": {
+              "endSeq": 12,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:17.224Z"
+          },
+          {
+            "id": "108f2741-7eb2-44de-ab71-4b3f428ad892",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "decision",
+            "title": "No full rollback for now",
+            "description": "Subhash recommended no full rollback for now. The fallback flow should be held, and the old path kept available until the vendor confirms the fix.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "My recommendation is no full rollback for now. We should hold the fallback flow and keep the old path available until the vendor confirms the fix.",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 3,
+              "startSeq": 3
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:17.221Z"
+          },
+          {
+            "id": "a69aab7f-17dd-4783-b85d-4681bcc94f5e",
+            "meetingId": "19daa497-e166-4469-952a-2fd1e04ee973",
+            "momId": "1bcae6cc-da6c-49f5-b739-3864348b3cc3",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "decision",
+            "title": "Launch gate remains until vendor clarity and error budget improvement",
+            "description": "The launch gate will stay until both vendor clarity is obtained and error budget numbers improve.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "My answer is no. The launch gate stays until we get both vendor clarity and cleaner error budget numbers.",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:22:47.169Z",
+            "updatedAt": "2026-04-18T20:23:17.213Z"
+          },
+          {
+            "id": "328e76b3-85ab-42de-aca5-d17f1ce8cc4d",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Escalate issue to payment vendor",
+            "description": "Rahul will escalate the issue to the payment vendor by the end of the day to determine if the SDK regression is on their side.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-12",
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Rahul, please take the payment vendor escalation by end of day.",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 7,
+              "startSeq": 7
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:23:17.204Z"
+          },
+          {
+            "id": "374e029f-4bb1-408a-9052-9740f1f95804",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Create a support macro and known-issues note",
+            "description": "Maya needs to create a support macro and a known-issues note today to prevent improvisation in customer responses.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-12",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I need a support macro and a known-issues note today so the team does not improvise customer responses.",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 5
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:22:47.166Z"
+          },
+          {
+            "id": "8dff551e-44ff-4ac3-a1dd-2320d1cb540d",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Develop feature-flag containment plan and rollback checklist",
+            "description": "Subhash will own the feature-flag containment plan and a rollback checklist by Wednesday, May 13.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-13",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I can own the feature-flag containment plan and a rollback checklist by Wednesday, May 13.",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 9,
+              "startSeq": 9
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:23:17.217Z"
+          },
+          {
+            "id": "28e22cfc-7d0c-49a2-8592-6d4f0d302135",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Create a recovery dashboard",
+            "description": "Neha will create a recovery dashboard by May 14 to show checkout latency, conversion drop, and error budget burn.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-14",
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I can own a recovery dashboard by Thursday, May 14.",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 4,
+              "startSeq": 4
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:22:47.158Z"
+          },
+          {
+            "id": "089af35c-d734-4ba8-9d73-8f5dcc68dcc7",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "question",
+            "title": "Decision on rollback vs. feature flag",
+            "description": "Clarification needed on whether to fully roll back the checkout SDK or stabilize behind a feature flag.",
+            "assignee": null,
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The open question is whether we should fully roll back the checkout SDK or stabilize behind the flag.",
+              "accountability": {
+                "ownerLabel": null,
+                "accountableTeam": null,
+                "accountabilityType": "unknown"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 2,
+              "startSeq": 2
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:23:03.365Z"
+          },
+          {
+            "id": "0d1a7d9d-38f9-44bc-a65e-5d395670edf0",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "action_item",
+            "title": "Conduct launch-freeze review",
+            "description": "A launch-freeze review is needed on May 15 before confirming the release is back on track.",
+            "assignee": null,
+            "assigneeEmail": null,
+            "dueDate": "2026-05-15",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "We also need a launch-freeze review on May 15 before we say the release is back on track.",
+              "accountability": {
+                "ownerLabel": null,
+                "accountableTeam": null,
+                "accountabilityType": "unknown"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:23:03.370Z"
+          },
+          {
+            "id": "1f5dd2c2-31e6-4a51-9885-835a0eceeacd",
+            "meetingId": "2faaf62f-6812-4d19-aded-72dcfe76744d",
+            "momId": "c268bc44-e126-47e8-9242-7feedcd40539",
+            "projectId": "ed805ad4-dc9e-4276-ba28-26c582d8e4a2",
+            "itemType": "risk",
+            "title": "High risk due to launch freeze",
+            "description": "Current risk is high because the launch freeze stays in place until dashboard visibility, vendor response, and feature-flag containment are all in hand.",
+            "assignee": null,
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Current risk is high because the launch freeze stays in place until dashboard visibility, vendor response, and feature-flag containment are all in hand.",
+              "accountability": {
+                "ownerLabel": null,
+                "accountableTeam": null,
+                "accountabilityType": "unknown"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 12,
+              "startSeq": 12
+            },
+            "createdAt": "2026-04-18T20:22:30.674Z",
+            "updatedAt": "2026-04-18T20:23:03.362Z"
+          }
+        ],
+        "stats": {
+          "totalMeetings": 4,
+          "totalItems": 26,
+          "pendingItems": 6,
+          "completedItems": 15
+        }
+      }
+    },
+    {
+      "systemId": "transcript_only",
+      "systemLabel": "Transcript-Only Baseline",
+      "systemMode": "stateless_transcript_only",
+      "runContext": {
+        "strategySummary": "Analyzes each meeting independently through the backend without prior project memory, database reconciliation, or carry-forward state transitions."
+      },
+      "summary": {
+        "meetingsProcessed": 4,
+        "checksPassed": 23,
+        "checksFailed": 11
+      },
+      "meetings": [
+        {
+          "sequenceNumber": 1,
+          "slug": "week1_incident_kickoff",
+          "title": "Release Recovery Cycle - Week 1 Incident Kickoff",
+          "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+          "requestStatus": 200,
+          "transcriptEventCount": 12,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemsCreated": 7,
+            "highlightsCreated": 6,
+            "processingTimeMs": 17278
+          },
+          "executiveSummary": "The meeting focused on addressing the checkout latency spike following the payment SDK update, resulting in a launch freeze. Key actions were assigned to mitigate the issue, including creating a recovery dashboard, escalating to the payment vendor, and developing a feature-flag containment plan. The decision to roll back the SDK or stabilize it remains open, impacting the release timeline.",
+          "detailedSummary": "## Objective Context\nKickoff meeting for the Release Recovery Cycle to address the incident caused by the payment SDK update, which led to a checkout latency spike and a subsequent launch freeze.\n\n## Decisions Made\n- Neha will create a recovery dashboard by May 14.\n- Rahul will escalate the issue to the payment vendor by the end of the day.\n- Subhash will develop a feature-flag containment plan and rollback checklist by May 13.\n\n## Product Implications\nThe checkout latency issue directly affects user experience and conversion rates, necessitating immediate corrective actions to stabilize the platform and resume the release process.\n\n## Delivery Risks Blockers\n- High risk due to the ongoing launch freeze until dashboard visibility, vendor response, and feature-flag containment are achieved.\n\n## Open Questions\n- Should we fully roll back the checkout SDK or stabilize behind the feature flag?\n- Can the fallback flow hold conversion rates?\n- Is the vendor acknowledging responsibility for the SDK regression?\n\n## Next Steps\n- Prepare for a launch-freeze review on May 15.",
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Create a recovery dashboard",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Develop a support macro and known-issues note",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Escalate issue to payment vendor",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Develop feature-flag containment plan and rollback checklist",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare for launch-freeze review",
+              "status": null,
+              "assignee": null,
+              "priority": "medium"
+            },
+            {
+              "itemType": "question",
+              "title": "Determine rollback necessity",
+              "status": null,
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "High risk due to launch freeze",
+              "status": null,
+              "assignee": null,
+              "priority": "critical"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "rollback",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "support macro",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "payment vendor",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "incident",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch freeze",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "latency",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 2,
+          "slug": "week2_stabilization_review",
+          "title": "Release Recovery Cycle - Week 2 Stabilization Review",
+          "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+          "requestStatus": 200,
+          "transcriptEventCount": 13,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemsCreated": 5,
+            "highlightsCreated": 5,
+            "processingTimeMs": 11773
+          },
+          "executiveSummary": "The stabilization review concluded with a decision to maintain the current launch freeze until vendor issues are resolved and error budgets are met. Key actions include completing the fallback runbook and defining explicit criteria for reopening the launch.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to assess the current status of the release recovery cycle, focusing on incident follow-up, rollback decisions, and launch gating.\n\n## Product Implications\nThe decision to maintain the launch freeze impacts the product timeline, delaying potential new feature rollouts until stability is confirmed.\n\n## Open Questions\n- Will the vendor provide the root-cause update by the promised date?\n\n## Next Steps\n- Subhash to complete the fallback runbook by May 16.\n- Product team to define explicit threshold for launch reopening.",
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "No full rollback for now",
+              "status": null,
+              "assignee": "Engineering Team",
+              "priority": "high"
+            },
+            {
+              "itemType": "blocker",
+              "title": "Payment vendor escalation is open",
+              "status": null,
+              "assignee": "Vendor Management Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete fallback runbook",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "decision",
+              "title": "Launch gate remains",
+              "status": null,
+              "assignee": "Product Team",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Define explicit threshold for launch reopening",
+              "status": null,
+              "assignee": "Product Team",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "feature flag",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "runbook",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "vendor escalation",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "stabilization",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "error budget",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch gate",
+              "passed": false,
+              "details": "Phrase missing from meeting summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 3,
+          "slug": "week3_gate_review",
+          "title": "Release Recovery Cycle - Week 3 Gate Review",
+          "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+          "requestStatus": 200,
+          "transcriptEventCount": 14,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemsCreated": 5,
+            "highlightsCreated": 5,
+            "processingTimeMs": 13672
+          },
+          "executiveSummary": "The decision to proceed with the release using the patched SDK and fallback flow was confirmed, contingent on completing the launch checklist and addressing alert noise. The full rollback option is closed, and the team is focused on finalizing preparations for a successful launch.",
+          "detailedSummary": "## Objective/ Context\nEvaluate the readiness of the release to move forward based on vendor updates and recovery data, and decide on the necessity of a full rollback.\n\n## Product Implications\nThe fallback flow remains as a safety path, and the release is contingent on resolving alert noise and completing the launch checklist.\n\n## Next Steps\n- Complete the launch checklist by May 19.\n- Tune alert rules by May 21.\n- Draft the incident postmortem by May 22.",
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "No full rollback; proceed with patched SDK and fallback flow",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete launch checklist",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Tune alert rules",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft incident postmortem",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "risk",
+              "title": "Alert noise causing false positives",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch checklist",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "fallback flow",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "postmortem",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "alert tuning",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "vendor",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "May 20",
+              "passed": false,
+              "details": "Phrase missing from meeting summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "decision",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 4,
+          "slug": "week4_recovery_readiness",
+          "title": "Release Recovery Cycle - Week 4 Recovery Readiness",
+          "meetingId": "benchmark-846cad65-6f3e-4da1-9250-21936187f1f5",
+          "requestStatus": 200,
+          "transcriptEventCount": 12,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-846cad65-6f3e-4da1-9250-21936187f1f5",
+            "itemsCreated": 3,
+            "highlightsCreated": 3,
+            "processingTimeMs": 9444
+          },
+          "executiveSummary": "The final recovery-readiness review confirmed that the release is ready with all major gate items closed, except for alert tuning, which remains a follow-up task. The decision to proceed with the patched SDK and documented fallback flow was finalized, ensuring no full rollback is necessary.",
+          "detailedSummary": "## Objective /  Context\nTo assess the readiness for release recovery by reviewing the status of remaining gate items and making necessary decisions to proceed with the launch.\n\n## Product  Implications\nThe release is ready to proceed with the patched SDK, which should improve stability and user experience without requiring a full rollback.\n\n## Delivery  Risks /  Blockers\nAlert tuning remains incomplete, with one fallback alert still too sensitive during traffic spikes. This is not blocking the release but is a follow-up task.\n\n## Next  Steps\n- Complete alert tuning post-release to ensure optimal alert sensitivity.",
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Complete alert tuning",
+              "status": null,
+              "assignee": "Engineering Team",
+              "priority": "medium"
+            },
+            {
+              "itemType": "decision",
+              "title": "Proceed with patched SDK and documented fallback flow",
+              "status": null,
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Final recovery-readiness status",
+              "status": null,
+              "assignee": "Support team",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch checklist",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "alert tuning",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "postmortem",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "support macro",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "should we fully roll back the checkout sdk",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "full rollback question",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "ready",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "fallback",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "vendor",
+              "passed": false,
+              "details": "Phrase missing from meeting summary."
+            }
+          ]
+        }
+      ],
+      "finalProjectChecks": [
+        {
+          "category": "project_item_status",
+          "target": "launch checklist => completed",
+          "passed": false,
+          "details": "Matching items found, but statuses were: Complete launch checklist=null."
+        },
+        {
+          "category": "project_item_status",
+          "target": "alert tuning => pending",
+          "passed": false,
+          "details": "Matching items found, but statuses were: Complete alert tuning=null."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "full rollback question",
+          "passed": true,
+          "details": "No open matching item found."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "should we fully roll back the checkout sdk",
+          "passed": true,
+          "details": "No open matching item found."
+        }
+      ],
+      "finalProjectSnapshot": {
+        "items": [
+          {
+            "id": "transcript_only-1-0",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "action_item",
+            "title": "Create a recovery dashboard",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-1",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "action_item",
+            "title": "Develop a support macro and known-issues note",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-2",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "action_item",
+            "title": "Escalate issue to payment vendor",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-3",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "action_item",
+            "title": "Develop feature-flag containment plan and rollback checklist",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-4",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "action_item",
+            "title": "Prepare for launch-freeze review",
+            "status": null,
+            "assignee": null,
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-1-5",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "question",
+            "title": "Determine rollback necessity",
+            "status": null,
+            "assignee": null,
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-6",
+            "meetingId": "benchmark-0bab3f0e-f025-4c74-b994-f67742e0230f",
+            "itemType": "risk",
+            "title": "High risk due to launch freeze",
+            "status": null,
+            "assignee": null,
+            "priority": "critical"
+          },
+          {
+            "id": "transcript_only-2-0",
+            "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemType": "decision",
+            "title": "No full rollback for now",
+            "status": null,
+            "assignee": "Engineering Team",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-1",
+            "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemType": "blocker",
+            "title": "Payment vendor escalation is open",
+            "status": null,
+            "assignee": "Vendor Management Team",
+            "priority": "critical"
+          },
+          {
+            "id": "transcript_only-2-2",
+            "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemType": "action_item",
+            "title": "Complete fallback runbook",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-3",
+            "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemType": "decision",
+            "title": "Launch gate remains",
+            "status": null,
+            "assignee": "Product Team",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-4",
+            "meetingId": "benchmark-1577d7e8-ac21-4f7b-83cc-c298c69f7ecf",
+            "itemType": "action_item",
+            "title": "Define explicit threshold for launch reopening",
+            "status": null,
+            "assignee": "Product Team",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-0",
+            "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemType": "decision",
+            "title": "No full rollback; proceed with patched SDK and fallback flow",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-1",
+            "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemType": "action_item",
+            "title": "Complete launch checklist",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-2",
+            "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemType": "action_item",
+            "title": "Tune alert rules",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-3",
+            "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemType": "action_item",
+            "title": "Draft incident postmortem",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-4",
+            "meetingId": "benchmark-02325e8f-8b19-4b85-9f9e-353a83c71f8d",
+            "itemType": "risk",
+            "title": "Alert noise causing false positives",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-0",
+            "meetingId": "benchmark-846cad65-6f3e-4da1-9250-21936187f1f5",
+            "itemType": "action_item",
+            "title": "Complete alert tuning",
+            "status": null,
+            "assignee": "Engineering Team",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-1",
+            "meetingId": "benchmark-846cad65-6f3e-4da1-9250-21936187f1f5",
+            "itemType": "decision",
+            "title": "Proceed with patched SDK and documented fallback flow",
+            "status": null,
+            "assignee": null,
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-2",
+            "meetingId": "benchmark-846cad65-6f3e-4da1-9250-21936187f1f5",
+            "itemType": "project_update",
+            "title": "Final recovery-readiness status",
+            "status": null,
+            "assignee": "Support team",
+            "priority": "medium"
+          }
+        ],
+        "stats": {
+          "synthesizedProjectState": true,
+          "note": "Final project state is approximated by the latest transcript-only item titles. No durable project memory or status transitions are applied."
+        }
+      }
+    }
+  ],
+  "comparison": {
+    "ranking": [
+      {
+        "systemId": "current_system",
+        "systemLabel": "Current Stateful Accountability System",
+        "checksPassed": 28,
+        "checksFailed": 6,
+        "passRate": 0.8235294117647058
+      },
+      {
+        "systemId": "transcript_only",
+        "systemLabel": "Transcript-Only Baseline",
+        "checksPassed": 23,
+        "checksFailed": 11,
+        "passRate": 0.6764705882352942
+      }
+    ],
+    "perMeeting": [
+      {
+        "sequenceNumber": 1,
+        "slug": "week1_incident_kickoff",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 7,
+            "checksFailed": 0
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 7,
+            "checksFailed": 0
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 2,
+        "slug": "week2_stabilization_review",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 5,
+            "checksFailed": 2
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 4,
+            "checksFailed": 3
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 3,
+        "slug": "week3_gate_review",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 6,
+            "checksFailed": 1
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 5,
+            "checksFailed": 2
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 4,
+        "slug": "week4_recovery_readiness",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 7,
+            "checksFailed": 2
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 5,
+            "checksFailed": 4
+          }
+        ]
+      }
+    ],
+    "deltas": [
+      {
+        "leftSystemId": "current_system",
+        "rightSystemId": "transcript_only",
+        "checksPassedDelta": 5,
+        "checksFailedDelta": -5
+      }
+    ]
+  }
+}

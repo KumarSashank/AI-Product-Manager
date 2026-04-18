@@ -179,6 +179,7 @@ interface BenchmarkReport {
 interface ApiResponse<T> {
   status: number;
   payload: T;
+  headers: Headers;
 }
 
 interface UploadedMeetingResponse {
@@ -328,16 +329,23 @@ async function api<T>(args: {
   route: string;
   body?: unknown;
   timeoutMs?: number;
+  authToken?: string;
 }): Promise<ApiResponse<T>> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), args.timeoutMs ?? 420_000);
 
   try {
+    const headers = new Headers({
+      'content-type': 'application/json',
+    });
+
+    if (args.authToken) {
+      headers.set('authorization', `Bearer ${args.authToken}`);
+    }
+
     const requestInit: RequestInit = {
       method: args.method,
-      headers: {
-        'content-type': 'application/json',
-      },
+      headers,
       signal: controller.signal,
     };
     if (args.body !== undefined) {
@@ -347,10 +355,92 @@ async function api<T>(args: {
     const response = await fetch(`${args.baseUrl}${args.route}`, requestInit);
     const text = await response.text();
     const payload = text ? (JSON.parse(text) as T) : ({} as T);
-    return { status: response.status, payload };
+    return { status: response.status, payload, headers: response.headers };
   } finally {
     clearTimeout(timeout);
   }
+}
+
+interface BenchmarkAuthResponse {
+  success?: boolean;
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+  };
+  error?: string;
+}
+
+interface BenchmarkAuthSession {
+  email: string;
+  authToken: string;
+}
+
+function extractAuthToken(headers: Headers): string | null {
+  const headerBag =
+    typeof (headers as Headers & { getSetCookie?: () => string[] }).getSetCookie === 'function'
+      ? (headers as Headers & { getSetCookie: () => string[] }).getSetCookie()
+      : [headers.get('set-cookie')].filter((value): value is string => Boolean(value));
+
+  for (const cookie of headerBag) {
+    const match = cookie.match(/auth_token=([^;]+)/);
+    if (match?.[1]) {
+      return decodeURIComponent(match[1]);
+    }
+  }
+
+  return null;
+}
+
+async function createBenchmarkAuthSession(baseUrl: string): Promise<BenchmarkAuthSession> {
+  const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const email = process.env.BENCHMARK_USER_EMAIL ?? `benchmark+${suffix}@example.com`;
+  const password = process.env.BENCHMARK_USER_PASSWORD ?? 'BenchmarkRunner123!';
+  const displayName = process.env.BENCHMARK_USER_NAME ?? 'Benchmark Runner';
+
+  const signup = await api<BenchmarkAuthResponse>({
+    baseUrl,
+    method: 'POST',
+    route: '/auth/signup',
+    body: {
+      email,
+      password,
+      displayName,
+    },
+  });
+
+  if (signup.status !== 201 && signup.status !== 409) {
+    throw new Error(`Benchmark signup failed: ${JSON.stringify(signup.payload)}`);
+  }
+
+  let authToken = extractAuthToken(signup.headers);
+
+  if (!authToken) {
+    const signin = await api<BenchmarkAuthResponse>({
+      baseUrl,
+      method: 'POST',
+      route: '/auth/signin',
+      body: {
+        email,
+        password,
+      },
+    });
+
+    if (signin.status !== 200) {
+      throw new Error(`Benchmark signin failed: ${JSON.stringify(signin.payload)}`);
+    }
+
+    authToken = extractAuthToken(signin.headers);
+  }
+
+  if (!authToken) {
+    throw new Error('Benchmark auth flow did not return an auth token');
+  }
+
+  return {
+    email,
+    authToken,
+  };
 }
 
 async function loadScenario(scenarioPath: string): Promise<BenchmarkScenario> {
@@ -754,8 +844,9 @@ async function evaluateCurrentSystem(args: {
   apiBaseUrl: string;
   scenario: BenchmarkScenario;
   scenarioDir: string;
+  authToken: string;
 }): Promise<BenchmarkSystemReport> {
-  const { apiBaseUrl, scenario, scenarioDir } = args;
+  const { apiBaseUrl, scenario, scenarioDir, authToken } = args;
   const projectSuffix = process.env.BENCHMARK_PROJECT_SUFFIX
     ? ` ${process.env.BENCHMARK_PROJECT_SUFFIX}`
     : '';
@@ -765,6 +856,7 @@ async function evaluateCurrentSystem(args: {
     baseUrl: apiBaseUrl,
     method: 'POST',
     route: '/projects',
+    authToken,
     body: {
       name: projectName,
       description: scenario.project.description,
@@ -789,6 +881,7 @@ async function evaluateCurrentSystem(args: {
       baseUrl: apiBaseUrl,
       method: 'POST',
       route: `/projects/${projectId}/upload-transcript`,
+      authToken,
       body: {
         title: meeting.title,
         transcript,
@@ -816,11 +909,13 @@ async function evaluateCurrentSystem(args: {
           baseUrl: apiBaseUrl,
           method: 'GET',
           route: `/meetings/${upload.payload.meetingId}/mom`,
+          authToken,
         }),
         api<MeetingItemsResponse>({
           baseUrl: apiBaseUrl,
           method: 'GET',
           route: `/meetings/${upload.payload.meetingId}/items`,
+          authToken,
         }),
       ]);
 
@@ -855,6 +950,7 @@ async function evaluateCurrentSystem(args: {
     baseUrl: apiBaseUrl,
     method: 'GET',
     route: `/projects/${projectId}`,
+    authToken,
   });
   const finalProjectItems = finalProject.payload.items ?? [];
   const finalProjectChecks = collectFinalProjectChecks({
@@ -893,8 +989,9 @@ async function evaluateTranscriptOnlySystem(args: {
   apiBaseUrl: string;
   scenario: BenchmarkScenario;
   scenarioDir: string;
+  authToken: string;
 }): Promise<BenchmarkSystemReport> {
-  const { apiBaseUrl, scenario, scenarioDir } = args;
+  const { apiBaseUrl, scenario, scenarioDir, authToken } = args;
   const meetingReports: BenchmarkMeetingReport[] = [];
   const projectState = new Map<string, ProjectItemSnapshot>();
 
@@ -908,6 +1005,7 @@ async function evaluateTranscriptOnlySystem(args: {
       baseUrl: apiBaseUrl,
       method: 'POST',
       route: '/benchmark/transcript-only-mom',
+      authToken,
       body: {
         title: meeting.title,
         transcript,
@@ -1025,6 +1123,7 @@ async function main(): Promise<void> {
   const requestedSystems: BenchmarkSystemId[] =
     system === 'all' ? ['current_system', 'transcript_only'] : [system];
 
+  const authSession = await createBenchmarkAuthSession(apiBaseUrl);
   const systemReports: BenchmarkSystemReport[] = [];
 
   for (const systemId of requestedSystems) {
@@ -1034,6 +1133,7 @@ async function main(): Promise<void> {
           apiBaseUrl,
           scenario,
           scenarioDir,
+          authToken: authSession.authToken,
         })
       );
       continue;
@@ -1044,6 +1144,7 @@ async function main(): Promise<void> {
         apiBaseUrl,
         scenario,
         scenarioDir,
+        authToken: authSession.authToken,
       })
     );
   }

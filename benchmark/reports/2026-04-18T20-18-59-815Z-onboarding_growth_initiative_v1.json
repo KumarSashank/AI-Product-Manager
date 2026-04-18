@@ -1,0 +1,3614 @@
+{
+  "scenario": {
+    "scenarioId": "onboarding_growth_initiative_v1",
+    "displayName": "Onboarding Growth Initiative - 5 Week Accountability Regression",
+    "schemaVersion": "1.0.0",
+    "sourcePath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/scenarios/onboarding_growth_initiative/scenario.json"
+  },
+  "run": {
+    "startedAt": "2026-04-18T20:18:59.815Z",
+    "finishedAt": "2026-04-18T20:22:13.694Z",
+    "apiBaseUrl": "http://127.0.0.1:3102/api/v1",
+    "requestedSystems": [
+      "current_system",
+      "transcript_only"
+    ],
+    "reportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-18-59-815Z-onboarding_growth_initiative_v1.json",
+    "health": {
+      "status": "healthy",
+      "version": "0.0.1",
+      "timestamp": "2026-04-18T20:18:59.828Z",
+      "services": [
+        "database",
+        "meetings",
+        "transcripts",
+        "mom",
+        "items"
+      ]
+    }
+  },
+  "summary": {
+    "systemsRun": 2,
+    "totalMeetingsProcessed": 10,
+    "checksPassed": 71,
+    "checksFailed": 5,
+    "bestSystemId": "current_system"
+  },
+  "systems": [
+    {
+      "systemId": "current_system",
+      "systemLabel": "Current Stateful Accountability System",
+      "systemMode": "stateful_api",
+      "runContext": {
+        "strategySummary": "Uses the product-memory pipeline through the backend API: transcript storage, structured extraction, reconciliation against prior project state, and final MoM generation.",
+        "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+        "projectName": "Onboarding Growth Initiative Benchmark 1776543540181"
+      },
+      "summary": {
+        "meetingsProcessed": 5,
+        "checksPassed": 37,
+        "checksFailed": 1
+      },
+      "meetings": [
+        {
+          "sequenceNumber": 1,
+          "slug": "week1_kickoff",
+          "title": "Onboarding Growth Initiative - Week 1 Kickoff",
+          "requestStatus": 201,
+          "transcriptEventCount": 16,
+          "momGeneration": {
+            "success": true,
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "highlightsCreated": 6,
+            "itemsCreated": 12,
+            "processingTimeMs": 20629
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "question",
+              "title": "Impact of guest checkout on support",
+              "status": "pending",
+              "assignee": "Support Team",
+              "priority": "medium"
+            },
+            {
+              "itemType": "question",
+              "title": "Decision on guest checkout in phase one",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Compliance implications of storing guest emails",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "dependency",
+              "title": "Dependency on identity team's lightweight session API",
+              "status": "pending",
+              "assignee": "Identity Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "risk",
+              "title": "Risk of beta scope if identity team slips",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "deadline",
+              "title": "Target beta readiness review",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Pricing visibility in guest flow",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Review compliance implications of storing guest emails",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete guest checkout wireframes",
+              "status": "pending",
+              "assignee": "Priya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare event taxonomy document",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Develop onboarding dashboard",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Align with finance on pricing experiment guardrails",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "guest checkout",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "pricing experiment guardrails",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "identity",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "phase one",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "guest checkout",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "activation",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "identity",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+          "executiveSummary": "The Onboarding Growth Initiative kickoff focused on aligning the team for Q2 objectives, specifically improving user activation and reducing drop-off. Key decisions included prioritizing guest checkout and funnel instrumentation, with several dependencies and risks identified that could impact the beta readiness timeline.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to align on the onboarding growth initiative for Q2, focusing on improving activation for new self-serve users and reducing drop-off before account completion.\n\n## Decisions Made\n- Prioritize guest checkout and funnel instrumentation as the two main tracks for the initiative.\n- Target beta readiness review for April 29, contingent on several dependencies and decisions.\n\n## Product Implications\n- Guest checkout and improved funnel instrumentation are expected to enhance user activation and reduce drop-off rates.\n\n## Delivery Risks Blockers\n- Dependency on the identity team's lightweight session API, expected by April 15.\n- Compliance implications of storing guest email addresses before full account creation.\n\n## Open Questions\n- Decision on whether guest checkout is included in phase one.\n- Clarity on pricing visibility in the guest flow.\n\n## Next Steps\n- Complete guest checkout wireframes by April 10.\n- Prepare event taxonomy document by April 11.\n- Develop onboarding dashboard by April 12.\n- Align with finance on pricing experiment guardrails by April 14."
+        },
+        {
+          "sequenceNumber": 2,
+          "slug": "week2_status",
+          "title": "Onboarding Growth Initiative - Week 2 Status Review",
+          "requestStatus": 201,
+          "transcriptEventCount": 18,
+          "momGeneration": {
+            "success": true,
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "highlightsCreated": 6,
+            "itemsCreated": 9,
+            "processingTimeMs": 15491
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Complete event taxonomy",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft fallback proposal",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "blocker",
+              "title": "Identity team sandbox delivery",
+              "status": "pending",
+              "assignee": "Identity Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "question",
+              "title": "Decision on guest checkout in phase one",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Pricing guardrails and experiment validity",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Compliance implications of storing guest emails",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Data risk due to delayed analytics dashboard",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Capture delivery risk of delayed analytics dashboard",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Finalize finance alignment on pricing guardrails",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "fallback proposal",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "finance",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "phase one",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "identity team",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "blocker",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "beta",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+          "executiveSummary": "The meeting focused on addressing key blockers and risks impacting the Onboarding Growth Initiative's beta readiness. Significant progress was made on wireframes, but dependencies on the Identity Team and unresolved finance alignment continue to pose risks to the timeline.",
+          "detailedSummary": "## Objective Context\nReview the status of the Onboarding Growth Initiative, identify progress, slips, and blockers impacting beta readiness.\n\n## Decisions Made\n- Subhash to complete event taxonomy by April 16.\n- Subhash to draft a fallback proposal by April 18 if the Identity Team remains a blocker.\n\n## Product Implications\n- Unresolved finance alignment on pricing guardrails could impact the validity of pricing experiments.\n- The delay in the analytics dashboard may prevent establishing a clean baseline before beta.\n\n## Delivery Risks Blockers\n- Identity Team's failure to deliver the sandbox environment is a critical blocker.\n- Compliance implications of storing guest emails remain unresolved.\n\n## Open Questions\n- Is guest checkout included in phase one?\n- What are the final pricing guardrails?\n\n## Next Steps\n- Subhash to complete event taxonomy and draft fallback proposal.\n- Kumar to finalize finance alignment on pricing guardrails."
+        },
+        {
+          "sequenceNumber": 3,
+          "slug": "week3_scope_risk",
+          "title": "Onboarding Growth Initiative - Week 3 Scope And Risk Review",
+          "requestStatus": 201,
+          "transcriptEventCount": 19,
+          "momGeneration": {
+            "success": true,
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "highlightsCreated": 6,
+            "itemsCreated": 7,
+            "processingTimeMs": 18872
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Draft support macros for guest session conversion",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "decision",
+              "title": "Beta date at risk unless key tasks are completed",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Validate event mapping for dashboard",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Finalize compliance review for storing guest emails",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Follow-up with finance on pricing alignment",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Taxonomy cleanup delay may impact dashboard",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Unresolved product question on guest checkout impact",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "support macros",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "pricing",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "beta",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "risk",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "April 29",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+          "executiveSummary": "The Onboarding Growth Initiative's beta launch scheduled for April 29 is at risk due to pending tasks in dashboard validation, compliance review, and support preparation. Key decisions and action items were identified to mitigate these risks and ensure alignment across teams.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to review the scope and risks associated with the Onboarding Growth Initiative to ensure readiness for the upcoming beta launch."
+        },
+        {
+          "sequenceNumber": 4,
+          "slug": "week4_replan",
+          "title": "Onboarding Growth Initiative - Week 4 Replan",
+          "requestStatus": 201,
+          "transcriptEventCount": 18,
+          "momGeneration": {
+            "success": true,
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "highlightsCreated": 6,
+            "itemsCreated": 14,
+            "processingTimeMs": 26930
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "risk",
+              "title": "Duplicate account path instability",
+              "status": "pending",
+              "assignee": "Arjun",
+              "priority": "critical"
+            },
+            {
+              "itemType": "decision",
+              "title": "April 29 beta launch is no longer realistic",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Finance approved pricing experiment guardrails",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Taxonomy cleanup completed and merged",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "blocker",
+              "title": "Dashboard data discrepancies",
+              "status": "pending",
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete support macros by next Monday",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Close compliance review by April 30",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Send retention behavior to Rahul",
+              "status": "pending",
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "deadline",
+              "title": "New target for launch readiness review: May 6",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Coordinate launch comms and support training plan",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare a clean launch checklist with owner names",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Finalize compliance review by April 30.",
+              "status": "pending",
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Coordinate launch comms and support training plan by May 2.",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare a clean launch checklist with owner names by next week.",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch readiness review",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "launch",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "compliance",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "guardrails",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "April 29",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "May 6",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+          "executiveSummary": "The April 29 beta launch for the Onboarding Growth Initiative has been postponed due to unresolved issues in compliance, dashboard reliability, and support preparation. A new target date for launch readiness is set for May 6, with key action items and risks identified to ensure alignment and mitigate delays.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to reassess the feasibility of the April 29 beta launch for the Onboarding Growth Initiative, address unresolved issues, and establish a new timeline.\n\n## Product Implications\n- Delay in beta launch impacts user activation timelines and may affect customer expectations.\n- Compliance and dashboard reliability issues need resolution to ensure a smooth user experience.\n\n## Open Questions\n- What are the specific steps needed to resolve dashboard discrepancies?\n- How will the support team be trained for the guest checkout feature?\n\n## Next Steps\n- Finalize compliance review by April 30.\n- Complete support macros by next Monday.\n- Coordinate launch communications and support training plan by May 2."
+        },
+        {
+          "sequenceNumber": 5,
+          "slug": "week5_launch_readiness",
+          "title": "Onboarding Growth Initiative - Week 5 Launch Readiness",
+          "requestStatus": 201,
+          "transcriptEventCount": 19,
+          "momGeneration": {
+            "success": true,
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "highlightsCreated": 5,
+            "itemsCreated": 5,
+            "processingTimeMs": 16025
+          },
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Verify duplicate account bug patch",
+              "status": "pending",
+              "assignee": "Arjun",
+              "priority": "critical"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare temporary workaround for duplicate account issue",
+              "status": "pending",
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Send final launch comms note",
+              "status": "pending",
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Outstanding launch risk due to incomplete launch comms",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Unresolved post-beta success criteria",
+              "status": "pending",
+              "assignee": "Project Team",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "duplicate account",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "launch comms",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "cannibalization",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "workaround",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "open question still unresolved: qa needs phase one decision",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "decision on guest checkout inclusion in phase one",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "compliance",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ],
+          "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+          "executiveSummary": "The Onboarding Growth Initiative is nearing its beta launch, with key blockers resolved, including dashboard discrepancies and compliance approval. However, the duplicate account bug remains a critical issue, and launch communications are still pending, posing a risk to the launch timeline.",
+          "detailedSummary": "## Objective /  Context\nThe meeting aimed to finalize the launch readiness for the Onboarding Growth Initiative's beta, addressing unresolved blockers and ensuring all teams are aligned for the upcoming launch.\n\n## Decisions  Made\n- Dashboard validation is complete and discrepancies resolved.\n- Compliance is approved with conditions on guest email retention.\n- Duplicate account bug fix is pending QA verification.\n\n## Product  Implications\nResolved dashboard issues enhance user tracking, but unresolved duplicate account bug could impact user experience. Compliance conditions require engineering adjustments.\n\n## Delivery  Risks /  Blockers\n- Duplicate account bug remains unresolved, pending QA verification.\n- Launch communications note is still pending, posing a launch risk.\n\n## Open  Questions\n- Framework for measuring cannibalization versus true activation lift remains unresolved.\n\n## Next  Steps\n- Arjun to verify duplicate account bug patch by end of day, May 5.\n- Maya to prepare a temporary workaround if QA does not sign off on the bug fix.\n- Kumar to send the final launch communications note."
+        }
+      ],
+      "finalProjectChecks": [
+        {
+          "category": "project_item_status",
+          "target": "phase one => completed",
+          "passed": true,
+          "details": "Found status completed for \"Decision on guest checkout in phase one\"."
+        },
+        {
+          "category": "project_item_status",
+          "target": "launch comms => pending",
+          "passed": true,
+          "details": "Found status pending for \"Send final launch comms note\"."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "qa needs phase one decision",
+          "passed": true,
+          "details": "No open matching item found."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "guest checkout inclusion in phase one",
+          "passed": true,
+          "details": "No open matching item found."
+        }
+      ],
+      "finalProjectSnapshot": {
+        "project": {
+          "id": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+          "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+          "teamId": null,
+          "createdBy": "9758fa8e-6016-45f8-86c0-73c44753a065",
+          "name": "Onboarding Growth Initiative Benchmark 1776543540181",
+          "description": "Recurring B2B SaaS product meetings focused on onboarding growth, launch readiness, ownership, deadlines, and unresolved questions.",
+          "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+          "isRecurring": true,
+          "status": "active",
+          "startDate": null,
+          "endDate": null,
+          "createdAt": "2026-04-18T20:19:00.185Z",
+          "updatedAt": "2026-04-18T20:19:00.195Z"
+        },
+        "meetings": [
+          {
+            "id": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+            "title": "Onboarding Growth Initiative - Week 5 Launch Readiness",
+            "description": "Act like a senior AI product manager. Track carry-over action items, unresolved questions, overdue deadlines, missing status updates, dependencies, risks, launch readiness, and accountability by owner or team.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-05-05T14:00:00.000Z",
+            "endTime": "2026-04-18T20:20:22.657Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 19,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:20:22.657Z",
+            "updatedAt": "2026-04-18T20:20:22.657Z"
+          },
+          {
+            "id": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+            "title": "Onboarding Growth Initiative - Week 4 Replan",
+            "description": "Act like a senior AI product manager. Track carry-over action items, unresolved questions, overdue deadlines, missing status updates, dependencies, risks, launch readiness, and accountability by owner or team.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-04-28T14:00:00.000Z",
+            "endTime": "2026-04-18T20:19:55.501Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 18,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:19:55.500Z",
+            "updatedAt": "2026-04-18T20:19:55.500Z"
+          },
+          {
+            "id": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+            "title": "Onboarding Growth Initiative - Week 3 Scope And Risk Review",
+            "description": "Act like a senior AI product manager. Track carry-over action items, unresolved questions, overdue deadlines, missing status updates, dependencies, risks, launch readiness, and accountability by owner or team.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-04-21T14:00:00.000Z",
+            "endTime": "2026-04-18T20:19:36.529Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 19,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:19:36.529Z",
+            "updatedAt": "2026-04-18T20:19:36.529Z"
+          },
+          {
+            "id": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+            "title": "Onboarding Growth Initiative - Week 2 Status Review",
+            "description": "Act like a senior AI product manager. Track carry-over action items, unresolved questions, overdue deadlines, missing status updates, dependencies, risks, launch readiness, and accountability by owner or team.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-04-14T14:00:00.000Z",
+            "endTime": "2026-04-18T20:19:20.909Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 18,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:19:20.910Z",
+            "updatedAt": "2026-04-18T20:19:20.910Z"
+          },
+          {
+            "id": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "organizationId": "95391b35-65ce-4043-98bd-6d41597cec00",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "recurringSeriesId": null,
+            "googleMeetLink": "uploaded://transcript-38d2bd69-1944-42e0-8854-336cc71aaf49",
+            "title": "Onboarding Growth Initiative - Week 1 Kickoff",
+            "description": "Act like a senior AI product manager. Track carry-over action items, unresolved questions, overdue deadlines, missing status updates, dependencies, risks, launch readiness, and accountability by owner or team.",
+            "meetingType": "other",
+            "status": "completed",
+            "startTime": "2026-04-07T14:00:00.000Z",
+            "endTime": "2026-04-18T20:19:00.198Z",
+            "durationMinutes": null,
+            "totalTranscriptEvents": 16,
+            "botSessionId": null,
+            "captureSource": "manual",
+            "createdAt": "2026-04-18T20:19:00.199Z",
+            "updatedAt": "2026-04-18T20:19:00.199Z"
+          }
+        ],
+        "items": [
+          {
+            "id": "f2fb64ce-e882-4830-a230-24a63f32abf3",
+            "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Verify duplicate account bug patch",
+            "description": "Arjun to verify the patch for the duplicate account bug by the end of the day, May 5.",
+            "assignee": "Arjun",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-05",
+            "status": "pending",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "QA reproduced that bug yesterday. The fix is in review. I can verify the patch by end of day, May 5.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Arjun",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "a8acf1fa-1aa8-4a02-87e5-e506cc9f0216",
+              "relatedPriorItemType": "risk",
+              "projectPrioritySignal": "critical",
+              "relatedPriorMeetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 5
+            },
+            "createdAt": "2026-04-18T20:20:38.809Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "7b4a41a0-2fc5-4e5e-91a3-0c4e60041efd",
+            "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Prepare temporary workaround for duplicate account issue",
+            "description": "Maya to prepare a temporary workaround note if QA does not sign off on the duplicate account bug fix by tonight.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-05",
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Good catch. Arjun, verify the patch today. Maya, prepare a temporary workaround note if QA does not sign off by tonight.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "17f3e009-dbe3-4272-a25a-7f6b53aabc8e",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.92,
+            "sourceTranscriptRange": {
+              "endSeq": 13,
+              "startSeq": 13
+            },
+            "createdAt": "2026-04-18T20:20:38.809Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "3b8c5e8e-ec55-4030-b0a5-c2f76e2bcdde",
+            "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Send final launch comms note",
+            "description": "Kumar to send the final launch communications note.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The support side is covered, but the final launch comms note has not gone out yet. I still need to send that.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "1c3e0507-2f5a-41fb-83a4-875e8185a797",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 17,
+              "startSeq": 17
+            },
+            "createdAt": "2026-04-18T20:20:38.809Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "58493489-c8d7-47d0-aebe-10bd91c89dc1",
+            "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Outstanding launch risk due to incomplete launch comms",
+            "description": "The launch communications note is still open, posing a risk until it is completed.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Then we should treat that as an outstanding launch risk until complete.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 18,
+              "startSeq": 18
+            },
+            "createdAt": "2026-04-18T20:20:38.809Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "7c54dcac-bd3b-4291-a5fd-0528d5ea0c40",
+            "meetingId": "d72f67be-a109-4422-a6fa-a56c01cb201a",
+            "momId": "40b1a4b5-9407-4afb-8eb8-12db11933715",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Unresolved post-beta success criteria",
+            "description": "The framework for measuring cannibalization versus true activation lift remains an open analytical question after beta.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Then that remains an open analytical question after beta.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:20:38.809Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "a8acf1fa-1aa8-4a02-87e5-e506cc9f0216",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Duplicate account path instability",
+            "description": "The duplicate account path is not stable enough for beta release.",
+            "assignee": "Arjun",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "blocked",
+            "priority": "critical",
+            "metadata": {
+              "context": "Arjun raised this concern during the QA update.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "QA has one major concern. The duplicate account path is still not stable enough for beta.",
+              "accountability": {
+                "ownerLabel": "Arjun",
+                "accountableTeam": "QA team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 8,
+              "startSeq": 8
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.746Z"
+          },
+          {
+            "id": "1c3e0507-2f5a-41fb-83a4-875e8185a797",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Coordinate launch comms and support training plan",
+            "description": "Kumar will coordinate the launch communications and support training plan with customer success by May 2.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "context": "Kumar agreed to handle coordination for the launch.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I will coordinate launch comms and the support training plan with customer success by Friday, May 2.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "7bdee9ce-d4d0-47dc-9862-18a7ce5065e9",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 15,
+              "startSeq": 15
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.753Z"
+          },
+          {
+            "id": "15cc0294-a96b-4e8c-9344-44c93877577e",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "project_update",
+            "title": "Finance approved pricing experiment guardrails",
+            "description": "Finance has approved the pricing experiment guardrails, allowing limited pricing cues before account creation.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Kumar provided an update on the finance approval.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Finance approved the pricing experiment guardrails.",
+              "relationType": "resolves_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Finance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "e65c1498-1760-4719-a4c0-c8b82bd5fac2",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "953c8178-acaa-4276-b347-31d204ac35d5"
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 3,
+              "startSeq": 3
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.755Z"
+          },
+          {
+            "id": "cfa8fe34-9133-4e04-824a-b94dbbf0f34f",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "blocker",
+            "title": "Dashboard data discrepancies",
+            "description": "There are data discrepancies between guest session starts and converted accounts in the dashboard.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "context": "Neha needs to work with engineering to resolve these discrepancies.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The dashboard still has data discrepancies between guest session starts and converted accounts.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": "Engineering team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "1d4f2aff-ca5f-4787-9450-cb4356cc17a6",
+              "relatedPriorItemType": "risk",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "953c8178-acaa-4276-b347-31d204ac35d5"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 5
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.759Z"
+          },
+          {
+            "id": "11e328e4-7c72-446b-8ba3-116acedab87a",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Complete support macros by next Monday",
+            "description": "Maya committed to completing the support macros by next Monday.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-01",
+            "status": "blocked",
+            "priority": "high",
+            "metadata": {
+              "context": "Maya was delayed due to an escalation.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Support macros are not finished. I can get them done before next Monday.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "17f3e009-dbe3-4272-a25a-7f6b53aabc8e",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 7,
+              "startSeq": 7
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.757Z"
+          },
+          {
+            "id": "d1f7f0e7-ab02-48c8-ae22-021931802ad0",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "decision",
+            "title": "April 29 beta launch is no longer realistic",
+            "description": "The team decided to replan the beta launch as April 29 is no longer a feasible date.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "critical",
+            "metadata": {
+              "context": "Kumar initiated the discussion about replanning.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "April 29 beta is no longer realistic, so today is about a controlled reset, not wishful thinking.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              },
+              "relatedPriorItemId": "bdb87aef-793c-4e16-b120-3e0603b94a79",
+              "relatedPriorItemType": "decision",
+              "projectPrioritySignal": "critical",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 1,
+              "startSeq": 1
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.761Z"
+          },
+          {
+            "id": "dde68663-9d56-41b3-980d-53121dbdd3ef",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "project_update",
+            "title": "Taxonomy cleanup completed and merged",
+            "description": "The taxonomy cleanup task has been completed and merged into the project.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Subhash provided an update on the taxonomy cleanup.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The taxonomy cleanup is done and merged.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "f1a13ecf-76fd-4c96-be0a-ec485fa1df6d",
+              "relatedPriorItemType": "risk",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 4,
+              "startSeq": 4
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.763Z"
+          },
+          {
+            "id": "768dcca8-b69b-4eea-9d55-92dfce942612",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "deadline",
+            "title": "New target for launch readiness review: May 6",
+            "description": "The new target date for the launch readiness review is set for May 6.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "pending",
+            "priority": "high",
+            "metadata": {
+              "context": "Kumar announced the new target date.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "New target for launch readiness review is Tuesday, May 6.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              },
+              "relatedPriorItemId": "86c2926e-ac9b-4726-8e40-891dc27b4ed7",
+              "relatedPriorItemType": "deadline",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 13,
+              "startSeq": 13
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:22.613Z"
+          },
+          {
+            "id": "8fde12f1-2c34-46a1-bfd8-f9b66d399430",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Coordinate launch comms and support training plan by May 2.",
+            "description": null,
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-02",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.92,
+            "sourceTranscriptRange": null,
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.768Z"
+          },
+          {
+            "id": "dcd31048-f9ca-421c-9832-2c44999b5f76",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Prepare a clean launch checklist with owner names by next week.",
+            "description": null,
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": "2026-05-05",
+            "status": "completed",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.88,
+            "sourceTranscriptRange": null,
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.766Z"
+          },
+          {
+            "id": "08fd2aa1-253f-4abd-83aa-d7e284363206",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Finalize compliance review by April 30.",
+            "description": null,
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-30",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "c297888b-b656-4633-b4a0-9a47fc90cdc3",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": null,
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.769Z"
+          },
+          {
+            "id": "5acc5239-6072-4b18-9899-c96533c363f5",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Prepare a clean launch checklist with owner names",
+            "description": "Anita requested a clean launch checklist with owner names by next week.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "medium",
+            "metadata": {
+              "context": "Anita emphasized the need for clear accountability.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I want a clean launch checklist next week with owner names, not just discussion.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 16,
+              "startSeq": 16
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.772Z"
+          },
+          {
+            "id": "d6c45536-1cc7-44a8-a5fb-a52dcfadc2ed",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Send retention behavior to Rahul",
+            "description": "Subhash committed to sending the retention behavior to Rahul today.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Subhash responded to Rahul's dependency for compliance review.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I can send that today.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "2506e487-ed0a-42e1-9263-df5445861347",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 12,
+              "startSeq": 12
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.774Z"
+          },
+          {
+            "id": "bee45ae9-4b15-4ebf-b76b-8e4cc9ea063d",
+            "meetingId": "5aa7e329-9433-41b7-a956-c2f5f60801a8",
+            "momId": "249be846-92cb-4c63-9999-60cf8ecdd08d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Close compliance review by April 30",
+            "description": "Rahul needs to close the compliance review by April 30, assuming engineering provides the retention behavior today.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Kumar requested a deadline for the compliance review.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Rahul, can you close that by Wednesday, April 30?",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Engineering team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "c297888b-b656-4633-b4a0-9a47fc90cdc3",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:20:22.613Z",
+            "updatedAt": "2026-04-18T20:20:38.776Z"
+          },
+          {
+            "id": "bdb87aef-793c-4e16-b120-3e0603b94a79",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "decision",
+            "title": "Beta date at risk unless key tasks are completed",
+            "description": "The beta date of April 29 is at risk unless dashboard validation, compliance review, and support preparation are completed this week.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "critical",
+            "metadata": {
+              "context": "Discussion on the feasibility of the beta date given current progress and risks.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Agreed. Let’s call beta date at risk unless dashboard validation, compliance review, and support prep are all done this week.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 18,
+              "startSeq": 18
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:38.807Z"
+          },
+          {
+            "id": "7bdee9ce-d4d0-47dc-9862-18a7ce5065e9",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Follow-up with finance on pricing alignment",
+            "description": "Kumar to follow up with finance to close the conversation on pricing and finance alignment.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Pricing and finance alignment is still pending.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The pricing conversation is still not fully closed. I have a follow-up with finance, but I do not have the final answer yet.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Finance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "e65c1498-1760-4719-a4c0-c8b82bd5fac2",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "953c8178-acaa-4276-b347-31d204ac35d5"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 14,
+              "startSeq": 14
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:22.532Z"
+          },
+          {
+            "id": "c297888b-b656-4633-b4a0-9a47fc90cdc3",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Finalize compliance review for storing guest emails",
+            "description": "Rahul needs to finish the compliance review for storing guest email addresses, pending final persistence behavior from engineering.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Compliance review is pending due to incomplete information from engineering.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I still have not finished the compliance review for storing guest email addresses. I need the final persistence behavior from engineering first.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "820da0e2-9978-4bda-b13f-84665ebca3ec",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:38.799Z"
+          },
+          {
+            "id": "776ac860-8e69-43dc-83f3-0d822e12ad30",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Unresolved product question on guest checkout impact",
+            "description": "How do we measure whether guest checkout cannibalizes intentional sign-ups rather than improving activation?",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Discussion on the impact of guest checkout on user sign-ups.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "We also still have an unresolved product question: how do we measure whether guest checkout cannibalizes intentional sign-ups rather than improving activation?",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "717abd9a-edd7-401b-8c6c-2953f1550c71",
+              "relatedPriorItemType": "question",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 19,
+              "startSeq": 19
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:22.538Z"
+          },
+          {
+            "id": "2d2679db-2eb3-47fd-8aa5-26cdc4d7219f",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Validate event mapping for dashboard",
+            "description": "Neha to complete validation of the event mapping for the dashboard by Wednesday, April 23.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-23",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "context": "Neha is working on the analytics dashboard and needs to validate event mapping.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The dashboard is close, but I have not validated the event mapping yet. I can get validation done by Wednesday, April 23.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "2242f113-08fe-41a6-a0aa-962d6b46c2da",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "953c8178-acaa-4276-b347-31d204ac35d5"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 6,
+              "startSeq": 6
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:22.609Z"
+          },
+          {
+            "id": "f1a13ecf-76fd-4c96-be0a-ec485fa1df6d",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Taxonomy cleanup delay may impact dashboard",
+            "description": "If taxonomy cleanup slips again, Neha may need to rework the dashboard event labels.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "blocked",
+            "priority": "high",
+            "metadata": {
+              "context": "Subhash has not completed the final cleanup pass on taxonomy.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "If taxonomy cleanup slips again, I may need to rework the dashboard event labels.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "2506e487-ed0a-42e1-9263-df5445861347",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 16,
+              "startSeq": 16
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:38.804Z"
+          },
+          {
+            "id": "17f3e009-dbe3-4272-a25a-7f6b53aabc8e",
+            "meetingId": "4fb5a8e2-f278-4ef0-a628-605a434e9926",
+            "momId": "3e69a193-8b7c-42ca-a47a-2e1787ce340d",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Draft support macros for guest session conversion",
+            "description": "Maya to draft support macros for scenarios where users create a guest session and later convert into a full account.",
+            "assignee": "Maya",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-24",
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "context": "Support needs prepared responses for user scenarios involving guest sessions.",
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Maya, can you draft support macros by Thursday, April 24?",
+              "accountability": {
+                "ownerLabel": "Maya",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 9
+            },
+            "createdAt": "2026-04-18T20:19:55.481Z",
+            "updatedAt": "2026-04-18T20:20:38.749Z"
+          },
+          {
+            "id": "48b82052-9009-43e1-8b9e-57e0935db7ac",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "blocker",
+            "title": "Identity team sandbox delivery",
+            "description": "The identity team did not deliver the sandbox on April 15 as promised, blocking progress.",
+            "assignee": "Identity Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Bigger blocker: identity team did not deliver the sandbox on April 15 as promised.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Identity Team",
+                "accountableTeam": "Identity team",
+                "accountabilityType": "team"
+              },
+              "relatedPriorItemId": "2c30c78b-7a49-41b4-a3b5-0b1a5d201eeb",
+              "relatedPriorItemType": "dependency",
+              "projectPrioritySignal": "critical",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:19:55.460Z"
+          },
+          {
+            "id": "90ea0e42-6c3f-43cd-8a1b-b0c07c14caa0",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Draft fallback proposal",
+            "description": "Subhash to draft a fallback proposal by April 18 in case the identity team does not unblock the project.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-18",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I can draft a fallback proposal by Friday, April 18, so we are not waiting passively.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "2506e487-ed0a-42e1-9263-df5445861347",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 13,
+              "startSeq": 13
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:38.779Z"
+          },
+          {
+            "id": "bd66a062-2c4e-4418-aaba-0a5af78a42ea",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Complete event taxonomy",
+            "description": "Subhash needs to complete the event taxonomy, which slipped from April 11 to April 16 due to changes by the identity team.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-16",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "The event taxonomy is about eighty percent done. I need two more days because the identity team changed some of the event names in their draft API notes.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "2506e487-ed0a-42e1-9263-df5445861347",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 3
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:38.784Z"
+          },
+          {
+            "id": "1d4f2aff-ca5f-4787-9450-cb4356cc17a6",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Data risk due to delayed analytics dashboard",
+            "description": "If the analytics dashboard is delayed, there will be no clean baseline before beta, posing a data risk.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "There is also a data risk. If the analytics dashboard is delayed, we will not have a clean baseline before beta.",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 16,
+              "startSeq": 16
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:38.801Z"
+          },
+          {
+            "id": "e65c1498-1760-4719-a4c0-c8b82bd5fac2",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Finalize finance alignment on pricing guardrails",
+            "description": null,
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Finance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "a72a547e-df82-4acd-b517-8f5567a249c5",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.85,
+            "sourceTranscriptRange": null,
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:22.483Z"
+          },
+          {
+            "id": "46999b1f-e1ea-4ecc-86ac-2b61addaba9f",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Pricing guardrails and experiment validity",
+            "description": "Kumar needs to finalize the alignment with finance on pricing guardrails and determine if pre-account pricing display affects experiment validity.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Finance alignment is not done yet. I met with them briefly, but I still need a final answer on the pricing guardrails and whether pre-account pricing display affects experiment validity.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Finance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "a72a547e-df82-4acd-b517-8f5567a249c5",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 9,
+              "startSeq": 9
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:22.595Z"
+          },
+          {
+            "id": "b8f91fcc-fc85-49df-bf04-6b506ca57347",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Decision on guest checkout in phase one",
+            "description": "Support and QA teams need to know if guest checkout is included in phase one for planning macros, escalation paths, and test plans.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Support wants to know if guest checkout is phase one because macros and escalation paths depend on that.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Support team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "717abd9a-edd7-401b-8c6c-2953f1550c71",
+              "relatedPriorItemType": "question",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 8,
+              "startSeq": 8
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:22.575Z"
+          },
+          {
+            "id": "2242f113-08fe-41a6-a0aa-962d6b46c2da",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Capture delivery risk of delayed analytics dashboard",
+            "description": "Neha to capture the delivery risk associated with the potential delay of the analytics dashboard.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Good point. Please capture that as a delivery risk.",
+              "relationType": "blocks_prior_item",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "011b6840-1eb6-4bb5-afe2-94389f0ae02c",
+              "relatedPriorItemType": "action_item",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 17,
+              "startSeq": 17
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:22.590Z"
+          },
+          {
+            "id": "1db2fdcc-0e15-4124-adab-f02dd69bc8ae",
+            "meetingId": "953c8178-acaa-4276-b347-31d204ac35d5",
+            "momId": "24010f30-66e7-460b-9f9a-eca9192ff0e0",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Compliance implications of storing guest emails",
+            "description": "Rahul needs a definitive answer on whether guest emails are persisted or only held in session, which poses a compliance risk.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "On the compliance side, I still need a definitive answer on whether guest emails are persisted or only held in session.",
+              "relationType": "carries_forward_prior_item",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              },
+              "relatedPriorItemId": "b00d2216-b7e0-41af-b229-cb3d3e114c0c",
+              "relatedPriorItemType": "risk",
+              "projectPrioritySignal": "high",
+              "relatedPriorMeetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246"
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:19:36.500Z",
+            "updatedAt": "2026-04-18T20:20:38.782Z"
+          },
+          {
+            "id": "770260ce-2499-4f0a-b7e6-a672a8e98afb",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Impact of guest checkout on support",
+            "description": "Maya raised a concern about how guest checkout might affect user contact methods and duplicate account creation.",
+            "assignee": "Support Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "blocked",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Support will need early notice if guest checkout changes how users contact us or how duplicate accounts are created.",
+              "accountability": {
+                "ownerLabel": "Support Team",
+                "accountableTeam": "Support team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.8,
+            "sourceTranscriptRange": {
+              "endSeq": 7,
+              "startSeq": 7
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.786Z"
+          },
+          {
+            "id": "717abd9a-edd7-401b-8c6c-2953f1550c71",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Decision on guest checkout in phase one",
+            "description": "Arjun needs a decision on whether guest checkout is included in phase one for QA to finalize the test matrix.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "QA will need a clear decision on whether guest checkout is in phase one. Otherwise we cannot finalize the test matrix.",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "QA team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 8,
+              "startSeq": 8
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:22.583Z"
+          },
+          {
+            "id": "820da0e2-9978-4bda-b13f-84665ebca3ec",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Review compliance implications of storing guest emails",
+            "description": null,
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": null,
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.777Z"
+          },
+          {
+            "id": "b00d2216-b7e0-41af-b229-cb3d3e114c0c",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Compliance implications of storing guest emails",
+            "description": "Rahul to review the compliance implications of storing guest email addresses before full account creation.",
+            "assignee": "Rahul",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I also need to review whether we are storing guest email addresses before full account creation. That might have compliance implications.",
+              "accountability": {
+                "ownerLabel": "Rahul",
+                "accountableTeam": "Compliance team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 10,
+              "startSeq": 10
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.788Z"
+          },
+          {
+            "id": "4c059463-7817-45de-b0dc-298f0ff87cb3",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "question",
+            "title": "Pricing visibility in guest flow",
+            "description": "Priya needs clarity on whether pricing should be shown before or after account creation in the guest flow.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "medium",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I also want clarity on whether the guest flow should show pricing before account creation or after.",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 14,
+              "startSeq": 14
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:22.600Z"
+          },
+          {
+            "id": "2c30c78b-7a49-41b4-a3b5-0b1a5d201eeb",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "dependency",
+            "title": "Dependency on identity team's lightweight session API",
+            "description": "The implementation of guest checkout depends on the identity team's lightweight session API, expected by April 15.",
+            "assignee": "Identity Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "There is one external dependency. The identity team promised their lightweight session API by April 15.",
+              "accountability": {
+                "ownerLabel": "Identity Team",
+                "accountableTeam": "Identity team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 11,
+              "startSeq": 11
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.792Z"
+          },
+          {
+            "id": "86c2926e-ac9b-4726-8e40-891dc27b4ed7",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "deadline",
+            "title": "Target beta readiness review",
+            "description": "The target date for the beta readiness review is April 29, contingent on identity, analytics, and phase one decisions.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "Let’s target beta readiness review on April 29 for now, but it depends on identity, analytics, and the phase one decision.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Project Team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 13,
+              "startSeq": 13
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:22.525Z"
+          },
+          {
+            "id": "2b0c0e3e-c096-4bf5-8f92-a92e48fada3d",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "risk",
+            "title": "Risk of beta scope if identity team slips",
+            "description": "Anita highlighted the risk to the beta scope if the identity team does not deliver the session API on time.",
+            "assignee": "Project Team",
+            "assigneeEmail": null,
+            "dueDate": null,
+            "status": "completed",
+            "priority": "critical",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "So the risk is clear. If identity slips, beta scope is at risk.",
+              "accountability": {
+                "ownerLabel": "Project Team",
+                "accountableTeam": "Identity team",
+                "accountabilityType": "team"
+              }
+            },
+            "aiConfidence": 0.9,
+            "sourceTranscriptRange": {
+              "endSeq": 12,
+              "startSeq": 12
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:19:55.473Z"
+          },
+          {
+            "id": "d26d8d4e-80a8-4e22-83ac-46590e7ee8e2",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Complete guest checkout wireframes",
+            "description": "Priya to complete the first-pass guest checkout wireframes.",
+            "assignee": "Priya",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-10",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "From design, I can get the first-pass guest checkout wireframes done by Thursday, April 10.",
+              "accountability": {
+                "ownerLabel": "Priya",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 3,
+              "startSeq": 3
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:22.558Z"
+          },
+          {
+            "id": "011b6840-1eb6-4bb5-afe2-94389f0ae02c",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Develop onboarding dashboard",
+            "description": "Neha to develop the first version of the onboarding dashboard, contingent on the stability of the taxonomy.",
+            "assignee": "Neha",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-12",
+            "status": "in_progress",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I’ll take the onboarding dashboard. I can get the first version ready by Saturday, April 12, assuming the taxonomy is stable.",
+              "accountability": {
+                "ownerLabel": "Neha",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 5,
+              "startSeq": 5
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.809Z"
+          },
+          {
+            "id": "a72a547e-df82-4acd-b517-8f5567a249c5",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Align with finance on pricing experiment guardrails",
+            "description": "Kumar to align with finance on pricing experiment guardrails to prevent distortion in conversion reporting.",
+            "assignee": "Kumar",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-14",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I also need to align with finance on the pricing experiment guardrails because we do not want guest checkout to distort conversion reporting.",
+              "accountability": {
+                "ownerLabel": "Kumar",
+                "accountableTeam": "Finance team",
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 6,
+              "startSeq": 6
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:22.604Z"
+          },
+          {
+            "id": "2506e487-ed0a-42e1-9263-df5445861347",
+            "meetingId": "bfdff6b4-1b3c-4f4b-ba21-1802daf77246",
+            "momId": "633fedd5-2166-4768-ba46-f66ef7c5e411",
+            "projectId": "92965f8d-b2d3-4021-8f08-be4fb7a7cc16",
+            "itemType": "action_item",
+            "title": "Prepare event taxonomy document",
+            "description": "Subhash to prepare the event taxonomy document for analytics.",
+            "assignee": "Subhash",
+            "assigneeEmail": null,
+            "dueDate": "2026-04-11",
+            "status": "completed",
+            "priority": "high",
+            "metadata": {
+              "generatedBy": "mom_pipeline",
+              "sourceQuote": "I’ll own the event taxonomy doc for analytics, and I can have that ready by Friday, April 11.",
+              "accountability": {
+                "ownerLabel": "Subhash",
+                "accountableTeam": null,
+                "accountabilityType": "individual"
+              }
+            },
+            "aiConfidence": 0.95,
+            "sourceTranscriptRange": {
+              "endSeq": 4,
+              "startSeq": 4
+            },
+            "createdAt": "2026-04-18T20:19:20.881Z",
+            "updatedAt": "2026-04-18T20:20:38.795Z"
+          }
+        ],
+        "stats": {
+          "totalMeetings": 5,
+          "totalItems": 47,
+          "pendingItems": 6,
+          "completedItems": 29
+        }
+      }
+    },
+    {
+      "systemId": "transcript_only",
+      "systemLabel": "Transcript-Only Baseline",
+      "systemMode": "stateless_transcript_only",
+      "runContext": {
+        "strategySummary": "Analyzes each meeting independently through the backend without prior project memory, database reconciliation, or carry-forward state transitions."
+      },
+      "summary": {
+        "meetingsProcessed": 5,
+        "checksPassed": 34,
+        "checksFailed": 4
+      },
+      "meetings": [
+        {
+          "sequenceNumber": 1,
+          "slug": "week1_kickoff",
+          "title": "Onboarding Growth Initiative - Week 1 Kickoff",
+          "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+          "requestStatus": 200,
+          "transcriptEventCount": 16,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemsCreated": 12,
+            "highlightsCreated": 6,
+            "processingTimeMs": 20983
+          },
+          "executiveSummary": "The meeting focused on aligning the team on the Onboarding Growth Initiative for Q2, with a particular emphasis on enhancing user activation and reducing drop-off rates. Key decisions included the initiation of guest checkout and funnel instrumentation tracks, with specific action items assigned to ensure timely progress.",
+          "detailedSummary": "## Objective Context\nThe objective is to improve activation for new self-serve users and reduce drop-off before account completion by implementing guest checkout and better funnel instrumentation.\n\n## Decisions Made\n- Proceed with guest checkout and funnel instrumentation as the two main tracks.\n- Assign specific deliverables with deadlines to team members for initial tasks.\n\n## Product Implications\n- Guest checkout could influence user conversion metrics and support processes.\n- Funnel instrumentation will provide insights into user drop-off points.\n\n## Delivery Risks Blockers\n- Dependency on the identity team's session API delivery by April 15.\n- Potential compliance issues with storing guest email addresses.\n\n## Open Questions\n- Should guest checkout be included in phase one or remain behind a feature flag?\n- Should pricing be visible in the guest flow before or after account creation?\n\n## Next Steps\n- Complete wireframes, event taxonomy, and onboarding dashboard by respective deadlines.\n- Align with finance on pricing guardrails and resolve open questions.",
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Complete first-pass guest checkout wireframes",
+              "status": null,
+              "assignee": "Priya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare event taxonomy document for analytics",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Develop first version of onboarding dashboard",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Align with finance on pricing experiment guardrails",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Impact of guest checkout on support",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "question",
+              "title": "Decision on guest checkout inclusion in phase one",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Compliance implications of storing guest email addresses",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "dependency",
+              "title": "Identity team's lightweight session API",
+              "status": null,
+              "assignee": "Identity Team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "risk",
+              "title": "Risk of identity team delay affecting beta scope",
+              "status": null,
+              "assignee": "Identity team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "deadline",
+              "title": "Target beta readiness review",
+              "status": null,
+              "assignee": null,
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Pricing visibility in guest flow",
+              "status": null,
+              "assignee": "Priya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Review compliance implications of storing guest email addresses",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "guest checkout",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "pricing experiment guardrails",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "identity",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "phase one",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "guest checkout",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "activation",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "identity",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 2,
+          "slug": "week2_status",
+          "title": "Onboarding Growth Initiative - Week 2 Status Review",
+          "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+          "requestStatus": 200,
+          "transcriptEventCount": 18,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemsCreated": 8,
+            "highlightsCreated": 6,
+            "processingTimeMs": 16536
+          },
+          "executiveSummary": "The Onboarding Growth Initiative meeting identified key blockers and unresolved questions impacting beta readiness, including the delay in the identity team's sandbox delivery and pending decisions on guest checkout and pricing guardrails. Immediate actions were assigned to address these issues to maintain project momentum.",
+          "detailedSummary": "## Objective Context\nReview the current status of the Onboarding Growth Initiative, focusing on progress, delays, and blockers affecting the beta release.\n\n## Decisions Made\n- Subhash to finalize the event taxonomy by April 16.\n- Subhash to draft a fallback proposal by April 18 if the identity team remains a blocker.\n\n## Product Implications\n- Incomplete event taxonomy and sandbox delivery delay are impacting dashboard development and QA test plan finalization.\n\n## Delivery Risks Blockers\n- Identity team sandbox delivery delay is a critical blocker.\n- Data risk due to potential analytics dashboard delay.\n\n## Open Questions\n- Is guest checkout included in phase one?\n- What are the pricing guardrails and their impact on experiment validity?\n\n## Next Steps\n- Subhash to complete event taxonomy and draft fallback proposal.\n- Kumar to resolve finance alignment on pricing guardrails.\n- Rahul to confirm compliance on guest email persistence.",
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Finalize event taxonomy",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft fallback proposal",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "medium"
+            },
+            {
+              "itemType": "blocker",
+              "title": "Identity team sandbox delivery delay",
+              "status": null,
+              "assignee": "Identity team",
+              "priority": "critical"
+            },
+            {
+              "itemType": "question",
+              "title": "Phase one inclusion of guest checkout",
+              "status": null,
+              "assignee": "Support team",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Pricing guardrails and experiment validity",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "risk",
+              "title": "Data risk due to analytics dashboard delay",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Resolve guest email persistence compliance",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Finance alignment on pricing guardrails",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "fallback proposal",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "finance",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "phase one",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "identity team",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "blocker",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "beta",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 3,
+          "slug": "week3_scope_risk",
+          "title": "Onboarding Growth Initiative - Week 3 Scope And Risk Review",
+          "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+          "requestStatus": 200,
+          "transcriptEventCount": 19,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemsCreated": 7,
+            "highlightsCreated": 6,
+            "processingTimeMs": 18198
+          },
+          "executiveSummary": "The Onboarding Growth Initiative's beta release scheduled for April 29 is at risk due to pending tasks in dashboard validation, compliance review, and support preparation. Key decisions and actions were identified to address these risks, with accountability assigned to specific team members and teams.",
+          "detailedSummary": "## Objective Context\nReview the scope and risks associated with the Onboarding Growth Initiative to ensure readiness for the planned beta release on April 29.",
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "Beta date at risk unless key tasks are completed",
+              "status": null,
+              "assignee": "Support team",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Validate event mapping for the dashboard",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Draft support macros for guest session conversion",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "blocker",
+              "title": "Compliance review pending final persistence behavior",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Unresolved product question on guest checkout impact",
+              "status": null,
+              "assignee": null,
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Follow-up on pricing and finance alignment",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "medium"
+            },
+            {
+              "itemType": "risk",
+              "title": "Taxonomy cleanup delay may impact dashboard",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "support macros",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "pricing",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "beta",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "risk",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "April 29",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 4,
+          "slug": "week4_replan",
+          "title": "Onboarding Growth Initiative - Week 4 Replan",
+          "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+          "requestStatus": 200,
+          "transcriptEventCount": 18,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemsCreated": 15,
+            "highlightsCreated": 6,
+            "processingTimeMs": 23874
+          },
+          "executiveSummary": "The team has decided to replan the onboarding growth initiative, moving the beta launch date from April 29 to a later date due to unresolved issues. Key focus areas include resolving dashboard data discrepancies, stabilizing the duplicate account path, and completing compliance reviews to ensure launch readiness by May 6.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to reassess the timeline for the onboarding growth initiative due to the April 29 beta launch being deemed unrealistic. The focus was on identifying current progress, outstanding tasks, and setting a new target for launch readiness.\n\n## Product Implications\n- The delay in the beta launch impacts the timeline for onboarding improvements and may affect user acquisition targets.\n\n## Delivery Risks Blockers\n- Dashboard data discrepancies need resolution.\n- Duplicate account path stability is a concern for QA.\n- Compliance review on guest email retention is pending.\n\n## Open Questions\n- Will the compliance review be completed by April 30?\n- Can the dashboard data discrepancies be resolved in time for the new launch readiness review?\n\n## Next Steps\n- Resolve dashboard data discrepancies.\n- Complete support macros by next Monday.\n- Close compliance review by April 30.",
+          "itemSnapshot": [
+            {
+              "itemType": "decision",
+              "title": "April 29 beta launch is no longer realistic",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Finance approved pricing experiment guardrails",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "medium"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Taxonomy cleanup completed",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Resolve dashboard data discrepancies",
+              "status": null,
+              "assignee": "Neha",
+              "priority": "high"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Design work completed",
+              "status": null,
+              "assignee": "Priya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Complete support macros",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "medium"
+            },
+            {
+              "itemType": "risk",
+              "title": "Duplicate account path not stable",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Compliance review on guest email retention",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "deadline",
+              "title": "Close compliance review by April 30",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Send retention behavior to Rahul",
+              "status": null,
+              "assignee": "Subhash",
+              "priority": "high"
+            },
+            {
+              "itemType": "deadline",
+              "title": "Launch readiness review on May 6",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Coordinate launch comms and support training",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare a clean launch checklist",
+              "status": null,
+              "assignee": "Anita",
+              "priority": "medium"
+            },
+            {
+              "itemType": "project_update",
+              "title": "Guest checkout shipping in beta",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "medium"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Close compliance review",
+              "status": null,
+              "assignee": "Rahul",
+              "priority": "high"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "launch readiness review",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "launch",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "compliance",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "guardrails",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "April 29",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "May 6",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        },
+        {
+          "sequenceNumber": 5,
+          "slug": "week5_launch_readiness",
+          "title": "Onboarding Growth Initiative - Week 5 Launch Readiness",
+          "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+          "requestStatus": 200,
+          "transcriptEventCount": 19,
+          "momGeneration": {
+            "success": true,
+            "momId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemsCreated": 6,
+            "highlightsCreated": 6,
+            "processingTimeMs": 15189
+          },
+          "executiveSummary": "The final launch readiness review for the onboarding growth beta identified key areas of progress and outstanding risks. While dashboard validation and compliance are complete, unresolved issues remain around the duplicate account bug and final launch communications, posing potential risks to the launch timeline.",
+          "detailedSummary": "## Objective Context\nThe meeting aimed to assess the launch readiness of the onboarding growth beta, focusing on resolving any outstanding issues and confirming readiness for launch.\n\n## Decisions Made\n- Dashboard validation is complete, and discrepancies are resolved.\n- Compliance is approved with a note on guest email retention and abandoned session purges.\n- The duplicate account bug fix is pending QA verification by end of day, May 5.\n- Support macros and escalation paths are complete.\n\n## Product Implications\n- The unresolved duplicate account bug could impact user experience if not fixed promptly.\n- The lack of a definitive framework for measuring success post-beta could affect long-term product evaluation.\n\n## Delivery Risks Blockers\n- Outstanding launch risk due to incomplete final launch communications.\n- Pending QA verification of the duplicate account bug fix.\n\n## Open Questions\n- What are the unresolved product perspective issues?\n- What is the final success criteria for post-beta measurement?\n\n## Next Steps\n- Arjun to verify the duplicate account bug patch by end of day, May 5.\n- Maya to prepare a temporary workaround note if the bug fix is not verified.\n- Kumar to send the final launch communications note.",
+          "itemSnapshot": [
+            {
+              "itemType": "action_item",
+              "title": "Verify the duplicate account bug patch",
+              "status": null,
+              "assignee": "Arjun",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Prepare temporary workaround note for duplicate account issue",
+              "status": null,
+              "assignee": "Maya",
+              "priority": "high"
+            },
+            {
+              "itemType": "action_item",
+              "title": "Send final launch comms note",
+              "status": null,
+              "assignee": "Kumar",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Unresolved product perspective issues",
+              "status": null,
+              "assignee": null,
+              "priority": "medium"
+            },
+            {
+              "itemType": "risk",
+              "title": "Outstanding launch risk due to incomplete launch comms",
+              "status": null,
+              "assignee": "Support team",
+              "priority": "high"
+            },
+            {
+              "itemType": "question",
+              "title": "Final success criteria for post-beta",
+              "status": null,
+              "assignee": null,
+              "priority": "medium"
+            }
+          ],
+          "expectationResults": [
+            {
+              "category": "meeting_item_presence",
+              "target": "duplicate account",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "launch comms",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "cannibalization",
+              "passed": false,
+              "details": "No matching meeting item title found."
+            },
+            {
+              "category": "meeting_item_presence",
+              "target": "workaround",
+              "passed": true,
+              "details": "Matched at least one meeting item title."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "open question still unresolved: qa needs phase one decision",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_item_absence",
+              "target": "decision on guest checkout inclusion in phase one",
+              "passed": true,
+              "details": "No forbidden meeting item title found."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "launch",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "compliance",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            },
+            {
+              "category": "meeting_summary_phrase",
+              "target": "dashboard",
+              "passed": true,
+              "details": "Phrase found in executive or detailed summary."
+            }
+          ]
+        }
+      ],
+      "finalProjectChecks": [
+        {
+          "category": "project_item_status",
+          "target": "phase one => completed",
+          "passed": false,
+          "details": "Matching items found, but statuses were: Decision on guest checkout inclusion in phase one=null; Phase one inclusion of guest checkout=null."
+        },
+        {
+          "category": "project_item_status",
+          "target": "launch comms => pending",
+          "passed": false,
+          "details": "Matching items found, but statuses were: Coordinate launch comms and support training=null; Send final launch comms note=null; Outstanding launch risk due to incomplete launch comms=null."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "qa needs phase one decision",
+          "passed": true,
+          "details": "No open matching item found."
+        },
+        {
+          "category": "project_open_absence",
+          "target": "guest checkout inclusion in phase one",
+          "passed": false,
+          "details": "Found open matching item \"Decision on guest checkout inclusion in phase one\" with status null."
+        }
+      ],
+      "finalProjectSnapshot": {
+        "items": [
+          {
+            "id": "transcript_only-1-0",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "action_item",
+            "title": "Complete first-pass guest checkout wireframes",
+            "status": null,
+            "assignee": "Priya",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-1",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "action_item",
+            "title": "Prepare event taxonomy document for analytics",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-2",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "action_item",
+            "title": "Develop first version of onboarding dashboard",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-1-3",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "action_item",
+            "title": "Align with finance on pricing experiment guardrails",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-4",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "question",
+            "title": "Impact of guest checkout on support",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-1-5",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "question",
+            "title": "Decision on guest checkout inclusion in phase one",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-6",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "question",
+            "title": "Compliance implications of storing guest email addresses",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-7",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "dependency",
+            "title": "Identity team's lightweight session API",
+            "status": null,
+            "assignee": "Identity Team",
+            "priority": "critical"
+          },
+          {
+            "id": "transcript_only-1-8",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "risk",
+            "title": "Risk of identity team delay affecting beta scope",
+            "status": null,
+            "assignee": "Identity team",
+            "priority": "critical"
+          },
+          {
+            "id": "transcript_only-1-9",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "deadline",
+            "title": "Target beta readiness review",
+            "status": null,
+            "assignee": null,
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-1-10",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "question",
+            "title": "Pricing visibility in guest flow",
+            "status": null,
+            "assignee": "Priya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-1-11",
+            "meetingId": "benchmark-f7e97f02-36c3-4752-b5bd-6eb34667a6f6",
+            "itemType": "action_item",
+            "title": "Review compliance implications of storing guest email addresses",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-0",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "action_item",
+            "title": "Finalize event taxonomy",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-1",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "action_item",
+            "title": "Draft fallback proposal",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-2-2",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "blocker",
+            "title": "Identity team sandbox delivery delay",
+            "status": null,
+            "assignee": "Identity team",
+            "priority": "critical"
+          },
+          {
+            "id": "transcript_only-2-3",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "question",
+            "title": "Phase one inclusion of guest checkout",
+            "status": null,
+            "assignee": "Support team",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-4",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "question",
+            "title": "Pricing guardrails and experiment validity",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-5",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "risk",
+            "title": "Data risk due to analytics dashboard delay",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-2-6",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "action_item",
+            "title": "Resolve guest email persistence compliance",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-2-7",
+            "meetingId": "benchmark-1cf99584-95e5-4619-b11b-4fad4fa0e3e4",
+            "itemType": "action_item",
+            "title": "Finance alignment on pricing guardrails",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-0",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "decision",
+            "title": "Beta date at risk unless key tasks are completed",
+            "status": null,
+            "assignee": "Support team",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-1",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "action_item",
+            "title": "Validate event mapping for the dashboard",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-2",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "action_item",
+            "title": "Draft support macros for guest session conversion",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-3",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "blocker",
+            "title": "Compliance review pending final persistence behavior",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-3-4",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "question",
+            "title": "Unresolved product question on guest checkout impact",
+            "status": null,
+            "assignee": null,
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-5",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "action_item",
+            "title": "Follow-up on pricing and finance alignment",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-3-6",
+            "meetingId": "benchmark-93be4049-ed3f-4f63-9667-d68c737e4857",
+            "itemType": "risk",
+            "title": "Taxonomy cleanup delay may impact dashboard",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-0",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "decision",
+            "title": "April 29 beta launch is no longer realistic",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-1",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "project_update",
+            "title": "Finance approved pricing experiment guardrails",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-2",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "project_update",
+            "title": "Taxonomy cleanup completed",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-3",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Resolve dashboard data discrepancies",
+            "status": null,
+            "assignee": "Neha",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-4",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "project_update",
+            "title": "Design work completed",
+            "status": null,
+            "assignee": "Priya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-5",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Complete support macros",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-6",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "risk",
+            "title": "Duplicate account path not stable",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-7",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "question",
+            "title": "Compliance review on guest email retention",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-8",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "deadline",
+            "title": "Close compliance review by April 30",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-9",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Send retention behavior to Rahul",
+            "status": null,
+            "assignee": "Subhash",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-10",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "deadline",
+            "title": "Launch readiness review on May 6",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-11",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Coordinate launch comms and support training",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-4-12",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Prepare a clean launch checklist",
+            "status": null,
+            "assignee": "Anita",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-13",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "project_update",
+            "title": "Guest checkout shipping in beta",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-4-14",
+            "meetingId": "benchmark-016185c1-df54-459d-a177-91bfb15008e3",
+            "itemType": "action_item",
+            "title": "Close compliance review",
+            "status": null,
+            "assignee": "Rahul",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-5-0",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "action_item",
+            "title": "Verify the duplicate account bug patch",
+            "status": null,
+            "assignee": "Arjun",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-5-1",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "action_item",
+            "title": "Prepare temporary workaround note for duplicate account issue",
+            "status": null,
+            "assignee": "Maya",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-5-2",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "action_item",
+            "title": "Send final launch comms note",
+            "status": null,
+            "assignee": "Kumar",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-5-3",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "question",
+            "title": "Unresolved product perspective issues",
+            "status": null,
+            "assignee": null,
+            "priority": "medium"
+          },
+          {
+            "id": "transcript_only-5-4",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "risk",
+            "title": "Outstanding launch risk due to incomplete launch comms",
+            "status": null,
+            "assignee": "Support team",
+            "priority": "high"
+          },
+          {
+            "id": "transcript_only-5-5",
+            "meetingId": "benchmark-9a9d3418-b525-41a7-9997-3a6be68b5ce4",
+            "itemType": "question",
+            "title": "Final success criteria for post-beta",
+            "status": null,
+            "assignee": null,
+            "priority": "medium"
+          }
+        ],
+        "stats": {
+          "synthesizedProjectState": true,
+          "note": "Final project state is approximated by the latest transcript-only item titles. No durable project memory or status transitions are applied."
+        }
+      }
+    }
+  ],
+  "comparison": {
+    "ranking": [
+      {
+        "systemId": "current_system",
+        "systemLabel": "Current Stateful Accountability System",
+        "checksPassed": 37,
+        "checksFailed": 1,
+        "passRate": 0.9736842105263158
+      },
+      {
+        "systemId": "transcript_only",
+        "systemLabel": "Transcript-Only Baseline",
+        "checksPassed": 34,
+        "checksFailed": 4,
+        "passRate": 0.8947368421052632
+      }
+    ],
+    "perMeeting": [
+      {
+        "sequenceNumber": 1,
+        "slug": "week1_kickoff",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 7,
+            "checksFailed": 0
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 7,
+            "checksFailed": 0
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 2,
+        "slug": "week2_status",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 6,
+            "checksFailed": 0
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 6,
+            "checksFailed": 0
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 3,
+        "slug": "week3_scope_risk",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 6,
+            "checksFailed": 0
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 6,
+            "checksFailed": 0
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 4,
+        "slug": "week4_replan",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 6,
+            "checksFailed": 0
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 6,
+            "checksFailed": 0
+          }
+        ]
+      },
+      {
+        "sequenceNumber": 5,
+        "slug": "week5_launch_readiness",
+        "scores": [
+          {
+            "systemId": "current_system",
+            "checksPassed": 8,
+            "checksFailed": 1
+          },
+          {
+            "systemId": "transcript_only",
+            "checksPassed": 8,
+            "checksFailed": 1
+          }
+        ]
+      }
+    ],
+    "deltas": [
+      {
+        "leftSystemId": "current_system",
+        "rightSystemId": "transcript_only",
+        "checksPassedDelta": 3,
+        "checksFailedDelta": -3
+      }
+    ]
+  }
+}

@@ -160,14 +160,28 @@ The suite runner writes aggregate outputs under:
 - `benchmark/reports/suites/*.json`
 - `benchmark/reports/suites/*.md`
 
-## Expected Result On This Branch
+## Recent Suite Result On This Branch
 
-For `benchmark/scenarios/onboarding_growth_initiative/scenario.json`, the current expected comparison result on `feat/accountability-ai-pm` is:
+A recent full-suite run on this branch produced:
 
-- `current_system`: `38 passed / 0 failed`
-- `transcript_only`: `32 passed / 6 failed`
+- aggregate suite totals
+  - `current_system`: `65 passed / 7 failed`
+  - `transcript_only`: `57 passed / 15 failed`
+- onboarding growth initiative
+  - `current_system`: `37 passed / 1 failed`
+  - `transcript_only`: `34 passed / 4 failed`
+- release recovery cycle
+  - `current_system`: `28 passed / 6 failed`
+  - `transcript_only`: `23 passed / 11 failed`
 
-If the transcript-only baseline ties or beats the stateful system, that is a regression in project-memory reasoning or accountability carry-forward.
+The committed suite artifacts for that run are available under:
+
+- `benchmark/reports/suites/`
+
+Exact scores can vary slightly across runs because the analysis layer uses model-generated outputs, but the important expectation is stable:
+
+- the stateful system should outperform the transcript-only baseline across the suite
+- if the transcript-only baseline ties or beats the stateful system, that is a regression in project-memory reasoning or accountability carry-forward
 
 ## Important Constraint
 
@@ -202,5 +216,5 @@ The whole point is to simulate the real product loop:
 - add 10 to 20 more scenarios
 - add more ablations beyond transcript-only
 - add lifecycle-transition scoring against gold labels
-- add a Markdown summary report alongside JSON
+- add suite-level trend summaries across repeated runs
 - add PM human-evaluation export sheets

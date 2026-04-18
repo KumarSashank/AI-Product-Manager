@@ -1,0 +1,75 @@
+{
+  "run": {
+    "startedAt": "2026-04-18T20:18:59.264Z",
+    "finishedAt": "2026-04-18T20:24:09.541Z",
+    "apiBaseUrl": "http://127.0.0.1:3102/api/v1",
+    "requestedSystems": [
+      "current_system",
+      "transcript_only"
+    ],
+    "scenarioCount": 2,
+    "suiteReportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/suites/2026-04-18T20-18-59-264Z-benchmark-suite.json",
+    "suiteMarkdownPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/suites/2026-04-18T20-18-59-264Z-benchmark-suite.md"
+  },
+  "summary": {
+    "bestSystemId": "current_system",
+    "totals": [
+      {
+        "systemId": "current_system",
+        "systemLabel": "Current Stateful Accountability System",
+        "checksPassed": 65,
+        "checksFailed": 7
+      },
+      {
+        "systemId": "transcript_only",
+        "systemLabel": "Transcript-Only Baseline",
+        "checksPassed": 57,
+        "checksFailed": 15
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "scenarioId": "onboarding_growth_initiative_v1",
+      "displayName": "Onboarding Growth Initiative - 5 Week Accountability Regression",
+      "bestSystemId": "current_system",
+      "systems": [
+        {
+          "systemId": "current_system",
+          "systemLabel": "Current Stateful Accountability System",
+          "checksPassed": 37,
+          "checksFailed": 1
+        },
+        {
+          "systemId": "transcript_only",
+          "systemLabel": "Transcript-Only Baseline",
+          "checksPassed": 34,
+          "checksFailed": 4
+        }
+      ],
+      "reportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-18-59-815Z-onboarding_growth_initiative_v1.json",
+      "markdownPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-18-59-815Z-onboarding_growth_initiative_v1.md"
+    },
+    {
+      "scenarioId": "release_recovery_cycle_v1",
+      "displayName": "Release Recovery Cycle - 4 Week Reliability Regression",
+      "bestSystemId": "current_system",
+      "systems": [
+        {
+          "systemId": "current_system",
+          "systemLabel": "Current Stateful Accountability System",
+          "checksPassed": 28,
+          "checksFailed": 6
+        },
+        {
+          "systemId": "transcript_only",
+          "systemLabel": "Transcript-Only Baseline",
+          "checksPassed": 23,
+          "checksFailed": 11
+        }
+      ],
+      "reportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-22-14-075Z-release_recovery_cycle_v1.json",
+      "markdownPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/2026-04-18T20-22-14-075Z-release_recovery_cycle_v1.md"
+    }
+  ]
+}
