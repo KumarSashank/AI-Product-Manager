@@ -1,9 +1,11 @@
 'use client';
 
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Link from 'next/link';
+import { useEffect, useRef } from 'react';
+
+import { benchmarkHeadline } from '@/lib/research';
 
 type Feature = {
   eyebrow: string;
@@ -23,9 +25,18 @@ type Method = {
 };
 
 const productHighlights = [
-  { value: '38 / 0', label: 'Benchmark checks passed with project memory enabled' },
-  { value: '32 / 6', label: 'Transcript-only baseline result on the same scenario' },
-  { value: '5 meetings', label: 'Longitudinal dataset used to validate carry-forward reasoning' },
+  {
+    value: `${benchmarkHeadline.currentSystem.passed} / ${benchmarkHeadline.currentSystem.failed}`,
+    label: 'Benchmark checks passed with project memory enabled',
+  },
+  {
+    value: `${benchmarkHeadline.transcriptOnly.passed} / ${benchmarkHeadline.transcriptOnly.failed}`,
+    label: 'Transcript-only baseline result on the same scenario',
+  },
+  {
+    value: `${benchmarkHeadline.meetings} meetings`,
+    label: 'Longitudinal dataset used to validate carry-forward reasoning',
+  },
 ];
 
 const features: Feature[] = [
@@ -198,6 +209,9 @@ export default function LandingPage() {
             <a href="#proof" className="transition hover:text-[var(--ink-strong)]">
               Validation
             </a>
+            <Link href="/research" className="transition hover:text-[var(--ink-strong)]">
+              Research
+            </Link>
             <a href="#capture" className="transition hover:text-[var(--ink-strong)]">
               Capture
             </a>
@@ -259,6 +273,12 @@ export default function LandingPage() {
             >
               See the benchmark evidence
             </a>
+            <Link
+              href="/research"
+              className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white px-6 py-3.5 text-base font-medium text-[var(--ink-strong)] transition hover:border-black/15 hover:bg-black/5"
+            >
+              Open research brief
+            </Link>
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -418,18 +438,27 @@ export default function LandingPage() {
               <div className="mt-8 space-y-5">
                 <BenchmarkBar
                   label="Current system"
-                  value="38 / 0"
+                  value={`${benchmarkHeadline.currentSystem.passed} / ${benchmarkHeadline.currentSystem.failed}`}
                   sublabel="Passed / failed checks"
                   width="100%"
                   tone="bg-[linear-gradient(90deg,#1d4ed8,#0891b2)]"
                 />
                 <BenchmarkBar
                   label="Transcript-only baseline"
-                  value="32 / 6"
+                  value={`${benchmarkHeadline.transcriptOnly.passed} / ${benchmarkHeadline.transcriptOnly.failed}`}
                   sublabel="Passed / failed checks"
                   width="84%"
                   tone="bg-[linear-gradient(90deg,#94a3b8,#64748b)]"
                 />
+              </div>
+
+              <div className="mt-8">
+                <Link
+                  href="/research"
+                  className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-medium text-[var(--ink-strong)] transition hover:border-black/15 hover:bg-black/5"
+                >
+                  Read the research overview
+                </Link>
               </div>
             </div>
 
