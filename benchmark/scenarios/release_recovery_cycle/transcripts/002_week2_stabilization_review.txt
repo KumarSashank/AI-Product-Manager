@@ -1,0 +1,16 @@
+Started at: 2026-05-15 09:00 AM
+
+[09:00 AM] Kumar: This is the stabilization review for the release recovery cycle. We need to decide whether the launch freeze remains and whether the full rollback question is still open.
+[09:01 AM] Neha: The dashboard is live. Checkout latency improved after we gated the new SDK behind a feature flag, but error budget burn is still above target on peak traffic.
+[09:02 AM] Subhash: Engineering completed the feature-flag containment plan and rollback checklist. My recommendation is no full rollback for now. We should hold the fallback flow and keep the old path available until the vendor confirms the fix.
+[09:03 AM] Rahul: Payment vendor escalation is open. They acknowledged the issue overnight and promised a root-cause update by Monday, May 18.
+[09:04 AM] Maya: Support macro is done, and the incident note is in the internal help center. That item can be treated as complete.
+[09:05 AM] Arjun: QA still needs a formal runbook for the fallback path. We have the test matrix, but we do not yet have a clean operational runbook for on-call.
+[09:06 AM] Kumar: Then add the runbook explicitly. Subhash, can you own the fallback runbook by Saturday, May 16?
+[09:07 AM] Subhash: Yes.
+[09:08 AM] Priya: From product, the key launch-gate question is whether we trust the feature flag enough to remove the launch freeze before the vendor response.
+[09:09 AM] Kumar: My answer is no. The launch gate stays until we get both vendor clarity and cleaner error budget numbers.
+[09:10 AM] Neha: We should also define an explicit threshold. I suggest that we do not reopen the launch unless checkout latency is back within the agreed error budget for three consecutive days.
+[09:11 AM] Kumar: Good. Let’s make that a tracked criterion instead of a hallway agreement.
+[09:12 AM] Anita: So the full rollback question is no longer the main decision. The real decisions now are feature-flag readiness, runbook completeness, vendor root cause, and the launch-gate threshold.
+

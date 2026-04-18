@@ -7,6 +7,15 @@ export const benchmarkHeadline = {
   transcriptOnly: { passed: 32, failed: 6 },
 };
 
+export const benchmarkSuiteOverview = {
+  scenarioCount: 2,
+  comparedSystems: 2,
+  scenarios: [
+    'Onboarding Growth Initiative - 5 Week Accountability Regression',
+    'Release Recovery Cycle - 4 Week Reliability Regression',
+  ],
+};
+
 export const researchLayers = [
   {
     title: 'Extraction quality',
@@ -56,5 +65,11 @@ export const researchArtifacts = [
     label: 'Dataset transcripts',
     href: `${REPO_URL}/tree/main/benchmark/scenarios/onboarding_growth_initiative/transcripts`,
     description: 'Chronological transcript files used for the accountability regression scenario.',
+  },
+  {
+    label: 'Benchmark suite',
+    href: `${REPO_URL}/blob/main/benchmark/README.md`,
+    description:
+      'How to run the multi-scenario suite and compare the stateful system against the transcript-only baseline.',
   },
 ];

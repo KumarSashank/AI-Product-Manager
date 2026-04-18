@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "release_recovery_cycle_v1",
+  "displayName": "Release Recovery Cycle - 4 Week Reliability Regression",
+  "project": {
+    "name": "Release Recovery Cycle Benchmark",
+    "description": "Recurring product and engineering reviews focused on incident recovery, launch gating, accountability, and cross-meeting decision continuity.",
+    "isRecurring": true
+  },
+  "defaultAnalysisMode": "product_manager",
+  "defaultContextNote": "Act like a senior AI product manager. Track incident follow-up, rollback decisions, launch gates, unresolved questions, deadlines, owner accountability, and what remains risky from week to week.",
+  "meetings": [
+    {
+      "sequenceNumber": 1,
+      "slug": "week1_incident_kickoff",
+      "title": "Release Recovery Cycle - Week 1 Incident Kickoff",
+      "transcriptPath": "./transcripts/001_week1_incident_kickoff.txt",
+      "expectations": {
+        "mustIncludeItemTitles": ["rollback", "dashboard", "support macro", "payment vendor"],
+        "mustIncludeSummaryPhrases": ["incident", "launch freeze", "latency"]
+      }
+    },
+    {
+      "sequenceNumber": 2,
+      "slug": "week2_stabilization_review",
+      "title": "Release Recovery Cycle - Week 2 Stabilization Review",
+      "transcriptPath": "./transcripts/002_week2_stabilization_review.txt",
+      "expectations": {
+        "mustIncludeItemTitles": ["feature flag", "runbook", "vendor escalation", "dashboard"],
+        "mustIncludeSummaryPhrases": ["stabilization", "error budget", "launch gate"]
+      }
+    },
+    {
+      "sequenceNumber": 3,
+      "slug": "week3_gate_review",
+      "title": "Release Recovery Cycle - Week 3 Gate Review",
+      "transcriptPath": "./transcripts/003_week3_gate_review.txt",
+      "expectations": {
+        "mustIncludeItemTitles": [
+          "launch checklist",
+          "fallback flow",
+          "postmortem",
+          "alert tuning"
+        ],
+        "mustIncludeSummaryPhrases": ["vendor", "May 20", "decision"]
+      }
+    },
+    {
+      "sequenceNumber": 4,
+      "slug": "week4_recovery_readiness",
+      "title": "Release Recovery Cycle - Week 4 Recovery Readiness",
+      "transcriptPath": "./transcripts/004_week4_recovery_readiness.txt",
+      "expectations": {
+        "mustIncludeItemTitles": [
+          "launch checklist",
+          "alert tuning",
+          "postmortem",
+          "support macro"
+        ],
+        "mustNotIncludeItemTitles": [
+          "should we fully roll back the checkout sdk",
+          "full rollback question"
+        ],
+        "mustIncludeSummaryPhrases": ["ready", "fallback", "vendor"]
+      }
+    }
+  ],
+  "finalProjectExpectations": {
+    "mustHaveItemStatuses": [
+      {
+        "titleLike": "launch checklist",
+        "status": "completed"
+      },
+      {
+        "titleLike": "alert tuning",
+        "status": "pending"
+      }
+    ],
+    "mustNotHaveOpenTitles": [
+      "full rollback question",
+      "should we fully roll back the checkout sdk"
+    ]
+  }
+}

@@ -43,7 +43,15 @@ benchmark/
         003_week3_scope_risk.txt
         004_week4_replan.txt
         005_week5_launch_readiness.txt
+    release_recovery_cycle/
+      scenario.json
+      transcripts/
+        001_week1_incident_kickoff.txt
+        002_week2_stabilization_review.txt
+        003_week3_gate_review.txt
+        004_week4_recovery_readiness.txt
   reports/
+    suites/
 ```
 
 ## Scenario Format
@@ -73,6 +81,12 @@ pnpm benchmark:longitudinal
 
 ```bash
 pnpm benchmark:compare
+```
+
+### Run the full benchmark suite across every scenario
+
+```bash
+pnpm benchmark:suite
 ```
 
 ### Against a specific scenario
@@ -141,6 +155,11 @@ For every run, the harness now writes:
 - a machine-readable `.json` report
 - a reviewer-friendly `.md` summary with rankings, per-meeting scores, and failing checks
 
+The suite runner writes aggregate outputs under:
+
+- `benchmark/reports/suites/*.json`
+- `benchmark/reports/suites/*.md`
+
 ## Expected Result On This Branch
 
 For `benchmark/scenarios/onboarding_growth_initiative/scenario.json`, the current expected comparison result on `feat/accountability-ai-pm` is:
@@ -169,6 +188,14 @@ The whole point is to simulate the real product loop:
 
 - `transcript_only`
   Uses the current meeting transcript plus meeting-local metadata only. No historical project state is provided.
+
+## Current Scenario Set
+
+- `onboarding_growth_initiative`
+  Tests carry-forward accountability, launch readiness, unresolved question tracking, and stateful reconciliation across 5 weekly product meetings.
+
+- `release_recovery_cycle`
+  Tests incident recovery memory, rollback decisions, launch gating, vendor escalation tracking, and closure of once-open technical questions across 4 meetings.
 
 ## Near-Term Next Steps
 

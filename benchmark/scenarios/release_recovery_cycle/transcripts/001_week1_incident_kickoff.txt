@@ -1,0 +1,15 @@
+Started at: 2026-05-12 09:00 AM
+
+[09:00 AM] Kumar: Thanks everyone. We need to treat this as the kickoff for release recovery, not a routine standup. Checkout latency spiked after the payment SDK update and we froze the May 20 launch train last night.
+[09:01 AM] Subhash: Engineering confirmed the spike started immediately after the SDK rollout. We can still put the new flow behind a feature flag, but the open question is whether we should fully roll back the checkout SDK or stabilize behind the flag.
+[09:02 AM] Priya: From product, I do not want a blind rollback if the fallback flow is viable. We need a decision path, not just a technical reaction.
+[09:03 AM] Neha: I can own a recovery dashboard by Thursday, May 14. It will show checkout latency, conversion drop, and error budget burn so we stop arguing from anecdotes.
+[09:04 AM] Maya: Support already saw a spike in payment-failure tickets. I need a support macro and a known-issues note today so the team does not improvise customer responses.
+[09:05 AM] Rahul: We also need the payment vendor involved. If the SDK regression is on their side, we need an official escalation instead of waiting for forum replies.
+[09:06 AM] Kumar: Good. Rahul, please take the payment vendor escalation by end of day. Maya, take the support macro today. Neha, dashboard by May 14.
+[09:07 AM] Arjun: QA needs clarity on the rollback decision. If we are not rolling back, I need the feature-flag plan and test matrix by tomorrow.
+[09:08 AM] Subhash: I can own the feature-flag containment plan and a rollback checklist by Wednesday, May 13.
+[09:09 AM] Kumar: Capture that as explicit follow-up. We also need a launch-freeze review on May 15 before we say the release is back on track.
+[09:10 AM] Anita: Summarize the real open questions. I hear: do we fully roll back, can the fallback flow hold conversion, and is the vendor acknowledging responsibility.
+[09:11 AM] Kumar: Correct. Current risk is high because the launch freeze stays in place until dashboard visibility, vendor response, and feature-flag containment are all in hand.
+

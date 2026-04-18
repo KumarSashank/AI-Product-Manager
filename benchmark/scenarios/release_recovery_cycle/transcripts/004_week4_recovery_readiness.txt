@@ -1,0 +1,15 @@
+Started at: 2026-05-22 09:00 AM
+
+[09:00 AM] Kumar: This is the final recovery-readiness review. I want explicit status on the remaining gate items from last week.
+[09:01 AM] Subhash: Launch checklist is complete. Engineering also merged the patched SDK build and documented the fallback flow. That item can be considered done.
+[09:02 AM] Maya: The postmortem draft is complete and shared with leads. Support is comfortable with the current macro and fallback note, so there is no new action from our side.
+[09:03 AM] Rahul: Vendor escalation is fully closed. We have their written confirmation and patch notes on record.
+[09:04 AM] Arjun: Alert tuning is better, but not finished. We reduced the noisy rules, though one fallback alert is still too sensitive during traffic spikes.
+[09:05 AM] Neha: Dashboard trends stayed within threshold for three consecutive days. From a metrics perspective, I would mark the recovery gate as satisfied.
+[09:06 AM] Priya: Then the only open execution item is alert tuning, not the release itself.
+[09:07 AM] Kumar: Correct. The release is ready. We should keep alert tuning open as follow-up work after recovery rather than blocking the train.
+[09:08 AM] Anita: Also confirm that the full rollback question is no longer open anywhere in the workspace.
+[09:09 AM] Kumar: Yes, that decision is closed. We are proceeding with the patched SDK plus documented fallback flow. No full rollback.
+[09:10 AM] Maya: Support macro stays complete and the postmortem is in review.
+[09:11 AM] Kumar: Final status is: launch checklist complete, vendor escalation closed, postmortem drafted, support macro complete, release ready, and alert tuning still pending as the only follow-up item.
+

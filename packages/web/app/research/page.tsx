@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import {
   benchmarkHeadline,
+  benchmarkSuiteOverview,
   researchArtifacts,
   researchContributions,
   researchLayers,
@@ -58,7 +59,7 @@ export default function ResearchPage() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-[1.8rem] border border-black/5 bg-white/90 p-6 shadow-[0_24px_64px_rgba(15,23,42,0.06)]">
             <p className="text-sm uppercase tracking-[0.2em] text-[var(--ink-soft)]">Scenario</p>
             <p className="mt-3 font-[family:var(--font-display)] text-3xl tracking-[-0.04em] text-[var(--ink-strong)]">
@@ -66,6 +67,18 @@ export default function ResearchPage() {
             </p>
             <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
               {benchmarkHeadline.scenario}
+            </p>
+          </div>
+          <div className="rounded-[1.8rem] border border-black/5 bg-white/90 p-6 shadow-[0_24px_64px_rgba(15,23,42,0.06)]">
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--ink-soft)]">
+              Suite coverage
+            </p>
+            <p className="mt-3 font-[family:var(--font-display)] text-3xl tracking-[-0.04em] text-[var(--ink-strong)]">
+              {benchmarkSuiteOverview.scenarioCount} scenarios
+            </p>
+            <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
+              The suite now compares {benchmarkSuiteOverview.comparedSystems} systems across
+              accountability and recovery sequences instead of relying on one benchmark story.
             </p>
           </div>
           <div className="rounded-[1.8rem] border border-[#1d4ed8]/12 bg-[linear-gradient(180deg,#ffffff,#eef6ff)] p-6 shadow-[0_24px_64px_rgba(15,23,42,0.06)]">

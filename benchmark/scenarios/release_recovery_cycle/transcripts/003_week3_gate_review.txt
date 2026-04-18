@@ -1,0 +1,17 @@
+Started at: 2026-05-19 09:00 AM
+
+[09:00 AM] Kumar: This is the gate review. We need to use the vendor update and the recovery data to decide whether the release can move forward.
+[09:01 AM] Rahul: The vendor root cause is confirmed. The regression was in their SDK cache path, and their patched build is now available.
+[09:02 AM] Subhash: Engineering tested the patched build yesterday. The fallback flow still exists, but we do not need a full rollback path anymore. We do need launch checklist coverage before we re-open the train.
+[09:03 AM] Arjun: QA signoff is close, but alert noise is still a problem. We are seeing false positives from the fallback monitoring rules, and on-call will hate this if we do not tune it.
+[09:04 AM] Neha: Dashboard trends are better. Latency is inside threshold on two consecutive days, but not yet three.
+[09:05 AM] Maya: Support is comfortable if the fallback flow stays documented. I also think we need the incident postmortem written before the release goes out, otherwise we will forget the operational learnings.
+[09:06 AM] Kumar: Agreed. Add postmortem as a first-class item. Also add alert tuning and the final launch checklist.
+[09:07 AM] Priya: Does this formally close the full rollback question?
+[09:08 AM] Kumar: Yes. We are not doing a full rollback. The decision is patched SDK plus fallback flow, with launch gated on checklist completion and one more clean day before May 20.
+[09:09 AM] Subhash: I’ll own the launch checklist and finish it by tonight, May 19.
+[09:10 AM] Arjun: I’ll own alert tuning and should have the noisy rules cleaned up by Thursday, May 21.
+[09:11 AM] Maya: I can draft the postmortem by Friday, May 22.
+[09:12 AM] Anita: Summarize the release state.
+[09:13 AM] Kumar: Vendor escalation is effectively resolved, full rollback is closed, fallback flow remains as a safety path, and the remaining open work is launch checklist, alert tuning, and the postmortem.
+
