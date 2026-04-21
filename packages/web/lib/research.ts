@@ -16,6 +16,12 @@ export const benchmarkSuiteOverview = {
   ],
 };
 
+export const benchmarkSuiteResult = {
+  currentSystem: { passed: 65, failed: 7 },
+  transcriptOnly: { passed: 57, failed: 15 },
+  scenarioWins: 2,
+};
+
 export const benchmarkScenarioCatalog = [
   {
     scenarioId: 'onboarding_growth_initiative_v1',

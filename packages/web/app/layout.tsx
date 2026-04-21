@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI Product Manager',
+  title: 'AI Product Manager | Meeting Memory for Execution Teams',
   description:
-    'Stateful meeting intelligence that turns transcripts into accountable action items, project memory, and PM-grade Minutes of Meeting.',
+    'Turn meetings into decisions, owners, next steps, and cross-meeting project memory from one product workspace.',
 };
 
 export default function RootLayout({
