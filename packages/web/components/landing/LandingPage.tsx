@@ -57,7 +57,7 @@ const productPanels: ProductPanel[] = [
       'Audio recording is supported for extension capture',
       'Multiple capture paths stay reachable from one product surface',
     ],
-    accent: 'from-[#31524b] to-[#79958c]',
+    accent: 'from-[#1d4ed8] to-[#0891b2]',
     icon: <CaptureIcon />,
   },
   {
@@ -70,7 +70,7 @@ const productPanels: ProductPanel[] = [
       'Owner-aware items and due-date context',
       'Evidence trace for why an item exists',
     ],
-    accent: 'from-[#556a53] to-[#99ab87]',
+    accent: 'from-[#2563eb] to-[#38bdf8]',
     icon: <InsightIcon />,
   },
   {
@@ -83,7 +83,7 @@ const productPanels: ProductPanel[] = [
       'Separate closed decisions from active risks',
       'Work inside a private workspace with collaborators',
     ],
-    accent: 'from-[#8a6047] to-[#d3a27a]',
+    accent: 'from-[#1e40af] to-[#0ea5e9]',
     icon: <TrackIcon />,
   },
 ];
@@ -99,7 +99,7 @@ const captureMethods: CaptureMethod[] = [
       'Best for public demos and reliable evaluation',
       'Fastest way to experience the core workflow',
     ],
-    tone: 'border-[#31524b]/16 bg-[linear-gradient(180deg,#ffffff,#eef3f0)]',
+    tone: 'border-[#1d4ed8]/16 bg-[linear-gradient(180deg,#ffffff,#eef6ff)]',
   },
   {
     label: 'Chrome extension',
@@ -111,7 +111,7 @@ const captureMethods: CaptureMethod[] = [
       'Speaker attribution still being tuned',
       'Good for active product development demos',
     ],
-    tone: 'border-[#556a53]/16 bg-[linear-gradient(180deg,#ffffff,#f2f4eb)]',
+    tone: 'border-[#0891b2]/16 bg-[linear-gradient(180deg,#ffffff,#ecfeff)]',
   },
   {
     label: 'Meeting bot',
@@ -123,7 +123,7 @@ const captureMethods: CaptureMethod[] = [
       'Keep expectations honest in public demos',
       'Better shown as a roadmap-facing capability today',
     ],
-    tone: 'border-[#8a6047]/16 bg-[linear-gradient(180deg,#ffffff,#fbf2e8)]',
+    tone: 'border-[#2563eb]/16 bg-[linear-gradient(180deg,#ffffff,#eef4ff)]',
   },
 ];
 
@@ -204,8 +204,8 @@ export default function LandingPage() {
               storyDots,
               {
                 scale: 1,
-                backgroundColor: '#e5ddd2',
-                borderColor: 'rgba(138,120,97,0.28)',
+                backgroundColor: '#dbeafe',
+                borderColor: 'rgba(147,197,253,0.45)',
                 duration: 0.18,
               },
               '<'
@@ -216,8 +216,8 @@ export default function LandingPage() {
               `[data-story-dot="${index}"]`,
               {
                 scale: 1.08,
-                backgroundColor: '#31524b',
-                borderColor: 'rgba(49,82,75,0.3)',
+                backgroundColor: '#1d4ed8',
+                borderColor: 'rgba(29,78,216,0.3)',
                 duration: 0.18,
               },
               '<'
@@ -256,12 +256,12 @@ export default function LandingPage() {
       ref={rootRef}
       className="min-h-screen overflow-x-hidden bg-[var(--surface-base)] pb-28 text-[var(--ink-strong)] md:pb-16"
     >
-      <div className="absolute inset-x-0 top-0 -z-10 h-[42rem] bg-[radial-gradient(circle_at_top_left,_rgba(87,115,106,0.16),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(184,145,108,0.12),_transparent_30%),linear-gradient(180deg,#fbf7f0_0%,#fcfaf5_48%,#ffffff_100%)]" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-[42rem] bg-[radial-gradient(circle_at_top_left,_rgba(29,78,216,0.13),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(8,145,178,0.12),_transparent_32%),linear-gradient(180deg,#f6fbff_0%,#fffdf7_46%,#ffffff_100%)]" />
 
       <header className="sticky top-0 z-30 border-b border-black/5 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3.5 lg:px-10 lg:py-4">
           <Link href="/" className="flex min-w-0 flex-1 items-center gap-3 pr-2">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.15rem] bg-[linear-gradient(135deg,#2d4743,#5f7c73)] text-white shadow-[0_16px_28px_rgba(45,71,67,0.18)] sm:h-11 sm:w-11 sm:rounded-2xl">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.15rem] bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] text-white shadow-[0_16px_28px_rgba(29,78,216,0.18)] sm:h-11 sm:w-11 sm:rounded-2xl">
               <LogoGlyph />
             </div>
             <div className="min-w-0">
@@ -298,7 +298,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[linear-gradient(135deg,#2d4743,#5f7c73)] px-4 py-2.5 text-[0.95rem] font-semibold leading-none text-white shadow-[0_16px_28px_rgba(45,71,67,0.18)] transition hover:-translate-y-0.5 sm:px-5 sm:text-sm"
+              className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-4 py-2.5 text-[0.95rem] font-semibold leading-none text-white shadow-[0_16px_28px_rgba(29,78,216,0.18)] transition hover:-translate-y-0.5 sm:px-5 sm:text-sm"
             >
               Get started
             </Link>
@@ -310,9 +310,9 @@ export default function LandingPage() {
         <div className="max-w-3xl">
           <div
             data-hero-badge
-            className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-[#31524b]/12 bg-white/88 px-3.5 py-2 text-[0.82rem] leading-5 text-[var(--ink-muted)] shadow-[0_18px_44px_rgba(15,23,42,0.05)] sm:gap-3 sm:px-4 sm:text-sm"
+            className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-[#1d4ed8]/12 bg-white/88 px-3.5 py-2 text-[0.82rem] leading-5 text-[var(--ink-muted)] shadow-[0_18px_44px_rgba(15,23,42,0.05)] sm:gap-3 sm:px-4 sm:text-sm"
           >
-            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#5f7c73]" />
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#0f766e]" />
             Structured meeting memory for execution teams
           </div>
 
@@ -342,7 +342,7 @@ export default function LandingPage() {
           <div data-hero-actions className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/signup"
-              className="inline-flex min-h-[3.35rem] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#2d4743,#5f7c73)] px-6 py-3.5 text-base font-semibold text-white shadow-[0_18px_32px_rgba(45,71,67,0.18)] transition hover:-translate-y-0.5 sm:w-auto"
+              className="inline-flex min-h-[3.35rem] w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-6 py-3.5 text-base font-semibold text-white shadow-[0_18px_32px_rgba(13,77,170,0.18)] transition hover:-translate-y-0.5 sm:w-auto"
             >
               Create a workspace
             </Link>
@@ -368,15 +368,15 @@ export default function LandingPage() {
         </div>
 
         <div data-story-shell className="relative">
-          <div className="rounded-[2rem] border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,243,236,0.94))] p-3 shadow-[0_28px_90px_rgba(15,23,42,0.1)] sm:rounded-[2.25rem] sm:p-4 lg:p-5">
+          <div className="rounded-[2rem] border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,247,251,0.94))] p-3 shadow-[0_28px_90px_rgba(15,23,42,0.1)] sm:rounded-[2.25rem] sm:p-4 lg:p-5">
             <div className="grid gap-3 sm:gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-[1.8rem] border border-black/6 bg-[#22302d] p-2.5 shadow-[0_18px_44px_rgba(15,23,42,0.16)] sm:rounded-[2rem] sm:p-3">
-                <div className="rounded-[1.45rem] bg-[linear-gradient(180deg,#fbf7f0,#f3ece0)] p-3 sm:rounded-[1.65rem] sm:p-4">
+              <div className="rounded-[1.8rem] border border-black/6 bg-[#0f172a] p-2.5 shadow-[0_18px_44px_rgba(15,23,42,0.16)] sm:rounded-[2rem] sm:p-3">
+                <div className="rounded-[1.45rem] bg-[linear-gradient(180deg,#f8fbff,#eef5ff)] p-3 sm:rounded-[1.65rem] sm:p-4">
                   <div className="mx-auto h-1.5 w-24 rounded-full bg-black/12" />
 
                   <div className="mt-5 flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.24em] text-[#5f7c73]">
+                      <p className="text-xs uppercase tracking-[0.24em] text-[#1d4ed8]">
                         How it works
                       </p>
                       <h2 className="mt-2 font-[family:var(--font-display)] text-[2rem] leading-none tracking-[-0.05em] text-[var(--ink-strong)] sm:text-3xl sm:tracking-[-0.04em]">
@@ -389,7 +389,7 @@ export default function LandingPage() {
                         <span
                           key={index}
                           data-story-dot={index}
-                          className="h-2.5 w-2.5 rounded-full border border-[#d6cbbc] bg-[#e5ddd2]"
+                          className="h-2.5 w-2.5 rounded-full border border-slate-300 bg-[#dbeafe]"
                         />
                       ))}
                     </div>
@@ -399,7 +399,7 @@ export default function LandingPage() {
                     <StoryScene
                       title="1. Capture the meeting"
                       subtitle="Transcript, audio, or uploaded notes"
-                      tone="bg-[#dce6df]"
+                      tone="bg-[#e0ecff]"
                       lines={[
                         'Weekly launch review is captured',
                         'Speakers and context are preserved',
@@ -409,7 +409,7 @@ export default function LandingPage() {
                     <StoryScene
                       title="2. Extract what matters"
                       subtitle="Actions, decisions, blockers, and risks"
-                      tone="bg-[#e6e1d5]"
+                      tone="bg-[#d9fbf3]"
                       lines={[
                         'Owners and due dates are identified',
                         'Risks and questions become structured items',
@@ -419,7 +419,7 @@ export default function LandingPage() {
                     <StoryScene
                       title="3. Keep the project moving"
                       subtitle="Workspace, evidence trace, and status tracking"
-                      tone="bg-[#ead9cd]"
+                      tone="bg-[#dbeafe]"
                       lines={[
                         'Open work carries into the next meeting',
                         'Teams update status from the same workspace',
@@ -431,8 +431,8 @@ export default function LandingPage() {
               </div>
 
               <div className="space-y-3 rounded-[1.8rem] border border-black/6 bg-white/86 p-4 sm:space-y-4 sm:rounded-[2rem] sm:p-5">
-                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f7f3ec)] p-4 sm:rounded-[1.4rem] sm:p-5">
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#5f7c73]">
+                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f8fbff)] p-4 sm:rounded-[1.4rem] sm:p-5">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[#0891b2]">
                     What the product makes clear
                   </p>
                   <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink-muted)]">
@@ -442,8 +442,8 @@ export default function LandingPage() {
                   </ul>
                 </div>
 
-                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#faf4ec)] p-4 sm:rounded-[1.4rem] sm:p-5">
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#8a6047]">
+                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#eff6ff)] p-4 sm:rounded-[1.4rem] sm:p-5">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[#1d4ed8]">
                     Why teams adopt it
                   </p>
                   <p className="mt-4 text-sm leading-6 text-[var(--ink-muted)]">
@@ -452,8 +452,8 @@ export default function LandingPage() {
                   </p>
                 </div>
 
-                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f3f0e8)] p-4 sm:rounded-[1.4rem] sm:p-5">
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#556a53]">
+                <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f6f9ff)] p-4 sm:rounded-[1.4rem] sm:p-5">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[#1d4ed8]">
                     Best way to start
                   </p>
                   <p className="mt-4 text-sm leading-6 text-[var(--ink-muted)]">
@@ -478,7 +478,7 @@ export default function LandingPage() {
               key={step.title}
               className="rounded-[1.6rem] border border-black/6 bg-white/86 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.05)] sm:rounded-[1.8rem] sm:p-6"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-[1.15rem] bg-[linear-gradient(135deg,#2d4743,#5f7c73)] font-[family:var(--font-display)] text-[1.45rem] text-white shadow-[0_16px_30px_rgba(45,71,67,0.16)] sm:h-12 sm:w-12 sm:rounded-2xl sm:text-2xl">
+              <div className="flex h-11 w-11 items-center justify-center rounded-[1.15rem] bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] font-[family:var(--font-display)] text-[1.45rem] text-white shadow-[0_16px_30px_rgba(13,77,170,0.16)] sm:h-12 sm:w-12 sm:rounded-2xl sm:text-2xl">
                 {index + 1}
               </div>
               <h3 className="mt-4 font-[family:var(--font-display)] text-[2rem] leading-[0.98] tracking-[-0.04em] text-[var(--ink-strong)] sm:mt-5 sm:text-3xl sm:tracking-[-0.03em]">
@@ -497,7 +497,7 @@ export default function LandingPage() {
         className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-5 lg:px-10 lg:py-16"
       >
         <div data-reveal className="max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.28em] text-[#5f7c73]">Product</p>
+          <p className="text-sm uppercase tracking-[0.28em] text-[#1d4ed8]">Product</p>
           <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
             A SaaS workflow, not just a page that writes meeting notes.
           </h2>
@@ -543,7 +543,7 @@ export default function LandingPage() {
 
       <section id="capture" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-5 lg:px-10 lg:py-16">
         <div data-reveal className="max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.28em] text-[#556a53]">Capture</p>
+          <p className="text-sm uppercase tracking-[0.28em] text-[#0891b2]">Capture</p>
           <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
             Honest capture states build trust.
           </h2>
@@ -587,11 +587,11 @@ export default function LandingPage() {
       <section id="proof" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-5 lg:px-10 lg:py-16">
         <div
           data-reveal
-          className="overflow-hidden rounded-[2.2rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f7f3ec)] shadow-[0_28px_90px_rgba(15,23,42,0.08)]"
+          className="overflow-hidden rounded-[2.2rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f8fbff)] shadow-[0_28px_90px_rgba(15,23,42,0.08)]"
         >
           <div className="grid gap-8 px-5 py-6 sm:px-7 sm:py-8 lg:grid-cols-[0.92fr_1.08fr] lg:px-10 lg:py-10">
             <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-[#8a6047]">Proof</p>
+              <p className="text-sm uppercase tracking-[0.28em] text-[#1d4ed8]">Proof</p>
               <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
                 The product is benchmarked against recurring meeting scenarios, not just polished UI
                 copy.
@@ -607,7 +607,7 @@ export default function LandingPage() {
                   value={`${benchmarkSuiteResult.currentSystem.passed} / ${benchmarkSuiteResult.currentSystem.failed}`}
                   sublabel={`${suitePassRate}% pass rate`}
                   width={`${suitePassRate}%`}
-                  tone="bg-[linear-gradient(90deg,#31524b,#79958c)]"
+                  tone="bg-[linear-gradient(90deg,#1d4ed8,#0891b2)]"
                 />
                 <BenchmarkBar
                   label="Transcript-only baseline"
@@ -661,12 +661,12 @@ export default function LandingPage() {
       <section className="mx-auto w-full max-w-7xl px-4 pb-24 pt-8 sm:px-5 lg:px-10 lg:pb-28">
         <div
           data-reveal
-          className="relative overflow-hidden rounded-[2rem] border border-black/5 bg-[linear-gradient(135deg,#22302d,#364a45)] px-5 py-8 text-white shadow-[0_28px_90px_rgba(15,23,42,0.16)] sm:rounded-[2.3rem] sm:px-7 sm:py-10 lg:px-10 lg:py-12"
+          className="relative overflow-hidden rounded-[2rem] border border-black/5 bg-[linear-gradient(135deg,#102032,#0f172a)] px-5 py-8 text-white shadow-[0_28px_90px_rgba(15,23,42,0.16)] sm:rounded-[2.3rem] sm:px-7 sm:py-10 lg:px-10 lg:py-12"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(170,188,157,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(211,162,122,0.16),transparent_34%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(94,234,212,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(96,165,250,0.18),transparent_34%)]" />
           <div className="relative grid gap-8 lg:grid-cols-[1.05fr_auto] lg:items-end">
             <div className="max-w-3xl">
-              <p className="text-sm uppercase tracking-[0.28em] text-[#d9c3a8]">Start here</p>
+              <p className="text-sm uppercase tracking-[0.28em] text-[#93c5fd]">Start here</p>
               <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] sm:text-5xl sm:tracking-[-0.04em]">
                 Open the product, run one meeting, and let the workspace show the follow-through.
               </h2>
@@ -707,7 +707,7 @@ export default function LandingPage() {
           </a>
           <Link
             href="/signup"
-            className="inline-flex min-h-[3.1rem] flex-1 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2d4743,#5f7c73)] px-4 py-3 text-sm font-semibold text-white"
+            className="inline-flex min-h-[3.1rem] flex-1 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] px-4 py-3 text-sm font-semibold text-white"
           >
             Get started
           </Link>
@@ -764,7 +764,7 @@ function StoryScene({
           <div
             key={line}
             data-story-line
-            className="rounded-[0.95rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#faf6ef)] px-3.5 py-3 text-sm leading-6 text-[var(--ink-muted)] sm:rounded-[1rem] sm:px-4"
+            className="rounded-[0.95rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f8fbff)] px-3.5 py-3 text-sm leading-6 text-[var(--ink-muted)] sm:rounded-[1rem] sm:px-4"
           >
             {line}
           </div>
@@ -807,7 +807,7 @@ function BenchmarkBar({
 
 function ProofTile({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-[1.25rem] border border-black/5 bg-[linear-gradient(180deg,#ffffff,#faf6ef)] p-4 sm:rounded-[1.4rem] sm:p-5">
+    <div className="rounded-[1.25rem] border border-black/5 bg-[linear-gradient(180deg,#ffffff,#f8fafc)] p-4 sm:rounded-[1.4rem] sm:p-5">
       <h3 className="font-[family:var(--font-display)] text-[1.8rem] leading-[0.98] tracking-[-0.04em] text-[var(--ink-strong)] sm:text-2xl sm:tracking-[-0.03em]">
         {title}
       </h3>
