@@ -7,6 +7,7 @@ import cookie from '@fastify/cookie';
 import { FastifyInstance } from 'fastify';
 
 import { authMiddleware } from '../middleware/auth.middleware.js';
+
 import { aiRoutes } from './ai.js';
 import { audioStreamRoutes } from './audio-stream.js';
 import { authRoutes } from './auth.js';
@@ -17,9 +18,9 @@ import { meetingItemsRoutes } from './meetingItems.js';
 import { meetingRoutes } from './meetings.js';
 import { momRoutes } from './mom.js';
 import { projectRoutes } from './projects.js';
+import { recordingStreamRoutes } from './recording-stream.js';
 import { transcriptRoutes } from './transcripts.js';
 import { uploadRoutes } from './upload.js';
-import { recordingStreamRoutes } from './recording-stream.js';
 import { workspaceRoutes } from './workspace.js';
 
 export async function registerRoutes(fastify: FastifyInstance): Promise<void> {

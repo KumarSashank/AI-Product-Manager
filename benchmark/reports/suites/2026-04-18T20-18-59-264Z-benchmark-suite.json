@@ -3,10 +3,7 @@
     "startedAt": "2026-04-18T20:18:59.264Z",
     "finishedAt": "2026-04-18T20:24:09.541Z",
     "apiBaseUrl": "http://127.0.0.1:3102/api/v1",
-    "requestedSystems": [
-      "current_system",
-      "transcript_only"
-    ],
+    "requestedSystems": ["current_system", "transcript_only"],
     "scenarioCount": 2,
     "suiteReportPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/suites/2026-04-18T20-18-59-264Z-benchmark-suite.json",
     "suiteMarkdownPath": "/Users/kumarsashank/dev/AI-Product-Manager/benchmark/reports/suites/2026-04-18T20-18-59-264Z-benchmark-suite.md"

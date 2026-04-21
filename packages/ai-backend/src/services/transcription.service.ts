@@ -23,6 +23,9 @@ const logger = pino({ name: 'transcription-service' });
 
 // Derive the V1Socket type from the SDK
 type V1Socket = Awaited<ReturnType<InstanceType<typeof DeepgramClient>['listen']['v1']['connect']>>;
+type V1ConnectionOptions = Parameters<
+  InstanceType<typeof DeepgramClient>['listen']['v1']['connect']
+>[0];
 
 /**
  * A single diarized transcript segment from Deepgram
@@ -79,7 +82,7 @@ export class TranscriptionService {
   private meetingId: string = '';
   private isActive: boolean = false;
   private isConnectionOpen: boolean = false;
-  private pendingChunks: Buffer[] = [];        // buffer audio until WS is open
+  private pendingChunks: Buffer[] = []; // buffer audio until WS is open
   private segmentCount: number = 0;
   private nextUnmappedIndex: number = 0;
   private keepAliveInterval: ReturnType<typeof setInterval> | null = null;
@@ -126,7 +129,7 @@ export class TranscriptionService {
 
     try {
       // Base options for Deepgram v1 streaming API
-      const baseOptions: Record<string, unknown> = {
+      const baseOptions: V1ConnectionOptions = {
         model: ListenV1Model.Nova3,
         language: config.language || 'en',
         smart_format: ListenV1SmartFormat.True,
@@ -150,7 +153,7 @@ export class TranscriptionService {
       logger.info({ audioFormat, meetingId: config.meetingId }, 'Connecting to Deepgram');
 
       // Open a live/streaming connection to Deepgram v1 API
-      this.liveConnection = await this.deepgramClient.listen.v1.connect(baseOptions as any);
+      this.liveConnection = await this.deepgramClient.listen.v1.connect(baseOptions);
 
       // Set up event handlers BEFORE connecting so we catch the 'open' event
       this.setupEventHandlers();
@@ -225,10 +228,9 @@ export class TranscriptionService {
     if (!this.liveConnection) return;
 
     try {
-      this.liveConnection.sendMedia(chunk.buffer.slice(
-        chunk.byteOffset,
-        chunk.byteOffset + chunk.byteLength
-      ));
+      this.liveConnection.sendMedia(
+        chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength)
+      );
     } catch (error) {
       logger.error({ error }, 'Failed to send audio chunk to Deepgram');
     }
@@ -265,7 +267,10 @@ export class TranscriptionService {
   async endSession(): Promise<void> {
     if (!this.isActive) return;
 
-    logger.info({ meetingId: this.meetingId, segments: this.segmentCount }, 'Ending transcription session');
+    logger.info(
+      { meetingId: this.meetingId, segments: this.segmentCount },
+      'Ending transcription session'
+    );
 
     if (this.keepAliveInterval) {
       clearInterval(this.keepAliveInterval);

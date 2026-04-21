@@ -12,11 +12,11 @@
 import { FastifyInstance } from 'fastify';
 import pino from 'pino';
 
+import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import {
   transcriptRepository,
   type NewTranscriptEvent,
 } from '../db/repositories/transcript.repository.js';
-import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import { TranscriptionService, type TranscriptSegment } from '../services/transcription.service.js';
 
 const logger = pino({ name: 'audio-stream-route' });

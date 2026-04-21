@@ -5,12 +5,12 @@
 
 import { FastifyInstance } from 'fastify';
 
-import { requireMeetingAccess, requireOrganizationId } from '../lib/access.js';
 import {
   momRepository,
   type NewMom,
   type NewHighlight,
 } from '../db/repositories/mom.repository.js';
+import { requireMeetingAccess, requireOrganizationId } from '../lib/access.js';
 
 // Request types
 interface CreateMomBody {

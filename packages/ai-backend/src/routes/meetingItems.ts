@@ -5,11 +5,11 @@
 
 import { FastifyInstance } from 'fastify';
 
-import { requireMeetingAccess } from '../lib/access.js';
 import {
   meetingItemsRepository,
   type NewMeetingItem,
 } from '../db/repositories/meetingItems.repository.js';
+import { requireMeetingAccess } from '../lib/access.js';
 
 // Request types
 interface CreateItemBody {

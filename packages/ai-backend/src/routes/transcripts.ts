@@ -5,12 +5,12 @@
 
 import { FastifyInstance } from 'fastify';
 
-import { requireMeetingAccess } from '../lib/access.js';
 import { meetingRepository } from '../db/repositories/meeting.repository.js';
 import {
   transcriptRepository,
   type NewTranscriptEvent,
 } from '../db/repositories/transcript.repository.js';
+import { requireMeetingAccess } from '../lib/access.js';
 import { actionItemsPipeline } from '../pipelines/actionItems.pipeline.js';
 
 // Request types
