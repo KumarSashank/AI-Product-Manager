@@ -22,14 +22,43 @@ const signinSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-// Cookie options for JWT token
-const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-  path: '/',
-  maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-};
+function resolveSameSite(): 'lax' | 'strict' | 'none' {
+  const configuredValue = process.env.COOKIE_SAME_SITE?.toLowerCase();
+
+  if (configuredValue === 'strict' || configuredValue === 'none' || configuredValue === 'lax') {
+    return configuredValue;
+  }
+
+  return process.env.NODE_ENV === 'production' ? 'none' : 'lax';
+}
+
+function buildCookieOptions() {
+  const sameSite = resolveSameSite();
+  const secure = process.env.COOKIE_SECURE
+    ? process.env.COOKIE_SECURE === 'true'
+    : process.env.NODE_ENV === 'production' || sameSite === 'none';
+  const domain = process.env.COOKIE_DOMAIN;
+
+  return {
+    httpOnly: true,
+    secure,
+    sameSite,
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    ...(domain ? { domain } : {}),
+  };
+}
+
+function buildClearCookieOptions() {
+  const { domain, path, sameSite, secure } = buildCookieOptions();
+
+  return {
+    path,
+    sameSite,
+    secure,
+    ...(domain ? { domain } : {}),
+  };
+}
 
 export async function authRoutes(server: FastifyInstance): Promise<void> {
   /**
@@ -47,7 +76,7 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
         body.inviteToken
       );
 
-      reply.setCookie('auth_token', token, cookieOptions);
+      reply.setCookie('auth_token', token, buildCookieOptions());
 
       return reply.status(201).send({
         success: true,
@@ -108,7 +137,7 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
 
       const { user, token } = await authService.signIn(body.email, body.password);
 
-      reply.setCookie('auth_token', token, cookieOptions);
+      reply.setCookie('auth_token', token, buildCookieOptions());
 
       return reply.send({
         success: true,
@@ -139,7 +168,7 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
    * POST /auth/logout - Clear auth cookie
    */
   server.post('/api/v1/auth/logout', async (_request: FastifyRequest, reply: FastifyReply) => {
-    reply.clearCookie('auth_token', { path: '/' });
+    reply.clearCookie('auth_token', buildClearCookieOptions());
     return reply.send({ success: true });
   });
 
@@ -157,14 +186,14 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       const payload = authService.verifyToken(token);
 
       if (!payload) {
-        reply.clearCookie('auth_token', { path: '/' });
+        reply.clearCookie('auth_token', buildClearCookieOptions());
         return reply.status(401).send({ error: 'Invalid or expired token' });
       }
 
       const user = await authService.getUserById(payload.userId);
 
       if (!user) {
-        reply.clearCookie('auth_token', { path: '/' });
+        reply.clearCookie('auth_token', buildClearCookieOptions());
         return reply.status(401).send({ error: 'User not found' });
       }
 

@@ -30,45 +30,45 @@ type CaptureMethod = {
 
 const firstVisitSteps = [
   {
-    title: 'Understand the workflow fast',
+    title: 'Leave every meeting with clarity',
     copy:
-      'The opening animation explains how meetings become structured work before anyone needs to sign in.',
+      'Capture decisions, action items, and deadlines before they disappear into memory, chat threads, or scattered notes.',
   },
   {
-    title: 'See the output clearly',
+    title: 'Keep owners and blockers visible',
     copy:
-      'Visitors should immediately understand that the app turns meetings into decisions, owners, next steps, and project memory.',
+      'Give every next step an owner, surface risks early, and make follow-up easier for product, engineering, and operations.',
   },
   {
-    title: 'Move into the workspace with context',
+    title: 'Carry context into the next review',
     copy:
-      'Once the value is clear, the workspace feels like a natural next step instead of an early barrier.',
+      'Bring unresolved work, open questions, and past decisions forward so your team keeps moving instead of starting from scratch.',
   },
 ];
 
 const productPanels: ProductPanel[] = [
   {
     eyebrow: 'Capture',
-    title: 'Bring in the meeting in the way that fits your team.',
+    title: 'Capture meetings without changing how your team works.',
     description:
-      'Start with transcript upload today, then move into extension or live capture as the workflow matures.',
+      'Upload a transcript, record audio, or use live capture so every discussion starts with real evidence.',
     points: [
-      'Transcript upload works well for repeatable runs',
-      'Audio recording is supported for extension capture',
-      'Multiple capture paths stay reachable from one product surface',
+      'Works for standups, planning calls, launch reviews, and stakeholder syncs',
+      'Start simple with transcript upload, then expand into live capture',
+      'Keeps raw meeting input available when you need traceability',
     ],
     accent: 'from-[#1d4ed8] to-[#0891b2]',
     icon: <CaptureIcon />,
   },
   {
     eyebrow: 'Understand',
-    title: 'Convert a meeting into structured, usable output.',
+    title: 'Turn conversation into accountable work.',
     description:
-      'The product extracts action items, decisions, risks, questions, and deadlines before it writes the final note.',
+      'Extract action items, decisions, risks, and follow-ups in a format your team can actually use after the meeting.',
     points: [
-      'PM-style MoM instead of generic recap',
-      'Owner-aware items and due-date context',
-      'Evidence trace for why an item exists',
+      'Owners and deadlines stay attached to the right work',
+      'Decisions, blockers, and open questions stay easy to review',
+      'Minutes of Meeting become a useful execution document',
     ],
     accent: 'from-[#2563eb] to-[#38bdf8]',
     icon: <InsightIcon />,
@@ -77,11 +77,11 @@ const productPanels: ProductPanel[] = [
     eyebrow: 'Track',
     title: 'Keep project memory alive across recurring meetings.',
     description:
-      'The real value is not one summary. It is the ability to revisit open work, update status, and keep context across time.',
+      'See what is still open, what changed, and what needs attention before the next review begins.',
     points: [
-      'Carry unresolved work into the next review',
-      'Separate closed decisions from active risks',
-      'Work inside a private workspace with collaborators',
+      'Carry unresolved work forward automatically',
+      'Separate completed work from active risk',
+      'Give the whole team one place to track progress',
     ],
     accent: 'from-[#1e40af] to-[#0ea5e9]',
     icon: <TrackIcon />,
@@ -93,11 +93,11 @@ const captureMethods: CaptureMethod[] = [
     label: 'Transcript upload',
     status: 'Live',
     description:
-      'Best route for most users today. It is fast, dependable, and easy to demo.',
+      'The quickest way to see value. Upload a transcript and turn a meeting into clear actions, decisions, and follow-up in minutes.',
     notes: [
-      'Strong first-time user path',
-      'Best for public demos and reliable evaluation',
-      'Fastest way to experience the core workflow',
+      'Best starting point for most teams',
+      'Reliable for demos, pilots, and regular usage',
+      'Fastest way to experience the full workflow',
     ],
     tone: 'border-[#1d4ed8]/16 bg-[linear-gradient(180deg,#ffffff,#eef6ff)]',
   },
@@ -105,11 +105,11 @@ const captureMethods: CaptureMethod[] = [
     label: 'Chrome extension',
     status: 'Beta',
     description:
-      'Useful when you want lighter capture during Google Meet sessions. Audio is working, while multi-speaker transcription is still improving.',
+      'A lighter workflow for Google Meet users who want capture built into the meeting itself while speaker attribution continues to improve.',
     notes: [
-      'Audio capture available',
-      'Speaker attribution still being tuned',
-      'Good for active product development demos',
+      'Audio capture is available',
+      'Best for teams testing live capture',
+      'Speaker separation is still being refined',
     ],
     tone: 'border-[#0891b2]/16 bg-[linear-gradient(180deg,#ffffff,#ecfeff)]',
   },
@@ -117,11 +117,11 @@ const captureMethods: CaptureMethod[] = [
     label: 'Meeting bot',
     status: 'Preview',
     description:
-      'Promising path for hands-free capture, but still limited by meeting permissions, waiting rooms, and auth friction.',
+      'The hands-free path we want long term, with current limitations around permissions, waiting rooms, and join reliability.',
     notes: [
-      'Best presented as an advanced capture option',
-      'Keep expectations honest in public demos',
-      'Better shown as a roadmap-facing capability today',
+      'Better as an advanced workflow today',
+      'Use when you can control meeting access',
+      'Still evolving toward a smoother default experience',
     ],
     tone: 'border-[#2563eb]/16 bg-[linear-gradient(180deg,#ffffff,#eef4ff)]',
   },
@@ -130,6 +130,10 @@ const captureMethods: CaptureMethod[] = [
 function passRate(passed: number, failed: number): number {
   const total = passed + failed;
   return total === 0 ? 0 : Math.round((passed / total) * 100);
+}
+
+function totalChecks(passed: number, failed: number): number {
+  return passed + failed;
 }
 
 export default function LandingPage() {
@@ -141,6 +145,18 @@ export default function LandingPage() {
   const baselinePassRate = passRate(
     benchmarkSuiteResult.transcriptOnly.passed,
     benchmarkSuiteResult.transcriptOnly.failed
+  );
+  const suiteCurrentTotal = totalChecks(
+    benchmarkSuiteResult.currentSystem.passed,
+    benchmarkSuiteResult.currentSystem.failed
+  );
+  const suiteBaselineTotal = totalChecks(
+    benchmarkSuiteResult.transcriptOnly.passed,
+    benchmarkSuiteResult.transcriptOnly.failed
+  );
+  const onboardingCurrentTotal = totalChecks(
+    benchmarkHeadline.currentSystem.passed,
+    benchmarkHeadline.currentSystem.failed
   );
 
   useEffect(() => {
@@ -274,7 +290,7 @@ export default function LandingPage() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm text-[var(--ink-muted)] md:flex">
+          <nav className="hidden items-center gap-7 text-sm text-[var(--ink-muted)] md:flex">
             <a href="#story" className="transition hover:text-[var(--ink-strong)]">
               How it works
             </a>
@@ -287,6 +303,19 @@ export default function LandingPage() {
             <a href="#proof" className="transition hover:text-[var(--ink-strong)]">
               Proof
             </a>
+            <Link
+              href="/research"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-[#1d4ed8]/25 bg-[linear-gradient(135deg,rgba(29,78,216,0.10),rgba(8,145,178,0.08))] px-3.5 py-1.5 text-sm font-semibold text-[#1d4ed8] shadow-[0_10px_22px_rgba(13,77,170,0.1)] transition hover:-translate-y-0.5 hover:border-[#1d4ed8]/40 hover:bg-[linear-gradient(135deg,rgba(29,78,216,0.16),rgba(8,145,178,0.14))]"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 -left-8 w-12 -skew-x-12 bg-white/55 opacity-0 transition-all duration-700 group-hover:left-[110%] group-hover:opacity-100"
+              />
+              Research
+              <span className="rounded-full bg-[#1d4ed8] px-1.5 py-0.5 text-[9px] font-bold uppercase leading-none tracking-[0.12em] text-white shadow-[0_4px_10px_rgba(13,77,170,0.28)]">
+                New
+              </span>
+            </Link>
           </nav>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -313,30 +342,30 @@ export default function LandingPage() {
             className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-[#1d4ed8]/12 bg-white/88 px-3.5 py-2 text-[0.82rem] leading-5 text-[var(--ink-muted)] shadow-[0_18px_44px_rgba(15,23,42,0.05)] sm:gap-3 sm:px-4 sm:text-sm"
           >
             <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#0f766e]" />
-            Structured meeting memory for execution teams
+            For teams tired of vague meeting follow-up
           </div>
 
           <h1
             data-hero-title
             className="mt-6 max-w-4xl font-[family:var(--font-display)] text-[3.15rem] leading-[0.95] tracking-[-0.06em] text-[var(--ink-strong)] sm:mt-7 sm:text-6xl sm:leading-[1.02] sm:tracking-[-0.05em] lg:text-7xl"
           >
-            Turn every meeting into decisions, owners, and next steps.
+            Make every meeting end with clear owners, decisions, and next steps.
           </h1>
 
           <p
             data-hero-copy
             className="mt-6 max-w-2xl text-[1.02rem] leading-7 text-[var(--ink-muted)] sm:mt-7 sm:text-xl sm:leading-8"
           >
-            AI Product Manager captures meeting input, extracts what matters, and keeps project
-            context alive across time so your team can move from talk to execution faster.
+            AI Product Manager turns transcripts, audio, and meeting notes into action items,
+            decisions, blockers, and follow-through your team can trust.
           </p>
 
           <p
             data-hero-copy
             className="mt-4 max-w-2xl text-[0.98rem] leading-6 text-[var(--ink-soft)] sm:text-base sm:leading-7"
           >
-            It starts with captured meeting evidence, moves into structured extraction, and ends in
-            a workspace built for follow-through.
+            No more hunting through chats, recordings, and docs to remember what was agreed or what
+            still needs attention.
           </p>
 
           <div data-hero-actions className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -433,32 +462,32 @@ export default function LandingPage() {
               <div className="space-y-3 rounded-[1.8rem] border border-black/6 bg-white/86 p-4 sm:space-y-4 sm:rounded-[2rem] sm:p-5">
                 <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f8fbff)] p-4 sm:rounded-[1.4rem] sm:p-5">
                   <p className="text-xs uppercase tracking-[0.22em] text-[#0891b2]">
-                    What the product makes clear
+                    What teams get immediately
                   </p>
                   <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink-muted)]">
-                    <li>It captures meeting input.</li>
-                    <li>It turns that input into structured work.</li>
-                    <li>It keeps project memory alive across recurring reviews.</li>
+                    <li>Clear action items and decisions.</li>
+                    <li>Owners, deadlines, and blockers in one place.</li>
+                    <li>A running memory across recurring meetings.</li>
                   </ul>
                 </div>
 
                 <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#eff6ff)] p-4 sm:rounded-[1.4rem] sm:p-5">
                   <p className="text-xs uppercase tracking-[0.22em] text-[#1d4ed8]">
-                    Why teams adopt it
+                    Why it matters
                   </p>
                   <p className="mt-4 text-sm leading-6 text-[var(--ink-muted)]">
-                    It does more than summarize a meeting. It preserves the work that still matters
-                    after the call ends.
+                    Most teams do not need more meeting notes. They need a reliable way to remember
+                    what was decided, who owns what, and what is still at risk.
                   </p>
                 </div>
 
                 <div className="rounded-[1.25rem] border border-black/6 bg-[linear-gradient(180deg,#ffffff,#f6f9ff)] p-4 sm:rounded-[1.4rem] sm:p-5">
                   <p className="text-xs uppercase tracking-[0.22em] text-[#1d4ed8]">
-                    Best way to start
+                    Best way to begin
                   </p>
                   <p className="mt-4 text-sm leading-6 text-[var(--ink-muted)]">
-                    Start with transcript upload for the cleanest experience, then explore extension
-                    or live capture once the workflow is familiar.
+                    Start with transcript upload to see the workflow quickly, then move into
+                    extension or live capture when your team is ready.
                   </p>
                 </div>
               </div>
@@ -499,11 +528,11 @@ export default function LandingPage() {
         <div data-reveal className="max-w-3xl">
           <p className="text-sm uppercase tracking-[0.28em] text-[#1d4ed8]">Product</p>
           <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
-            A SaaS workflow, not just a page that writes meeting notes.
+            One workspace for meeting output your team can actually use.
           </h2>
           <p className="mt-4 text-[1.02rem] leading-7 text-[var(--ink-muted)] sm:mt-5 sm:text-lg sm:leading-8">
-            The product needs to feel clear on first visit and useful after sign-up. That means a
-            clean story, honest states, and a workspace that supports real follow-through.
+            Instead of scattered notes and forgotten follow-ups, give your team a system that turns
+            conversations into accountable work and keeps it moving.
           </p>
         </div>
 
@@ -545,11 +574,11 @@ export default function LandingPage() {
         <div data-reveal className="max-w-3xl">
           <p className="text-sm uppercase tracking-[0.28em] text-[#0891b2]">Capture</p>
           <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
-            Honest capture states build trust.
+            Start with the capture path that fits your team.
           </h2>
           <p className="mt-4 text-[1.02rem] leading-7 text-[var(--ink-muted)] sm:mt-5 sm:text-lg sm:leading-8">
-            Public SaaS products should tell people what works today and what is still under active
-            improvement, especially when live meeting capture is involved.
+            Choose the most reliable way to bring meetings in today, then grow into live workflows
+            as adoption increases.
           </p>
         </div>
 
@@ -593,26 +622,25 @@ export default function LandingPage() {
             <div>
               <p className="text-sm uppercase tracking-[0.28em] text-[#1d4ed8]">Proof</p>
               <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
-                The product is benchmarked against recurring meeting scenarios, not just polished UI
-                copy.
+                It does more than summarize. It remembers what still matters.
               </h2>
               <p className="mt-4 text-[1.02rem] leading-7 text-[var(--ink-muted)] sm:mt-5 sm:text-lg sm:leading-8">
-                The current stateful system beats the transcript-only baseline across the live suite,
-                which is exactly the behavior we want if project memory is adding real value.
+                We benchmark the system on recurring meeting scenarios so we can measure whether it
+                preserves ownership, blockers, and project state over time.
               </p>
 
               <div className="mt-8 space-y-5">
                 <BenchmarkBar
                   label="Stateful system"
-                  value={`${benchmarkSuiteResult.currentSystem.passed} / ${benchmarkSuiteResult.currentSystem.failed}`}
-                  sublabel={`${suitePassRate}% pass rate`}
+                  value={`${benchmarkSuiteResult.currentSystem.passed} / ${suiteCurrentTotal}`}
+                  sublabel={`${suitePassRate}% pass rate · checks passed`}
                   width={`${suitePassRate}%`}
                   tone="bg-[linear-gradient(90deg,#1d4ed8,#0891b2)]"
                 />
                 <BenchmarkBar
                   label="Transcript-only baseline"
-                  value={`${benchmarkSuiteResult.transcriptOnly.passed} / ${benchmarkSuiteResult.transcriptOnly.failed}`}
-                  sublabel={`${baselinePassRate}% pass rate`}
+                  value={`${benchmarkSuiteResult.transcriptOnly.passed} / ${suiteBaselineTotal}`}
+                  sublabel={`${baselinePassRate}% pass rate · checks passed`}
                   width={`${baselinePassRate}%`}
                   tone="bg-[linear-gradient(90deg,#94a3b8,#64748b)]"
                 />
@@ -637,21 +665,21 @@ export default function LandingPage() {
             <div className="grid gap-4 rounded-[1.6rem] border border-black/5 bg-white/90 p-5 sm:gap-5 sm:rounded-[1.8rem] sm:p-6">
               <ProofTile
                 title={`${benchmarkSuiteResult.scenarioWins} of ${benchmarkSuiteOverview.scenarioCount} scenario wins`}
-                body="The current system outperformed the transcript-only baseline across every committed benchmark scenario in the current suite."
+                body="Across the current benchmark suite, the stateful system beats the transcript-only baseline on every committed scenario."
               />
               <div className="grid gap-5 sm:grid-cols-2">
                 <ProofTile
-                  title={`${benchmarkHeadline.currentSystem.passed} / ${benchmarkHeadline.currentSystem.failed}`}
-                  body="Latest onboarding scenario result with project memory enabled."
+                  title={`${benchmarkHeadline.currentSystem.passed} / ${onboardingCurrentTotal}`}
+                  body="Latest onboarding benchmark score with project memory enabled."
                 />
                 <ProofTile
                   title={`${benchmarkSuiteOverview.scenarioCount} recurring stories`}
-                  body="The benchmark suite now covers both onboarding execution and recovery-style coordination."
+                  body="Current benchmark coverage spans onboarding execution and recovery-style coordination."
                 />
               </div>
               <ProofTile
                 title="Why this matters"
-                body="A better product should not just write nicer notes. It should remember what stayed open, what changed, and what still blocks progress."
+                body="Your team should not have to rediscover the same blockers every week. Better meeting intelligence keeps context alive between meetings."
               />
             </div>
           </div>
@@ -668,11 +696,11 @@ export default function LandingPage() {
             <div className="max-w-3xl">
               <p className="text-sm uppercase tracking-[0.28em] text-[#93c5fd]">Start here</p>
               <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] sm:text-5xl sm:tracking-[-0.04em]">
-                Open the product, run one meeting, and let the workspace show the follow-through.
+                Bring in one meeting and see what your team should do next.
               </h2>
               <p className="mt-4 text-[1.02rem] leading-7 text-slate-300 sm:mt-5 sm:text-lg sm:leading-8">
-                The landing page explains the value clearly. The workspace proves it with real
-                meeting output, accountability, and follow-through.
+                Start with a transcript, generate structured output, and give your team one place
+                to track decisions, actions, and open risks after the call ends.
               </p>
             </div>
 

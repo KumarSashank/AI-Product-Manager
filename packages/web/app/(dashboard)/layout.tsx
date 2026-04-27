@@ -6,7 +6,15 @@ import { useEffect, useState } from 'react';
 
 import { authApi, User } from '@/lib/api';
 
-const navItems = [
+type NavItem = {
+  label: string;
+  href: string;
+  icon: React.ReactNode;
+  highlight?: boolean;
+  badge?: string;
+};
+
+const navItems: NavItem[] = [
   {
     label: 'Projects',
     href: '/projects',
@@ -31,6 +39,22 @@ const navItems = [
           strokeLinejoin="round"
           strokeWidth={1.6}
           d="M4 7a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7zm4 0v10m8-6H8"
+        />
+      </svg>
+    ),
+  },
+  {
+    label: 'Research',
+    href: '/research',
+    highlight: true,
+    badge: 'New',
+    icon: (
+      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.6}
+          d="M9 3v2.5M15 3v2.5M8 5.5h8a2 2 0 012 2v1.2a2 2 0 01-.35 1.13l-3.9 5.62a2 2 0 00-.35 1.13V20a1 1 0 01-1.45.9l-2.4-1.2A1 1 0 019 18.8v-2.22a2 2 0 00-.35-1.13L4.75 9.83A2 2 0 014.4 8.7V7.5a2 2 0 012-2h1.6"
         />
       </svg>
     ),
@@ -89,6 +113,44 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <nav className="flex-1 space-y-1 px-3 py-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+
+            if (item.highlight) {
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-[linear-gradient(135deg,#1d4ed8,#0891b2)] text-white shadow-[0_14px_28px_rgba(13,77,170,0.22)]'
+                      : 'border border-[#1d4ed8]/25 bg-[linear-gradient(135deg,rgba(29,78,216,0.10),rgba(8,145,178,0.08))] text-[#1d4ed8] shadow-[0_10px_22px_rgba(13,77,170,0.08)] hover:border-[#1d4ed8]/35 hover:bg-[linear-gradient(135deg,rgba(29,78,216,0.14),rgba(8,145,178,0.12))]'
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`pointer-events-none absolute inset-y-0 -left-8 w-12 -skew-x-12 bg-white/35 opacity-0 transition-all duration-700 group-hover:left-[110%] group-hover:opacity-100 ${
+                      isActive ? 'bg-white/40' : ''
+                    }`}
+                  />
+                  <span className={isActive ? 'text-white' : 'text-[#1d4ed8]'}>{item.icon}</span>
+                  {!sidebarCollapsed && (
+                    <>
+                      <span className="flex-1">{item.label}</span>
+                      {item.badge && (
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                            isActive
+                              ? 'bg-white/25 text-white'
+                              : 'bg-[#1d4ed8] text-white shadow-[0_6px_14px_rgba(13,77,170,0.28)]'
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </Link>
+              );
+            }
 
             return (
               <Link

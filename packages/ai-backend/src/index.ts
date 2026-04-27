@@ -19,6 +19,21 @@ import Fastify from 'fastify';
 
 import { registerRoutes } from './routes/index.js';
 
+function parseAllowedOrigins(): string[] {
+  const configuredOrigins = [
+    process.env.CORS_ALLOWED_ORIGINS,
+    process.env.FRONTEND_ORIGIN,
+    process.env.FRONTEND_URL,
+  ]
+    .flatMap((value) => (value ? value.split(',') : []))
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  return Array.from(
+    new Set(['http://localhost:3000', 'http://localhost:3001', ...configuredOrigins])
+  );
+}
+
 const server = Fastify({
   logger: true,
 });
@@ -35,10 +50,11 @@ server.get('/api/v1/health', async () => {
 
 async function start(): Promise<void> {
   try {
+    const allowedOrigins = parseAllowedOrigins();
+
     // Register CORS
     await server.register(cors, {
       origin: (origin, callback) => {
-        const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
         // Allow Chrome extension origins
         if (
           !origin ||
