@@ -81,6 +81,7 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       return reply.status(201).send({
         success: true,
         user,
+        token,
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -142,6 +143,7 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       return reply.send({
         success: true,
         user,
+        token,
       });
     } catch (error) {
       if (error instanceof z.ZodError) {

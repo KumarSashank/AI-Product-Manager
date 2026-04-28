@@ -3,9 +3,12 @@
  * @description Centralized API client for backend communication
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api/v1';
+const isBrowser = typeof window !== 'undefined';
+const host = isBrowser ? window.location.hostname : 'localhost';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || `http://${host}:3002/api/v1`;
 export const BACKEND_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:3002';
+  process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || `http://${host}:3002`;
 
 /**
  * Generic fetch wrapper with error handling
@@ -14,13 +17,24 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
   const url = `${API_BASE_URL}${endpoint}`;
   let response: Response;
 
+  let headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (isBrowser) {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  }
+
   try {
     response = await fetch(url, {
       ...options,
       credentials: 'include', // Include cookies for auth
       headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
+        ...headers,
+        ...(options.headers as Record<string, string>),
       },
     });
   } catch (error) {
@@ -54,22 +68,36 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
 
 // Auth API
 export const authApi = {
-  signup: (email: string, password: string, displayName: string, inviteToken?: string) =>
-    apiFetch<{ user: User }>('/auth/signup', {
+  signup: async (email: string, password: string, displayName: string, inviteToken?: string) => {
+    const res = await apiFetch<{ user: User; token?: string }>('/auth/signup', {
       method: 'POST',
       body: JSON.stringify({ email, password, displayName, inviteToken }),
-    }),
+    });
+    if (isBrowser && res.token) {
+      localStorage.setItem('auth_token', res.token);
+    }
+    return res;
+  },
 
-  signin: (email: string, password: string) =>
-    apiFetch<{ user: User }>('/auth/signin', {
+  signin: async (email: string, password: string) => {
+    const res = await apiFetch<{ user: User; token?: string }>('/auth/signin', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
-    }),
+    });
+    if (isBrowser && res.token) {
+      localStorage.setItem('auth_token', res.token);
+    }
+    return res;
+  },
 
-  logout: () =>
-    apiFetch<{ success: boolean }>('/auth/logout', {
+  logout: async () => {
+    if (isBrowser) {
+      localStorage.removeItem('auth_token');
+    }
+    return apiFetch<{ success: boolean }>('/auth/logout', {
       method: 'POST',
-    }),
+    });
+  },
 
   me: () => apiFetch<{ user: User }>('/auth/me'),
 

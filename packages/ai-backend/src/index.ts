@@ -55,11 +55,12 @@ async function start(): Promise<void> {
     // Register CORS
     await server.register(cors, {
       origin: (origin, callback) => {
-        // Allow Chrome extension origins
+        // Allow Chrome extension origins and local network IPs for mobile testing
         if (
           !origin ||
           allowedOrigins.includes(origin) ||
-          origin.startsWith('chrome-extension://')
+          origin.startsWith('chrome-extension://') ||
+          /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(origin)
         ) {
           callback(null, true);
         } else {
