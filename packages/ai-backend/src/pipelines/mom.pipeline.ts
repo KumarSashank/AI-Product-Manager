@@ -218,6 +218,10 @@ export class MoMPipeline {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      console.error('[MoM Pipeline] FAILED for meeting', meetingId, ':', errorMessage);
+      if (errorStack) console.error('[MoM Pipeline] Stack:', errorStack);
 
       this.updateProgress(meetingId, {
         status: 'error',
