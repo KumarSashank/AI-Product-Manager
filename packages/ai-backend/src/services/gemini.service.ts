@@ -4,6 +4,7 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
+import { jsonrepair } from 'jsonrepair';
 import { z } from 'zod';
 
 // Initialize Gemini client
@@ -959,7 +960,7 @@ Return your response as JSON with this exact structure:
 
     const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
 
-    return ExecutiveSummarySchema.parse(JSON.parse(cleanContent));
+    return ExecutiveSummarySchema.parse(JSON.parse(jsonrepair(cleanContent)));
   }
 
   /**
@@ -1008,7 +1009,7 @@ Return your response as JSON with this exact structure:
 
     const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
 
-    const parsed = HighlightsResponseSchema.parse(JSON.parse(cleanContent));
+    const parsed = HighlightsResponseSchema.parse(JSON.parse(jsonrepair(cleanContent)));
     return parsed.highlights;
   }
 
@@ -1073,7 +1074,7 @@ Return your response as JSON with this exact structure:
 
     const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
 
-    const raw = JSON.parse(cleanContent) as Record<string, unknown>;
+    const raw = JSON.parse(jsonrepair(cleanContent)) as Record<string, unknown>;
     const normalized = {
       items: Array.isArray(raw.items)
         ? raw.items.map((item) => this.normalizeActionItem(item))
@@ -1177,7 +1178,7 @@ Return your response as JSON.`,
     const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
 
     const normalized = this.applyReadinessGuard(
-      this.normalizeMoMResponse(JSON.parse(cleanContent)),
+      this.normalizeMoMResponse(JSON.parse(jsonrepair(cleanContent))),
       context
     );
     return this.ensureMoMQuality(normalized, context, seedItems);

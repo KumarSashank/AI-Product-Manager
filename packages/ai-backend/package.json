@@ -30,6 +30,7 @@
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.45.1",
     "fastify": "^4.25.0",
+    "jsonrepair": "^3.14.0",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.104.0",
     "pino": "^8.18.0",
