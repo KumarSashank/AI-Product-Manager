@@ -963,7 +963,10 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+    const cleanContent = content
+      .replace(/^```json\n?/g, '')
+      .replace(/\n?```$/g, '')
+      .trim();
 
     return ExecutiveSummarySchema.parse(JSON.parse(jsonrepair(cleanContent)));
   }
@@ -1012,7 +1015,10 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+    const cleanContent = content
+      .replace(/^```json\n?/g, '')
+      .replace(/\n?```$/g, '')
+      .trim();
 
     const parsed = HighlightsResponseSchema.parse(JSON.parse(jsonrepair(cleanContent)));
     return parsed.highlights;
@@ -1077,7 +1083,10 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+    const cleanContent = content
+      .replace(/^```json\n?/g, '')
+      .replace(/\n?```$/g, '')
+      .trim();
 
     const raw = JSON.parse(jsonrepair(cleanContent)) as Record<string, unknown>;
     const normalized = {
@@ -1180,7 +1189,10 @@ Return your response as JSON.`,
     if (!content) throw new Error('No response from Gemini');
 
     // Clean up potential markdown formatting that Gemini sometimes includes
-    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+    const cleanContent = content
+      .replace(/^```json\n?/g, '')
+      .replace(/\n?```$/g, '')
+      .trim();
 
     const normalized = this.applyReadinessGuard(
       this.normalizeMoMResponse(JSON.parse(jsonrepair(cleanContent))),
