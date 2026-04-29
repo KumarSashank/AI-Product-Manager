@@ -13,10 +13,10 @@ import {
 } from '../lib/productManager.js';
 import { formatTranscriptForAI, getTranscriptSpeakerStats } from '../lib/transcript.js';
 import {
-  openaiService,
+  aiService,
   type ActionItem,
   type MeetingAnalysisContext,
-} from '../services/openai.service.js';
+} from '../services/gemini.service.js';
 import { productManagerService } from '../services/productManager.service.js';
 
 // ============================================================================
@@ -85,7 +85,7 @@ export class ActionItemsPipeline {
 
       // Extract items via OpenAI
       const extractedItems = dedupeContextualItems([
-        ...(await openaiService.extractActionItems(transcriptText, baseContext)),
+        ...(await aiService.extractActionItems(transcriptText, baseContext)),
         ...projectContext.accountabilityAlerts,
       ]);
       const reconciliation = reconcileMeetingItems({
@@ -122,7 +122,7 @@ export class ActionItemsPipeline {
    * Extract from raw transcript text (no database fetch)
    */
   async extractFromText(transcriptText: string): Promise<ActionItem[]> {
-    return await openaiService.extractActionItems(transcriptText);
+    return await aiService.extractActionItems(transcriptText);
   }
 
   private buildContext(

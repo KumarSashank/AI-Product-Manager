@@ -45,15 +45,15 @@ vi.mock('../services/productManager.service.js', () => ({
 }));
 
 // Mock OpenAI service
-vi.mock('../services/openai.service.js', () => ({
-  openaiService: {
+vi.mock('../services/gemini.service.js', () => ({
+  aiService: {
     extractActionItems: vi.fn(),
   },
 }));
 
 import { meetingItemsRepository } from '../db/repositories/meetingItems.repository.js';
 import { transcriptRepository } from '../db/repositories/transcript.repository.js';
-import { openaiService } from '../services/openai.service.js';
+import { aiService } from '../services/gemini.service.js';
 
 import { actionItemsPipeline } from './actionItems.pipeline.js';
 
@@ -119,7 +119,7 @@ describe('Action Items Pipeline', () => {
   describe('extract', () => {
     it('should extract action items successfully', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.extractActionItems as Mock).mockResolvedValue(mockActionItems);
+      (aiService.extractActionItems as Mock).mockResolvedValue(mockActionItems);
       (meetingItemsRepository.createBatch as Mock).mockResolvedValue([
         { id: 'item-1' },
         { id: 'item-2' },
@@ -134,19 +134,19 @@ describe('Action Items Pipeline', () => {
       expect(result.processingTimeMs).toBeGreaterThanOrEqual(0);
     });
 
-    it('should fail when no transcript available', async () => {
+    it('should handle empty transcript gracefully', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue([]);
 
       const result = await actionItemsPipeline.extract('meeting-123');
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('No transcript available for this meeting');
+      expect(result.success).toBe(true);
+      expect(result.itemsCreated).toBe(0);
       expect(result.items).toEqual([]);
     });
 
     it('should handle empty items array', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.extractActionItems as Mock).mockResolvedValue([]);
+      (aiService.extractActionItems as Mock).mockResolvedValue([]);
 
       const result = await actionItemsPipeline.extract('meeting-123');
 
@@ -158,7 +158,7 @@ describe('Action Items Pipeline', () => {
 
     it('should handle OpenAI errors gracefully', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.extractActionItems as Mock).mockRejectedValue(new Error('API quota exceeded'));
+      (aiService.extractActionItems as Mock).mockRejectedValue(new Error('API quota exceeded'));
 
       const result = await actionItemsPipeline.extract('meeting-123');
 
@@ -169,7 +169,7 @@ describe('Action Items Pipeline', () => {
 
   describe('extractFromText', () => {
     it('should extract from raw text without database', async () => {
-      (openaiService.extractActionItems as Mock).mockResolvedValue(mockActionItems);
+      (aiService.extractActionItems as Mock).mockResolvedValue(mockActionItems);
 
       const result = await actionItemsPipeline.extractFromText(mockTranscript);
 

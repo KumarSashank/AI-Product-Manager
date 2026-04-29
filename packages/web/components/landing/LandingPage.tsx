@@ -5,11 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Link from 'next/link';
 import { useEffect, useRef, type ReactNode } from 'react';
 
-import {
-  benchmarkHeadline,
-  benchmarkSuiteOverview,
-  benchmarkSuiteResult,
-} from '@/lib/research';
+import { benchmarkHeadline, benchmarkSuiteOverview, benchmarkSuiteResult } from '@/lib/research';
 
 type ProductPanel = {
   eyebrow: string;
@@ -31,18 +27,15 @@ type CaptureMethod = {
 const firstVisitSteps = [
   {
     title: 'Leave every meeting with clarity',
-    copy:
-      'Capture decisions, action items, and deadlines before they disappear into memory, chat threads, or scattered notes.',
+    copy: 'Capture decisions, action items, and deadlines before they disappear into memory, chat threads, or scattered notes.',
   },
   {
     title: 'Keep owners and blockers visible',
-    copy:
-      'Give every next step an owner, surface risks early, and make follow-up easier for product, engineering, and operations.',
+    copy: 'Give every next step an owner, surface risks early, and make follow-up easier for product, engineering, and operations.',
   },
   {
     title: 'Carry context into the next review',
-    copy:
-      'Bring unresolved work, open questions, and past decisions forward so your team keeps moving instead of starting from scratch.',
+    copy: 'Bring unresolved work, open questions, and past decisions forward so your team keeps moving instead of starting from scratch.',
   },
 ];
 
@@ -392,7 +385,10 @@ export default function LandingPage() {
               value={`${benchmarkSuiteOverview.scenarioCount} scenarios`}
               label="Recurring-meeting stories in the current benchmark suite"
             />
-            <StatCard value="Private workspaces" label="Account-scoped projects and collaborators" />
+            <StatCard
+              value="Private workspaces"
+              label="Account-scoped projects and collaborators"
+            />
           </div>
         </div>
 
@@ -570,7 +566,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="capture" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-5 lg:px-10 lg:py-16">
+      <section
+        id="capture"
+        className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-5 lg:px-10 lg:py-16"
+      >
         <div data-reveal className="max-w-3xl">
           <p className="text-sm uppercase tracking-[0.28em] text-[#0891b2]">Capture</p>
           <h2 className="mt-4 font-[family:var(--font-display)] text-[2.45rem] leading-[0.96] tracking-[-0.05em] text-[var(--ink-strong)] sm:text-5xl sm:tracking-[-0.04em]">
@@ -699,8 +698,8 @@ export default function LandingPage() {
                 Bring in one meeting and see what your team should do next.
               </h2>
               <p className="mt-4 text-[1.02rem] leading-7 text-slate-300 sm:mt-5 sm:text-lg sm:leading-8">
-                Start with a transcript, generate structured output, and give your team one place
-                to track decisions, actions, and open risks after the call ends.
+                Start with a transcript, generate structured output, and give your team one place to
+                track decisions, actions, and open risks after the call ends.
               </p>
             </div>
 
@@ -773,7 +772,10 @@ function StoryScene({
   tone: string;
 }) {
   return (
-    <div data-story-scene className="absolute inset-3 rounded-[1.15rem] border border-black/6 bg-white p-3.5 shadow-[0_16px_32px_rgba(15,23,42,0.06)] sm:inset-4 sm:rounded-[1.3rem] sm:p-4">
+    <div
+      data-story-scene
+      className="absolute inset-3 rounded-[1.15rem] border border-black/6 bg-white p-3.5 shadow-[0_16px_32px_rgba(15,23,42,0.06)] sm:inset-4 sm:rounded-[1.3rem] sm:p-4"
+    >
       <div data-story-line className={`h-2.5 w-18 rounded-full sm:w-20 ${tone}`} />
       <p
         data-story-line

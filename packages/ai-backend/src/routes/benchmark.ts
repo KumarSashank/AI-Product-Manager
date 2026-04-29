@@ -14,7 +14,7 @@ import {
   getTranscriptSpeakerStats,
   parseTranscript,
 } from '../lib/transcript.js';
-import { openaiService, type MeetingAnalysisContext } from '../services/openai.service.js';
+import { aiService, type MeetingAnalysisContext } from '../services/gemini.service.js';
 
 const transcriptOnlyBenchmarkSchema = z.object({
   title: z.string().min(1, 'Meeting title is required'),
@@ -119,12 +119,8 @@ export async function benchmarkRoutes(fastify: FastifyInstance): Promise<void> {
       };
 
       const start = Date.now();
-      const extractedItems = await openaiService.extractActionItems(transcriptText, context);
-      const mom = await openaiService.generateMoMWithSeedItems(
-        transcriptText,
-        context,
-        extractedItems
-      );
+      const extractedItems = await aiService.extractActionItems(transcriptText, context);
+      const mom = await aiService.generateMoMWithSeedItems(transcriptText, context, extractedItems);
 
       return reply.status(200).send({
         success: true,

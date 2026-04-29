@@ -201,6 +201,7 @@ describe('Meeting Routes', () => {
         url: '/api/v1/meetings/meeting-123/audio',
         headers: {
           'content-type': 'audio/webm',
+          authorization: 'Bearer fake-token',
         },
         payload: Buffer.from('fake-audio'),
       });

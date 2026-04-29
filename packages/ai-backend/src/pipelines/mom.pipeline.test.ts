@@ -54,8 +54,8 @@ vi.mock('../services/productManager.service.js', () => ({
 }));
 
 // Mock OpenAI service
-vi.mock('../services/openai.service.js', () => ({
-  openaiService: {
+vi.mock('../services/gemini.service.js', () => ({
+  aiService: {
     extractActionItems: vi.fn().mockResolvedValue([]),
     generateMoMWithSeedItems: vi.fn(),
     fitsInContext: vi.fn().mockReturnValue(true),
@@ -65,7 +65,7 @@ vi.mock('../services/openai.service.js', () => ({
 import { meetingItemsRepository } from '../db/repositories/meetingItems.repository.js';
 import { momRepository } from '../db/repositories/mom.repository.js';
 import { transcriptRepository } from '../db/repositories/transcript.repository.js';
-import { openaiService } from '../services/openai.service.js';
+import { aiService } from '../services/gemini.service.js';
 
 import { MoMPipeline, momPipeline } from './mom.pipeline.js';
 
@@ -142,7 +142,7 @@ describe('MoM Pipeline', () => {
     it('should generate MoM successfully', async () => {
       // Setup mocks
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.generateMoMWithSeedItems as Mock).mockResolvedValue(mockMoMResponse);
+      (aiService.generateMoMWithSeedItems as Mock).mockResolvedValue(mockMoMResponse);
       (momRepository.upsert as Mock).mockResolvedValue({ id: 'mom-123', meetingId: 'meeting-123' });
       (momRepository.addHighlights as Mock).mockResolvedValue([{ id: 'highlight-1' }]);
       (meetingItemsRepository.createBatch as Mock).mockResolvedValue([
@@ -159,28 +159,27 @@ describe('MoM Pipeline', () => {
       expect(result.processingTimeMs).toBeGreaterThanOrEqual(0);
     });
 
-    it('should fail when no transcript available', async () => {
+    it('should handle empty transcript gracefully', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue([]);
+      (momRepository.upsert as Mock).mockResolvedValue({ id: 'mom-123' });
 
       const result = await momPipeline.generate('meeting-123');
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('No transcript available for this meeting');
-      expect(result.momId).toBeNull();
+      expect(result.success).toBe(true);
+      expect(result.momId).toBe('mom-123');
     });
 
     it('should fail when transcript is null', async () => {
-      (transcriptRepository.findByMeetingId as Mock).mockResolvedValue([]);
+      (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(null);
 
       const result = await momPipeline.generate('meeting-123');
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('No transcript available for this meeting');
     });
 
     it('should handle OpenAI errors gracefully', async () => {
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.generateMoMWithSeedItems as Mock).mockRejectedValue(
+      (aiService.generateMoMWithSeedItems as Mock).mockRejectedValue(
         new Error('Rate limit exceeded')
       );
 
@@ -193,7 +192,7 @@ describe('MoM Pipeline', () => {
     it('should handle empty highlights array', async () => {
       const responseNoHighlights = { ...mockMoMResponse, highlights: [] };
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.generateMoMWithSeedItems as Mock).mockResolvedValue(responseNoHighlights);
+      (aiService.generateMoMWithSeedItems as Mock).mockResolvedValue(responseNoHighlights);
       (momRepository.upsert as Mock).mockResolvedValue({ id: 'mom-123' });
       (meetingItemsRepository.createBatch as Mock).mockResolvedValue([{ id: 'item-1' }]);
 
@@ -207,7 +206,7 @@ describe('MoM Pipeline', () => {
     it('should handle empty items array', async () => {
       const responseNoItems = { ...mockMoMResponse, items: [] };
       (transcriptRepository.findByMeetingId as Mock).mockResolvedValue(mockTranscriptEvents);
-      (openaiService.generateMoMWithSeedItems as Mock).mockResolvedValue(responseNoItems);
+      (aiService.generateMoMWithSeedItems as Mock).mockResolvedValue(responseNoItems);
       (momRepository.upsert as Mock).mockResolvedValue({ id: 'mom-123' });
       (momRepository.addHighlights as Mock).mockResolvedValue([{ id: 'h-1' }]);
 

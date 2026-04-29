@@ -14,10 +14,10 @@ import {
 } from '../lib/productManager.js';
 import { formatTranscriptForAI, getTranscriptSpeakerStats } from '../lib/transcript.js';
 import {
-  openaiService,
+  aiService,
   type Highlight,
   type MeetingAnalysisContext,
-} from '../services/openai.service.js';
+} from '../services/gemini.service.js';
 import { productManagerService } from '../services/productManager.service.js';
 
 // ============================================================================
@@ -97,7 +97,7 @@ export class MoMPipeline {
       const baseContext = this.buildContext(meetingId, meeting, transcriptEvents, projectContext);
 
       // Check if transcript is too long
-      if (!openaiService.fitsInContext(transcriptText, 100000)) {
+      if (!aiService.fitsInContext(transcriptText, 100000)) {
         // Would implement chunking here for very long meetings
         console.warn('Large transcript detected, may need chunking');
       }
@@ -109,7 +109,7 @@ export class MoMPipeline {
         message: 'Extracting structured PM insights...',
       });
 
-      const extractedItems = await openaiService.extractActionItems(transcriptText, baseContext);
+      const extractedItems = await aiService.extractActionItems(transcriptText, baseContext);
       const initialCandidateItems = dedupeContextualItems([
         ...extractedItems,
         ...projectContext.accountabilityAlerts,
@@ -145,7 +145,7 @@ export class MoMPipeline {
         message: 'Generating context-aware MoM with AI...',
       });
 
-      const momResponse = await openaiService.generateMoMWithSeedItems(
+      const momResponse = await aiService.generateMoMWithSeedItems(
         transcriptText,
         context,
         reconciliation.contextualItems

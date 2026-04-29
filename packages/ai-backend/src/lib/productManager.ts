@@ -4,7 +4,7 @@
  *              and de-duplication before AI-generated MoM synthesis.
  */
 
-import type { ActionItem } from '../services/openai.service.js';
+import type { ActionItem } from '../services/gemini.service.js';
 
 export interface ContextualActionItem extends ActionItem {
   metadata?: Record<string, unknown> | undefined;

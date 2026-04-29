@@ -17,7 +17,7 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
   const url = `${API_BASE_URL}${endpoint}`;
   let response: Response;
 
-  let headers: Record<string, string> = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 

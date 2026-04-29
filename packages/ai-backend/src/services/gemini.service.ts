@@ -3,12 +3,12 @@
  * @description Core wrapper for OpenAI API with rate limiting and structured outputs
  */
 
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+// Initialize Gemini client
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || '',
 });
 
 // ============================================================================
@@ -149,11 +149,11 @@ export interface MeetingAnalysisContext {
 // OPENAI SERVICE CLASS
 // ============================================================================
 
-export class OpenAIService {
+export class GeminiService {
   private model: string;
   private embeddingModel: string;
 
-  constructor(model: string = 'gpt-4o', embeddingModel: string = 'text-embedding-3-small') {
+  constructor(model: string = 'gemini-2.5-pro', embeddingModel: string = 'text-embedding-004') {
     this.model = model;
     this.embeddingModel = embeddingModel;
   }
@@ -926,12 +926,20 @@ export class OpenAIService {
     transcript: string,
     context?: MeetingAnalysisContext
   ): Promise<ExecutiveSummary> {
-    const response = await openai.chat.completions.create({
+    const response = await ai.models.generateContent({
       model: this.model,
-      messages: [
+      contents: [
         {
-          role: 'system',
-          content: `You are an expert meeting analyst. Generate a concise executive summary from the meeting transcript. 
+          role: 'user',
+          parts: [
+            {
+              text: `Meeting context:\n${this.buildContextBlock(context)}\n\nAnalyze this meeting transcript and provide an executive summary:\n\n${transcript}`,
+            },
+          ],
+        },
+      ],
+      config: {
+        systemInstruction: `You are an expert meeting analyst. Generate a concise executive summary from the meeting transcript. 
 Focus on the key outcomes and decisions. Be professional and objective.
 
 Return your response as JSON with this exact structure:
@@ -941,23 +949,13 @@ Return your response as JSON with this exact structure:
   "sentiment": "positive" | "neutral" | "negative" | "mixed",
   "participantCount": number (optional)
 }`,
-        },
-        {
-          role: 'user',
-          content: `Meeting context:
-${this.buildContextBlock(context)}
-
-Analyze this meeting transcript and provide an executive summary:
-
-${transcript}`,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+      },
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error('No response from OpenAI');
+    const content = response.text;
+    if (!content) throw new Error('No response from Gemini');
 
     return ExecutiveSummarySchema.parse(JSON.parse(content));
   }
@@ -969,12 +967,20 @@ ${transcript}`,
     transcript: string,
     context?: MeetingAnalysisContext
   ): Promise<Highlight[]> {
-    const response = await openai.chat.completions.create({
+    const response = await ai.models.generateContent({
       model: this.model,
-      messages: [
+      contents: [
         {
-          role: 'system',
-          content: `You are an expert meeting analyst. Extract key highlights from the transcript.
+          role: 'user',
+          parts: [
+            {
+              text: `Meeting context:\n${this.buildContextBlock(context)}\n\nExtract highlights from this meeting transcript:\n\n${transcript}`,
+            },
+          ],
+        },
+      ],
+      config: {
+        systemInstruction: `You are an expert meeting analyst. Extract key highlights from the transcript.
 Include: key points, notable quotes, outcomes, concerns, and opportunities.
 Rate importance from 1-10. Extract relevant keywords for search.
 
@@ -990,23 +996,13 @@ Return your response as JSON with this exact structure:
     }
   ]
 }`,
-        },
-        {
-          role: 'user',
-          content: `Meeting context:
-${this.buildContextBlock(context)}
-
-Extract highlights from this meeting transcript:
-
-${transcript}`,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+      },
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error('No response from OpenAI');
+    const content = response.text;
+    if (!content) throw new Error('No response from Gemini');
 
     const parsed = HighlightsResponseSchema.parse(JSON.parse(content));
     return parsed.highlights;
@@ -1019,12 +1015,20 @@ ${transcript}`,
     transcript: string,
     context?: MeetingAnalysisContext
   ): Promise<ActionItem[]> {
-    const response = await openai.chat.completions.create({
+    const response = await ai.models.generateContent({
       model: this.model,
-      messages: [
+      contents: [
         {
-          role: 'system',
-          content: `You are an expert meeting analyst. Extract all actionable items from the transcript.
+          role: 'user',
+          parts: [
+            {
+              text: `Meeting context:\n${this.buildContextBlock(context)}\n\nCurrent meeting raw transcript (source of truth):\n${transcript}\n\nExtract all action items and meeting items from the raw transcript above. Preserve explicit ownership when the accountable owner is a team rather than an individual.`,
+            },
+          ],
+        },
+      ],
+      config: {
+        systemInstruction: `You are an expert meeting analyst. Extract all actionable items from the transcript.
 Look for: action items, decisions, blockers, risks, questions, concerns, next steps, 
 follow-ups, dependencies, milestones, requirements, assumptions, constraints, and feedback.
 Include assignees and due dates when mentioned. Extract the source quote if available.
@@ -1055,24 +1059,13 @@ Return your response as JSON with this exact structure:
     }
   ]
 }`,
-        },
-        {
-          role: 'user',
-          content: `Meeting context:
-${this.buildContextBlock(context)}
-
-Current meeting raw transcript (source of truth):
-${transcript}
-
-Extract all action items and meeting items from the raw transcript above. Preserve explicit ownership when the accountable owner is a team rather than an individual.`,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+      },
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error('No response from OpenAI');
+    const content = response.text;
+    if (!content) throw new Error('No response from Gemini');
 
     const raw = JSON.parse(content) as Record<string, unknown>;
     const normalized = {
@@ -1117,12 +1110,20 @@ Extract all action items and meeting items from the raw transcript above. Preser
           )
         : '[]';
 
-    const response = await openai.chat.completions.create({
+    const response = await ai.models.generateContent({
       model: this.model,
-      messages: [
+      contents: [
         {
-          role: 'system',
-          content: `You are a senior enterprise product manager creating comprehensive Minutes of Meeting (MoM).
+          role: 'user',
+          parts: [
+            {
+              text: `Meeting context:\n${this.buildContextBlock(context)}\n\nCurrent meeting raw transcript (source of truth):\n${transcript}\n\nCandidate accountability and extraction items:\n${seedItemsBlock}\n\nGenerate complete Minutes of Meeting using the raw transcript first and the candidate items second.`,
+            },
+          ],
+        },
+      ],
+      config: {
+        systemInstruction: `You are a senior enterprise product manager creating comprehensive Minutes of Meeting (MoM).
 Write with the judgment, clarity, and prioritization discipline expected in a high-end PM organization.
 
 Generate:
@@ -1158,28 +1159,14 @@ Rules:
 - Use the provided candidate items as a starting point, refine them where needed, and avoid duplicating the same follow-up in multiple forms.
 
 Return your response as JSON.`,
-        },
-        {
-          role: 'user',
-          content: `Meeting context:
-${this.buildContextBlock(context)}
-
-Current meeting raw transcript (source of truth):
-${transcript}
-
-Candidate accountability and extraction items:
-${seedItemsBlock}
-
-Generate complete Minutes of Meeting using the raw transcript first and the candidate items second.`,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
-      max_tokens: 4000,
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+        maxOutputTokens: 4000,
+      },
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) throw new Error('No response from OpenAI');
+    const content = response.text;
+    if (!content) throw new Error('No response from Gemini');
 
     const normalized = this.applyReadinessGuard(
       this.normalizeMoMResponse(JSON.parse(content)),
@@ -1192,12 +1179,12 @@ Generate complete Minutes of Meeting using the raw transcript first and the cand
    * Generate embeddings for semantic search
    */
   async generateEmbedding(text: string): Promise<number[]> {
-    const response = await openai.embeddings.create({
+    const response = await ai.models.embedContent({
       model: this.embeddingModel,
-      input: text,
+      contents: text,
     });
 
-    return response.data[0]?.embedding ?? [];
+    return response.embeddings?.[0]?.values ?? [];
   }
 
   /**
@@ -1206,29 +1193,30 @@ Generate complete Minutes of Meeting using the raw transcript first and the cand
   async generateEmbeddings(texts: string[]): Promise<number[][]> {
     if (texts.length === 0) return [];
 
-    const response = await openai.embeddings.create({
+    const response = await ai.models.embedContent({
       model: this.embeddingModel,
-      input: texts,
+      contents: texts,
     });
 
-    return response.data.map((d) => d.embedding);
+    return response.embeddings?.map((e) => e.values ?? []) ?? [];
   }
 
   /**
-   * Estimate token count (rough approximation)
+   * Estimate token count (rough approximation or exact if supported)
    */
   estimateTokens(text: string): number {
-    // Rough estimate: ~4 chars per token for English
+    // We could use ai.models.countTokens, but it is async.
+    // For synchronous check, rough estimate of ~4 chars per token for English.
     return Math.ceil(text.length / 4);
   }
 
   /**
-   * Check if text fits within token limit
+   * Check if text fits within token limit (1 million for gemini-1.5/2.5-pro)
    */
-  fitsInContext(text: string, maxTokens: number = 128000): boolean {
+  fitsInContext(text: string, maxTokens: number = 1000000): boolean {
     return this.estimateTokens(text) < maxTokens;
   }
 }
 
 // Singleton instance
-export const openaiService = new OpenAIService();
+export const aiService = new GeminiService();

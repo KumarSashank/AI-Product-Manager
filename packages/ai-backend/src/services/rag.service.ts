@@ -13,7 +13,7 @@ import {
 } from '../db/schema/embeddings.js';
 import { meetings } from '../db/schema/meetings.js';
 
-import { openaiService } from './openai.service.js';
+import { aiService } from './gemini.service.js';
 
 // ============================================================================
 // TYPES
@@ -49,7 +49,7 @@ export class RAGService {
     metadata?: MeetingEmbedding['metadata']
   ): Promise<MeetingEmbedding> {
     // Generate embedding
-    const embedding = await openaiService.generateEmbedding(content);
+    const embedding = await aiService.generateEmbedding(content);
 
     // Store in database
     const result = await db
@@ -85,7 +85,7 @@ export class RAGService {
 
     // Generate embeddings in batch
     const texts = items.map((i) => i.content);
-    const embeddings = await openaiService.generateEmbeddings(texts);
+    const embeddings = await aiService.generateEmbeddings(texts);
 
     // Prepare records
     const records: NewMeetingEmbedding[] = items.map((item, idx) => ({
@@ -117,7 +117,7 @@ export class RAGService {
     const { limit = 10, contentTypes, meetingId, projectId, organizationId } = options;
 
     // Generate query embedding
-    const queryEmbedding = await openaiService.generateEmbedding(query);
+    const queryEmbedding = await aiService.generateEmbedding(query);
 
     const scopedMeetingIds = await this.getScopedMeetingIds({
       meetingId,
@@ -185,7 +185,7 @@ export class RAGService {
     const truncatedResults: SearchResult[] = [];
 
     for (const result of results) {
-      const resultTokens = openaiService.estimateTokens(result.content);
+      const resultTokens = aiService.estimateTokens(result.content);
       if (totalTokens + resultTokens > maxTokens) {
         break;
       }
