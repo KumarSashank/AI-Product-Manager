@@ -957,7 +957,9 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    return ExecutiveSummarySchema.parse(JSON.parse(content));
+    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+
+    return ExecutiveSummarySchema.parse(JSON.parse(cleanContent));
   }
 
   /**
@@ -1004,7 +1006,9 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    const parsed = HighlightsResponseSchema.parse(JSON.parse(content));
+    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+
+    const parsed = HighlightsResponseSchema.parse(JSON.parse(cleanContent));
     return parsed.highlights;
   }
 
@@ -1067,7 +1071,9 @@ Return your response as JSON with this exact structure:
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
-    const raw = JSON.parse(content) as Record<string, unknown>;
+    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+
+    const raw = JSON.parse(cleanContent) as Record<string, unknown>;
     const normalized = {
       items: Array.isArray(raw.items)
         ? raw.items.map((item) => this.normalizeActionItem(item))
@@ -1161,15 +1167,17 @@ Rules:
 Return your response as JSON.`,
         responseMimeType: 'application/json',
         temperature: 0.3,
-        maxOutputTokens: 4000,
       },
     });
 
     const content = response.text;
     if (!content) throw new Error('No response from Gemini');
 
+    // Clean up potential markdown formatting that Gemini sometimes includes
+    const cleanContent = content.replace(/^```json\n?/g, '').replace(/\n?```$/g, '').trim();
+
     const normalized = this.applyReadinessGuard(
-      this.normalizeMoMResponse(JSON.parse(content)),
+      this.normalizeMoMResponse(JSON.parse(cleanContent)),
       context
     );
     return this.ensureMoMQuality(normalized, context, seedItems);
