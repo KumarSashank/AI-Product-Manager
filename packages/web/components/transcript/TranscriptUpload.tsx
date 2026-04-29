@@ -108,7 +108,6 @@ export function TranscriptUpload({ projectId, onClose, onSuccess }: TranscriptUp
           );
 
           await meetingsApi.generateMom(meetingId);
-          await meetingsApi.extractItems(meetingId);
 
           // Refetch results
           const [momData, itemsData, highlightsData] = await Promise.all([

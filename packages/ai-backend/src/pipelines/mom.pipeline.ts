@@ -75,7 +75,7 @@ export class MoMPipeline {
           executiveSummary:
             'This meeting was completely silent or captions were disabled, so no summary could be generated.',
           detailedSummary: '',
-          aiModelVersion: 'gpt-4o',
+          aiModelVersion: 'gemini-2.5-pro',
         });
 
         return {
@@ -175,7 +175,7 @@ export class MoMPipeline {
         meetingId,
         executiveSummary: momResponse.executiveSummary,
         detailedSummary: momResponse.detailedSummary,
-        aiModelVersion: 'gpt-4o',
+        aiModelVersion: 'gemini-2.5-pro',
         overallConfidence:
           momResponse.overallConfidence ??
           this.estimateOverallConfidence(momResponse.items.map((item) => item.aiConfidence)),

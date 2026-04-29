@@ -28,6 +28,7 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [newProject, setNewProject] = useState({ name: '', description: '', googleMeetLink: '' });
   const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState('');
 
   useEffect(() => {
     loadProjects();
@@ -47,6 +48,7 @@ export default function ProjectsPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreating(true);
+    setCreateError('');
     try {
       const response = await projectsApi.create({
         name: newProject.name,
@@ -58,7 +60,7 @@ export default function ProjectsPage() {
       setNewProject({ name: '', description: '', googleMeetLink: '' });
       router.push(`/projects/${response.project.id}?setup=1`);
     } catch (err) {
-      console.error('Failed to create project:', err);
+      setCreateError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setCreating(false);
     }
@@ -407,6 +409,12 @@ export default function ProjectsPage() {
                   For recurring meetings, paste the same link to group sessions together.
                 </p>
               </div>
+
+              {createError && (
+                <div className="rounded-xl border border-red-300 bg-red-50 px-3.5 py-3 text-sm text-red-700">
+                  {createError}
+                </div>
+              )}
 
               <div className="flex gap-3 pt-2">
                 <button

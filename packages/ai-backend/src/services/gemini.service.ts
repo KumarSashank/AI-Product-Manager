@@ -1,11 +1,16 @@
 /**
- * @fileoverview OpenAI Service
- * @description Core wrapper for OpenAI API with rate limiting and structured outputs
+ * @fileoverview Gemini Service
+ * @description Core wrapper for Google Gemini API with structured outputs and JSON repair
  */
 
 import { GoogleGenAI } from '@google/genai';
 import { jsonrepair } from 'jsonrepair';
 import { z } from 'zod';
+
+// Validate API key at startup
+if (!process.env.GEMINI_API_KEY) {
+  console.error('[GeminiService] GEMINI_API_KEY is not set — all AI calls will fail.');
+}
 
 // Initialize Gemini client
 const ai = new GoogleGenAI({

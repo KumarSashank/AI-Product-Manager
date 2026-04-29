@@ -179,20 +179,12 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
    */
   server.get('/api/v1/auth/me', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const token = request.cookies.auth_token;
-
-      if (!token) {
+      // request.user is set by the auth middleware from cookie or Bearer token
+      if (!request.user) {
         return reply.status(401).send({ error: 'Not authenticated' });
       }
 
-      const payload = authService.verifyToken(token);
-
-      if (!payload) {
-        reply.clearCookie('auth_token', buildClearCookieOptions());
-        return reply.status(401).send({ error: 'Invalid or expired token' });
-      }
-
-      const user = await authService.getUserById(payload.userId);
+      const user = await authService.getUserById(request.user.userId);
 
       if (!user) {
         reply.clearCookie('auth_token', buildClearCookieOptions());
