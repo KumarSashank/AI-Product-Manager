@@ -422,7 +422,7 @@ export class GeminiService {
     if (!raw || typeof raw !== 'object') return raw;
     const value = raw as Record<string, unknown>;
 
-    const highlightType =
+    const rawHighlightType =
       typeof value.highlightType === 'string'
         ? value.highlightType
         : typeof value.type === 'string'
@@ -430,6 +430,8 @@ export class GeminiService {
           : typeof value.category === 'string'
             ? value.category
             : 'key_point';
+
+    const highlightType = this.normalizeHighlightType(rawHighlightType);
 
     const content =
       typeof value.content === 'string'
@@ -686,6 +688,31 @@ export class GeminiService {
       .replace(/^Resolved carry-over [^:]+:\s*/i, '')
       .replace(/^Open [^:]+ remains active:\s*/i, '')
       .trim();
+  }
+
+  private normalizeHighlightType(raw: string): Highlight['highlightType'] {
+    const lower = raw.toLowerCase().replace(/[^a-z_]/g, '');
+    const VALID: Highlight['highlightType'][] = [
+      'executive_summary',
+      'key_point',
+      'notable_quote',
+      'outcome',
+    ];
+
+    // Direct match (already valid)
+    if ((VALID as string[]).includes(lower)) {
+      return lower as Highlight['highlightType'];
+    }
+
+    // Map common AI-generated labels to valid enum values
+    if (/decision|conclusion|resolution|agreed/.test(lower)) return 'outcome';
+    if (/risk|blocker|issue|warning|concern|challenge/.test(lower)) return 'key_point';
+    if (/summary|overview|executive|recap/.test(lower)) return 'executive_summary';
+    if (/quote|said|comment|remark|notable/.test(lower)) return 'notable_quote';
+    if (/outcome|result|action|next_step|deliverable/.test(lower)) return 'outcome';
+    if (/takeaway|insight|learning|observation/.test(lower)) return 'key_point';
+
+    return 'key_point';
   }
 
   private inferHighlightTypeFromItem(item: ActionItem): Highlight['highlightType'] {
