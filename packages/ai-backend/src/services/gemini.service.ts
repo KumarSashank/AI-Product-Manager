@@ -1080,29 +1080,60 @@ Each item should include:
 - a concise title
 - optional context
 - aiConfidence from 0 to 1
-- sourceTranscriptRange using the transcript seq numbers when possible
-
-Return your response as JSON with this exact structure:
-{
-  "items": [
-    {
-      "itemType": "action_item" | "decision" | "announcement" | "project_update" | "blocker" | "idea" | "question" | "risk" | "commitment" | "deadline" | "dependency" | "parking_lot" | "key_takeaway" | "reference",
-      "title": "short title max 200 chars",
-      "description": "detailed description (optional)",
-      "assignee": "accountable owner label: individual or team (optional)",
-      "accountabilityType": "individual" | "team" | "unknown",
-      "accountableTeam": "team name when team ownership applies (optional)",
-      "assigneeEmail": "email (optional)",
-      "dueDate": "YYYY-MM-DD (optional)",
-      "priority": "low" | "medium" | "high" | "critical",
-      "sourceQuote": "direct quote (optional)",
-      "context": "surrounding context (optional)",
-      "aiConfidence": 0.0,
-      "sourceTranscriptRange": { "startSeq": 1, "endSeq": 2 }
-    }
-  ]
-}`,
+- sourceTranscriptRange using the transcript seq numbers when possible`,
         responseMimeType: 'application/json',
+        responseSchema: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  itemType: {
+                    type: 'string',
+                    enum: [
+                      'action_item',
+                      'decision',
+                      'announcement',
+                      'project_update',
+                      'blocker',
+                      'idea',
+                      'question',
+                      'risk',
+                      'commitment',
+                      'deadline',
+                      'dependency',
+                      'parking_lot',
+                      'key_takeaway',
+                      'reference',
+                    ],
+                  },
+                  title: { type: 'string' },
+                  description: { type: 'string' },
+                  assignee: { type: 'string' },
+                  accountabilityType: { type: 'string', enum: ['individual', 'team', 'unknown'] },
+                  accountableTeam: { type: 'string' },
+                  assigneeEmail: { type: 'string' },
+                  dueDate: { type: 'string' },
+                  priority: { type: 'string', enum: ['low', 'medium', 'high', 'critical'] },
+                  sourceQuote: { type: 'string' },
+                  context: { type: 'string' },
+                  aiConfidence: { type: 'number' },
+                  sourceTranscriptRange: {
+                    type: 'object',
+                    properties: {
+                      startSeq: { type: 'number' },
+                      endSeq: { type: 'number' },
+                    },
+                  },
+                },
+                required: ['itemType', 'title', 'priority'],
+              },
+            },
+          },
+          required: ['items'],
+        },
         temperature: 0.3,
       },
     });
@@ -1205,9 +1236,84 @@ Rules:
 - Rate highlight importance 1-10.
 - For extracted items, include aiConfidence and sourceTranscriptRange whenever possible.
 - Use the provided candidate items as a starting point, refine them where needed, and avoid duplicating the same follow-up in multiple forms.
-
-Return your response as JSON.`,
+- IMPORTANT: highlightType must be exactly one of: executive_summary, key_point, notable_quote, outcome
+- IMPORTANT: itemType must be exactly one of: action_item, decision, announcement, project_update, blocker, idea, question, risk, commitment, deadline, dependency, parking_lot, key_takeaway, reference
+- IMPORTANT: priority must be exactly one of: low, medium, high, critical`,
         responseMimeType: 'application/json',
+        responseSchema: {
+          type: 'object',
+          properties: {
+            executiveSummary: { type: 'string' },
+            detailedSummary: { type: 'string' },
+            mainTopics: { type: 'array', items: { type: 'string' } },
+            highlights: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  highlightType: {
+                    type: 'string',
+                    enum: ['executive_summary', 'key_point', 'notable_quote', 'outcome'],
+                  },
+                  content: { type: 'string' },
+                  speaker: { type: 'string' },
+                  importance: { type: 'number' },
+                  keywords: { type: 'array', items: { type: 'string' } },
+                },
+                required: ['highlightType', 'content'],
+              },
+            },
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  itemType: {
+                    type: 'string',
+                    enum: [
+                      'action_item',
+                      'decision',
+                      'announcement',
+                      'project_update',
+                      'blocker',
+                      'idea',
+                      'question',
+                      'risk',
+                      'commitment',
+                      'deadline',
+                      'dependency',
+                      'parking_lot',
+                      'key_takeaway',
+                      'reference',
+                    ],
+                  },
+                  title: { type: 'string' },
+                  description: { type: 'string' },
+                  assignee: { type: 'string' },
+                  accountabilityType: { type: 'string', enum: ['individual', 'team', 'unknown'] },
+                  accountableTeam: { type: 'string' },
+                  assigneeEmail: { type: 'string' },
+                  dueDate: { type: 'string' },
+                  priority: { type: 'string', enum: ['low', 'medium', 'high', 'critical'] },
+                  sourceQuote: { type: 'string' },
+                  context: { type: 'string' },
+                  aiConfidence: { type: 'number' },
+                  sourceTranscriptRange: {
+                    type: 'object',
+                    properties: {
+                      startSeq: { type: 'number' },
+                      endSeq: { type: 'number' },
+                    },
+                  },
+                },
+                required: ['itemType', 'title'],
+              },
+            },
+            suggestedTopics: { type: 'array', items: { type: 'string' } },
+            overallConfidence: { type: 'number' },
+          },
+          required: ['executiveSummary', 'detailedSummary', 'highlights', 'items'],
+        },
         temperature: 0.3,
       },
     });
